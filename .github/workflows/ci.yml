@@ -73,3 +73,33 @@ jobs:
         with:
           command: clippy
           args: -- -D warnings
+
+  build:
+    name: Build
+    needs: [check, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Install dependencies
+        run: sudo apt install libgtk-3-dev
+
+      - name: Run cargo build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+            name: image_roll
+            path: target/release/image_roll
