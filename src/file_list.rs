@@ -1,4 +1,4 @@
-use gio::{Cancellable, FileExt, FileMonitorExt, FileMonitorFlags, FileQueryInfoFlags, FileType};
+use gio::{Cancellable, FileExt, FileQueryInfoFlags, FileType};
 
 pub struct FileList {
     file_list: Vec<gio::FileInfo>,
@@ -88,7 +88,7 @@ impl FileList {
         if let Some(current_folder) = &self.current_folder {
             self.current_file = match self.current_file.take() {
                 Some((_, _)) if self.file_list.is_empty() => None,
-                Some((index, _)) if index as i64 - 1 >= 0 => Some((
+                Some((index, _)) if index as i64 > 0 => Some((
                     index - 1,
                     current_folder
                         .get_child(self.file_list[index - 1].get_name().unwrap())
@@ -115,7 +115,6 @@ impl FileList {
         self.current_folder.as_ref()
     }
 
-    /// Get a reference to the file list's current file.
     pub fn current_file(&self) -> Option<&gio::File> {
         self.current_file.as_ref().map(|(_, file)| file)
     }
