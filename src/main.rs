@@ -1,11 +1,11 @@
-extern crate gtk;
 extern crate gio;
+extern crate gtk;
 
-mod image;
 mod file_list;
+mod image;
 
-use gtk::{Builder, prelude::*};
-use gio::{Cancellable, FileMonitorFlags, prelude::*};
+use gio::{prelude::*, Cancellable, FileMonitorFlags};
+use gtk::{prelude::*, Builder};
 
 use gtk::{Application, ApplicationWindow};
 
@@ -13,7 +13,11 @@ use std::{cell::RefCell, env::args, rc::Rc};
 
 use file_list::FileList;
 
-fn load_image(file: Option<&gio::File>, image_widget: &gtk::Image, current_image: Rc<RefCell<Option<image::Image>>>) {
+fn load_image(
+    file: Option<&gio::File>,
+    image_widget: &gtk::Image,
+    current_image: Rc<RefCell<Option<image::Image>>>,
+) {
     if let Some(file) = file {
         let image = image::Image::load_from_path(file.get_path().unwrap());
         image_widget.set_from_pixbuf(Some(image.image_buffer()));
@@ -28,17 +32,29 @@ fn build_ui(application: &gtk::Application) {
     let glade_src = include_str!("resources/image_roll_ui.glade");
     let builder = Builder::from_string(glade_src);
 
-    let window: ApplicationWindow = builder.get_object("main_window").expect("Couldn't get main_window");
+    let window: ApplicationWindow = builder
+        .get_object("main_window")
+        .expect("Couldn't get main_window");
     window.set_application(Some(application));
 
-    let open_menu_button: gtk::Button = builder.get_object("open_menu_button").expect("Couldn't get open_menu_button");
+    let open_menu_button: gtk::Button = builder
+        .get_object("open_menu_button")
+        .expect("Couldn't get open_menu_button");
 
-    let image_widget: gtk::Image = builder.get_object("image_widget").expect("Couldn't get image_widget");
+    let image_widget: gtk::Image = builder
+        .get_object("image_widget")
+        .expect("Couldn't get image_widget");
 
-    let popover_menu: gtk::PopoverMenu = builder.get_object("popover_menu").expect("Couldn't get popover_menu");
+    let popover_menu: gtk::PopoverMenu = builder
+        .get_object("popover_menu")
+        .expect("Couldn't get popover_menu");
 
-    let next_button: gtk::Button = builder.get_object("next_button").expect("Couldn't get next_button");
-    let previous_button: gtk::Button = builder.get_object("previous_button").expect("Couldn't get previous_button");
+    let next_button: gtk::Button = builder
+        .get_object("next_button")
+        .expect("Couldn't get next_button");
+    let previous_button: gtk::Button = builder
+        .get_object("previous_button")
+        .expect("Couldn't get previous_button");
 
     let current_image: Rc<RefCell<Option<image::Image>>> = Rc::new(RefCell::new(None));
 
@@ -89,28 +105,30 @@ fn build_ui(application: &gtk::Application) {
         file_chooser.show_all();
     }));
 
-    next_button.connect_clicked(glib::clone!(@strong file_list, @strong image_widget, @strong current_image => move |_| {
-        let mut file_list = file_list.borrow_mut();
-        file_list.next();
+    next_button.connect_clicked(
+        glib::clone!(@strong file_list, @strong image_widget, @strong current_image => move |_| {
+            let mut file_list = file_list.borrow_mut();
+            file_list.next();
 
-        load_image(file_list.current_file(), &image_widget, current_image.clone());
-    }));
+            load_image(file_list.current_file(), &image_widget, current_image.clone());
+        }),
+    );
 
-    previous_button.connect_clicked(glib::clone!(@strong file_list, @strong image_widget, @strong current_image => move |_| {
-        let mut file_list = file_list.borrow_mut();
-        file_list.previous();
+    previous_button.connect_clicked(
+        glib::clone!(@strong file_list, @strong image_widget, @strong current_image => move |_| {
+            let mut file_list = file_list.borrow_mut();
+            file_list.previous();
 
-        load_image(file_list.current_file(), &image_widget, current_image.clone());
-    }));
+            load_image(file_list.current_file(), &image_widget, current_image.clone());
+        }),
+    );
 
     window.show_all();
 }
 
 fn main() {
-    let application = Application::new(
-        Some("com.github.weclaw1.ImageRoll"),
-        Default::default(),
-    ).expect("Failed to initialize GTK application");
+    let application = Application::new(Some("com.github.weclaw1.ImageRoll"), Default::default())
+        .expect("Failed to initialize GTK application");
 
     application.connect_activate(|app| {
         build_ui(app);
