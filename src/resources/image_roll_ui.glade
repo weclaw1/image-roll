@@ -27,7 +27,7 @@ Author: Robert Węcławski
 
 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk+" version="3.22"/>
   <!-- interface-license-type mit -->
   <!-- interface-name Image Roll -->
   <!-- interface-description Advanced image viewer -->
