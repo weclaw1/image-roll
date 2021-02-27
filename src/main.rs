@@ -3,24 +3,29 @@ extern crate gtk;
 
 mod file_list;
 mod image;
+mod settings;
 
 use gio::{prelude::*, Cancellable, FileMonitorFlags};
-use gtk::{prelude::*, Builder};
+use gtk::{Builder, ComboBoxText, prelude::*};
 
 use gtk::{Application, ApplicationWindow};
 
-use std::{cell::RefCell, env::args, rc::Rc};
+use std::{cell::RefCell, env::args, mem, rc::Rc};
 
 use file_list::FileList;
+use image::PreviewSize;
+use settings::Settings;
 
 fn load_image(
+    settings: Rc<RefCell<Settings>>,
     file: Option<&gio::File>,
     image_widget: &gtk::Image,
     current_image: Rc<RefCell<Option<image::Image>>>,
 ) {
     if let Some(file) = file {
-        let image = image::Image::load_from_path(file.get_path().unwrap());
-        image_widget.set_from_pixbuf(Some(image.image_buffer()));
+        let mut image = image::Image::load_from_path(file.get_path().unwrap());
+        image.create_preview_image_buffer(settings.borrow().scale());
+        image_widget.set_from_pixbuf(Some(image.preview_image_buffer()));
         current_image.replace(Some(image));
     } else {
         image_widget.set_from_pixbuf(None);
@@ -56,13 +61,19 @@ fn build_ui(application: &gtk::Application) {
         .get_object("previous_button")
         .expect("Couldn't get previous_button");
 
+    let image_viewport: gtk::Viewport = builder.get_object("image_viewport").expect("Couldn't get image_viewport");
+
+    let preview_size_combobox: gtk::ComboBoxText = builder.get_object("preview_size_combobox").expect("Couldn't get preview_size_combobox");
+
+    let settings: Rc<RefCell<Settings>> = Rc::new(RefCell::new(Settings::new(PreviewSize::BestFit(image_viewport.get_allocation().width, image_viewport.get_allocation().height))));
+
     let current_image: Rc<RefCell<Option<image::Image>>> = Rc::new(RefCell::new(None));
 
     let file_list: Rc<RefCell<FileList>> = Rc::new(RefCell::new(FileList::new(None)));
 
     let current_folder_monitor: Rc<RefCell<Option<gio::FileMonitor>>> = Rc::new(RefCell::new(None));
 
-    open_menu_button.connect_clicked(glib::clone!(@strong window, @strong popover_menu, @strong file_list, @strong image_widget, @strong current_image, @strong next_button, @strong previous_button => move |_| {
+    open_menu_button.connect_clicked(glib::clone!(@strong window, @strong popover_menu, @strong file_list, @strong image_widget, @strong current_image, @strong next_button, @strong previous_button, @strong settings => move |_| {
         popover_menu.popdown();
         let file_chooser = gtk::FileChooserDialog::new(
             Some("Open file"),
@@ -74,10 +85,10 @@ fn build_ui(application: &gtk::Application) {
             ("Open", gtk::ResponseType::Ok),
             ("Cancel", gtk::ResponseType::Cancel),
         ]);
-        file_chooser.connect_response(glib::clone!(@strong image_widget, @strong file_list, @strong current_folder_monitor, @strong current_image, @strong next_button, @strong previous_button => move |file_chooser, response| {
+        file_chooser.connect_response(glib::clone!(@strong image_widget, @strong file_list, @strong current_folder_monitor, @strong current_image, @strong next_button, @strong previous_button, @strong settings => move |file_chooser, response| {
             if response == gtk::ResponseType::Ok {
                 let file = file_chooser.get_file().expect("Couldn't get file");
-                load_image(Some(&file), &image_widget, current_image.clone());
+                load_image(settings.clone(), Some(&file), &image_widget, current_image.clone());
 
                 let new_file_list = FileList::new(Some(file));
                 let buttons_active = new_file_list.len() > 1;
@@ -86,8 +97,8 @@ fn build_ui(application: &gtk::Application) {
                 previous_button.set_sensitive(buttons_active);
 
                 file_list.replace(new_file_list);
-                let folder_monitor = file_list.borrow_mut().current_folder().unwrap().monitor_directory::<Cancellable>(FileMonitorFlags::NONE, None).expect("Couldn't get monitor for directory");
-                folder_monitor.connect_changed(glib::clone!(@strong file_list, @strong image_widget, @strong current_image, @strong next_button, @strong previous_button => move |_, _, _, _| {
+                let folder_monitor = file_list.borrow().current_folder().unwrap().monitor_directory::<Cancellable>(FileMonitorFlags::NONE, None).expect("Couldn't get monitor for directory");
+                folder_monitor.connect_changed(glib::clone!(@strong file_list, @strong image_widget, @strong current_image, @strong next_button, @strong previous_button, @strong settings => move |_, _, _, _| {
                     let mut file_list = file_list.borrow_mut();
 
                     file_list.refresh();
@@ -96,7 +107,7 @@ fn build_ui(application: &gtk::Application) {
                     next_button.set_sensitive(buttons_active);
                     previous_button.set_sensitive(buttons_active);
 
-                    load_image(file_list.current_file(), &image_widget, current_image.clone());
+                    load_image(settings.clone(), file_list.current_file(), &image_widget, current_image.clone());
                 }));
                 current_folder_monitor.replace(Some(folder_monitor));
             }
@@ -106,22 +117,48 @@ fn build_ui(application: &gtk::Application) {
     }));
 
     next_button.connect_clicked(
-        glib::clone!(@strong file_list, @strong image_widget, @strong current_image => move |_| {
+        glib::clone!(@strong settings, @strong file_list, @strong image_widget, @strong current_image => move |_| {
             let mut file_list = file_list.borrow_mut();
             file_list.next();
 
-            load_image(file_list.current_file(), &image_widget, current_image.clone());
+            load_image(settings.clone(), file_list.current_file(), &image_widget, current_image.clone());
         }),
     );
 
     previous_button.connect_clicked(
-        glib::clone!(@strong file_list, @strong image_widget, @strong current_image => move |_| {
+        glib::clone!(@strong settings, @strong file_list, @strong image_widget, @strong current_image => move |_| {
             let mut file_list = file_list.borrow_mut();
             file_list.previous();
 
-            load_image(file_list.current_file(), &image_widget, current_image.clone());
+            load_image(settings.clone(), file_list.current_file(), &image_widget, current_image.clone());
         }),
     );
+
+    image_viewport.connect_size_allocate(glib::clone!(@strong settings, @strong image_widget, @strong current_image => move |_, allocation| {
+        let mut settings = settings.borrow_mut();
+        if let PreviewSize::BestFit(_, _) = settings.scale() {
+            let new_scale = PreviewSize::BestFit(allocation.width, allocation.height);
+            settings.set_scale(new_scale);
+            if let Some(image) = current_image.borrow_mut().as_mut() {
+                image.create_preview_image_buffer(new_scale);
+                image_widget.set_from_pixbuf(Some(image.preview_image_buffer()));
+            }
+        }
+    }));
+
+    preview_size_combobox.connect_changed(glib::clone!(@strong settings, @strong image_widget, @strong current_image, @strong image_viewport => move |preview_size_combobox| {
+        let mut settings = settings.borrow_mut();
+        let mut scale = PreviewSize::from(preview_size_combobox.get_active_id().unwrap().as_str());
+        if let PreviewSize::BestFit(_, _) = scale {
+            let viewport_allocation = image_viewport.get_allocation();
+            scale = PreviewSize::BestFit(viewport_allocation.width, viewport_allocation.height);
+        }
+        settings.set_scale(scale);
+        if let Some(image) = current_image.borrow_mut().as_mut() {
+            image.create_preview_image_buffer(scale);
+            image_widget.set_from_pixbuf(Some(image.preview_image_buffer()));
+        }
+    }));
 
     window.show_all();
 }
