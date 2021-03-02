@@ -91,16 +91,16 @@ impl From<PreviewSize> for String {
     fn from(value: PreviewSize) -> Self {
         match value {
             PreviewSize::BestFit(_, _) => String::from("preview_fit_screen"),
-            PreviewSize::Resized(value) if value == 0.1 => String::from("preview_10"),
-            PreviewSize::Resized(value) if value == 0.25 => String::from("preview_25"),
-            PreviewSize::Resized(value) if value == 0.33 => String::from("preview_33"),
-            PreviewSize::Resized(value) if value == 0.5 => String::from("preview_50"),
-            PreviewSize::Resized(value) if value == 0.66 => String::from("preview_66"),
-            PreviewSize::Resized(value) if value == 0.75 => String::from("preview_75"),
+            PreviewSize::Resized(value) if (value - 0.1).abs() < f32::EPSILON => String::from("preview_10"),
+            PreviewSize::Resized(value) if (value - 0.25).abs() < f32::EPSILON => String::from("preview_25"),
+            PreviewSize::Resized(value) if (value - 0.33).abs() < f32::EPSILON => String::from("preview_33"),
+            PreviewSize::Resized(value) if (value - 0.5).abs() < f32::EPSILON => String::from("preview_50"),
+            PreviewSize::Resized(value) if (value - 0.66).abs() < f32::EPSILON => String::from("preview_66"),
+            PreviewSize::Resized(value) if (value - 0.75).abs() < f32::EPSILON => String::from("preview_75"),
             PreviewSize::OriginalSize => String::from("preview_100"),
-            PreviewSize::Resized(value) if value == 1.33 => String::from("preview_133"),
-            PreviewSize::Resized(value) if value == 1.5 => String::from("preview_150"),
-            PreviewSize::Resized(value) if value == 2.0 => String::from("preview_200"),
+            PreviewSize::Resized(value) if (value - 1.33).abs() < f32::EPSILON => String::from("preview_133"),
+            PreviewSize::Resized(value) if (value - 1.5).abs() < f32::EPSILON => String::from("preview_150"),
+            PreviewSize::Resized(value) if (value - 2.0).abs() < f32::EPSILON => String::from("preview_200"),
             _ => panic!("Cannot create PreviewSize for this value"),
         }
     }
@@ -111,45 +111,39 @@ impl PreviewSize {
         match self {
             PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
             PreviewSize::OriginalSize => PreviewSize::Resized(0.75),
-            PreviewSize::Resized(value) if value == 2.0 => PreviewSize::Resized(1.5),
-            PreviewSize::Resized(value) if value == 1.5 => PreviewSize::Resized(1.33),
-            PreviewSize::Resized(value) if value == 1.33 => PreviewSize::OriginalSize,
-            PreviewSize::Resized(value) if value == 0.75 => PreviewSize::Resized(0.66),
-            PreviewSize::Resized(value) if value == 0.66 => PreviewSize::Resized(0.5),
-            PreviewSize::Resized(value) if value == 0.5 => PreviewSize::Resized(0.33),
-            PreviewSize::Resized(value) if value == 0.33 => PreviewSize::Resized(0.25),
-            PreviewSize::Resized(value) if value == 0.25 => PreviewSize::Resized(0.1),
+            PreviewSize::Resized(value) if (value - 2.0).abs() < f32::EPSILON => PreviewSize::Resized(1.5),
+            PreviewSize::Resized(value) if (value - 1.5).abs() < f32::EPSILON => PreviewSize::Resized(1.33),
+            PreviewSize::Resized(value) if (value - 1.33).abs() < f32::EPSILON => PreviewSize::OriginalSize,
+            PreviewSize::Resized(value) if (value - 0.75).abs() < f32::EPSILON => PreviewSize::Resized(0.66),
+            PreviewSize::Resized(value) if (value - 0.66).abs() < f32::EPSILON => PreviewSize::Resized(0.5),
+            PreviewSize::Resized(value) if (value - 0.5).abs() < f32::EPSILON => PreviewSize::Resized(0.33),
+            PreviewSize::Resized(value) if (value - 0.33).abs() < f32::EPSILON => PreviewSize::Resized(0.25),
+            PreviewSize::Resized(value) if (value - 0.25).abs() < f32::EPSILON => PreviewSize::Resized(0.1),
             PreviewSize::Resized(_) => panic!("Preview size cannot be smaller than 10%"),
         }
     }
 
     pub fn can_be_smaller(&self) -> bool {
-        match self {
-            PreviewSize::Resized(value) if value <= &0.1 => false,
-            _ => true,
-        }
+        !matches!(self, PreviewSize::Resized(value) if value <= &0.1)
     }
 
     pub fn larger(self) -> PreviewSize {
         match self {
             PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
             PreviewSize::OriginalSize => PreviewSize::Resized(1.33),
-            PreviewSize::Resized(value) if value == 0.1 => PreviewSize::Resized(0.25),
-            PreviewSize::Resized(value) if value == 0.25 => PreviewSize::Resized(0.33),
-            PreviewSize::Resized(value) if value == 0.33 => PreviewSize::Resized(0.5),
-            PreviewSize::Resized(value) if value == 0.5 => PreviewSize::Resized(0.66),
-            PreviewSize::Resized(value) if value == 0.66 => PreviewSize::Resized(0.75),
-            PreviewSize::Resized(value) if value == 0.75 => PreviewSize::OriginalSize,
-            PreviewSize::Resized(value) if value == 1.33 => PreviewSize::Resized(1.5),
-            PreviewSize::Resized(value) if value == 1.5 => PreviewSize::Resized(2.0),
+            PreviewSize::Resized(value) if (value - 0.1).abs() < f32::EPSILON => PreviewSize::Resized(0.25),
+            PreviewSize::Resized(value) if (value - 0.25).abs() < f32::EPSILON => PreviewSize::Resized(0.33),
+            PreviewSize::Resized(value) if (value - 0.33).abs() < f32::EPSILON => PreviewSize::Resized(0.5),
+            PreviewSize::Resized(value) if (value - 0.5).abs() < f32::EPSILON => PreviewSize::Resized(0.66),
+            PreviewSize::Resized(value) if (value - 0.66).abs() < f32::EPSILON => PreviewSize::Resized(0.75),
+            PreviewSize::Resized(value) if (value - 0.75).abs() < f32::EPSILON => PreviewSize::OriginalSize,
+            PreviewSize::Resized(value) if (value - 1.33).abs() < f32::EPSILON => PreviewSize::Resized(1.5),
+            PreviewSize::Resized(value) if (value - 1.5).abs() < f32::EPSILON => PreviewSize::Resized(2.0),
             PreviewSize::Resized(_) => panic!("Preview size cannot be larger than 200%"),
         }
     }
 
     pub fn can_be_larger(&self) -> bool {
-        match self {
-            PreviewSize::Resized(value) if value >= &2.0 => false,
-            _ => true,
-        }
+        !matches!(self, PreviewSize::Resized(value) if value >= &2.0)
     }
 }
