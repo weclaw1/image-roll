@@ -1,5 +1,3 @@
-use std::time::Instant;
-
 use crate::image::PreviewSize;
 
 pub struct Settings {
@@ -8,9 +6,7 @@ pub struct Settings {
 
 impl Settings {
     pub fn new(preview_size: PreviewSize) -> Settings {
-        Settings {
-            preview_size,
-        }
+        Settings { preview_size }
     }
 
     pub fn set_scale(&mut self, preview_size: PreviewSize) {

@@ -183,7 +183,7 @@ Author: Robert Węcławski
       </packing>
     </child>
   </object>
-  <object class="GtkImage" id="preview_bigger_icon">
+  <object class="GtkImage" id="preview_larger_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">zoom-in</property>
@@ -411,11 +411,11 @@ Author: Robert Węcławski
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="preview_bigger_button">
+              <object class="GtkButton" id="preview_larger_button">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="image">preview_bigger_icon</property>
+                <property name="image">preview_larger_icon</property>
               </object>
               <packing>
                 <property name="expand">False</property>

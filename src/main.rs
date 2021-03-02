@@ -6,11 +6,11 @@ mod image;
 mod settings;
 
 use gio::{prelude::*, Cancellable, FileMonitorFlags};
-use gtk::{Builder, ComboBoxText, prelude::*};
+use gtk::{prelude::*, Builder};
 
 use gtk::{Application, ApplicationWindow};
 
-use std::{cell::RefCell, env::args, mem, rc::Rc};
+use std::{cell::RefCell, env::args, rc::Rc};
 
 use file_list::FileList;
 use image::PreviewSize;
@@ -61,11 +61,26 @@ fn build_ui(application: &gtk::Application) {
         .get_object("previous_button")
         .expect("Couldn't get previous_button");
 
-    let image_viewport: gtk::Viewport = builder.get_object("image_viewport").expect("Couldn't get image_viewport");
+    let preview_smaller_button: gtk::Button = builder
+        .get_object("preview_smaller_button")
+        .expect("Couldn't get preview_smaller_button");
+    let preview_larger_button: gtk::Button = builder
+        .get_object("preview_larger_button")
+        .expect("Couldn't get preview_larger_button");
 
-    let preview_size_combobox: gtk::ComboBoxText = builder.get_object("preview_size_combobox").expect("Couldn't get preview_size_combobox");
+    let image_viewport: gtk::Viewport = builder
+        .get_object("image_viewport")
+        .expect("Couldn't get image_viewport");
 
-    let settings: Rc<RefCell<Settings>> = Rc::new(RefCell::new(Settings::new(PreviewSize::BestFit(image_viewport.get_allocation().width, image_viewport.get_allocation().height))));
+    let preview_size_combobox: gtk::ComboBoxText = builder
+        .get_object("preview_size_combobox")
+        .expect("Couldn't get preview_size_combobox");
+
+    let settings: Rc<RefCell<Settings>> =
+        Rc::new(RefCell::new(Settings::new(PreviewSize::BestFit(
+            image_viewport.get_allocation().width,
+            image_viewport.get_allocation().height,
+        ))));
 
     let current_image: Rc<RefCell<Option<image::Image>>> = Rc::new(RefCell::new(None));
 
@@ -146,19 +161,47 @@ fn build_ui(application: &gtk::Application) {
         }
     }));
 
-    preview_size_combobox.connect_changed(glib::clone!(@strong settings, @strong image_widget, @strong current_image, @strong image_viewport => move |preview_size_combobox| {
+    preview_size_combobox.connect_changed(glib::clone!(@strong settings, @strong image_widget, @strong current_image, @strong image_viewport, @strong preview_larger_button, @strong preview_smaller_button => move |preview_size_combobox| {
         let mut settings = settings.borrow_mut();
         let mut scale = PreviewSize::from(preview_size_combobox.get_active_id().unwrap().as_str());
         if let PreviewSize::BestFit(_, _) = scale {
             let viewport_allocation = image_viewport.get_allocation();
             scale = PreviewSize::BestFit(viewport_allocation.width, viewport_allocation.height);
         }
+        preview_smaller_button.set_sensitive(scale.can_be_smaller());
+        preview_larger_button.set_sensitive(scale.can_be_larger());
         settings.set_scale(scale);
         if let Some(image) = current_image.borrow_mut().as_mut() {
             image.create_preview_image_buffer(scale);
             image_widget.set_from_pixbuf(Some(image.preview_image_buffer()));
         }
     }));
+
+    preview_smaller_button.connect_clicked(
+        glib::clone!(@strong settings, @strong preview_size_combobox => move |_| {
+            let new_scale = {
+                let mut settings = settings.borrow_mut();
+                let current_scale = settings.scale();
+                let new_scale = current_scale.smaller();
+                settings.set_scale(new_scale);
+                new_scale
+            };
+            preview_size_combobox.set_active_id(Some(String::from(new_scale).as_ref()));
+        }),
+    );
+
+    preview_larger_button.connect_clicked(
+        glib::clone!(@strong settings, @strong preview_size_combobox => move |_| {
+            let new_scale = {
+                let mut settings = settings.borrow_mut();
+                let current_scale = settings.scale();
+                let new_scale = current_scale.larger();
+                settings.set_scale(new_scale);
+                new_scale
+            };
+            preview_size_combobox.set_active_id(Some(String::from(new_scale).as_ref()));
+        }),
+    );
 
     window.show_all();
 }
