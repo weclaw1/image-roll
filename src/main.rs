@@ -34,8 +34,11 @@ fn load_image(
 }
 
 fn build_ui(application: &gtk::Application) {
-    let glade_src = include_str!("resources/image_roll_ui.glade");
-    let builder = Builder::from_string(glade_src);
+    let bytes = glib::Bytes::from_static(include_bytes!("resources/resources.gresource"));
+    let resources = gio::Resource::from_data(&bytes).unwrap();
+    gio::resources_register(&resources);
+
+    let builder = Builder::from_resource("/com/github/weclaw1/image_roll/image_roll_ui.glade");
 
     let window: ApplicationWindow = builder
         .get_object("main_window")

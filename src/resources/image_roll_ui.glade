@@ -40,7 +40,7 @@ Author: Robert Węcławski
   <object class="GtkImage" id="crop_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="pixbuf">src/resources/crop_icon.svg</property>
+    <property name="pixbuf">crop_icon.svg</property>
   </object>
   <object class="GtkImage" id="link_aspect_ratio_icon">
     <property name="visible">True</property>
@@ -213,7 +213,7 @@ Author: Robert Węcławski
     <property name="window-position">center</property>
     <property name="default-width">440</property>
     <property name="default-height">250</property>
-    <property name="icon-name">applications-graphics</property>
+    <property name="icon">com.github.weclaw1.ImageRoll.svg</property>
     <property name="gravity">center</property>
     <child>
       <object class="GtkBox">
@@ -308,7 +308,7 @@ Author: Robert Węcławski
                       <object class="GtkImage" id="resize_icon">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="pixbuf">src/resources/resize_icon.svg</property>
+                        <property name="pixbuf">resize_icon.svg</property>
                       </object>
                     </child>
                   </object>
