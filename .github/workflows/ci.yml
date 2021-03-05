@@ -140,5 +140,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-            name: image_roll
-            path: target/release/image_roll
+            name: image-roll
+            path: target/release/image-roll

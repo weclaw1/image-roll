@@ -394,7 +394,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "image_roll"
+name = "image-roll"
 version = "0.1.0"
 dependencies = [
  "approx",

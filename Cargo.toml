@@ -1,5 +1,5 @@
 [package]
-name = "image_roll"
+name = "image-roll"
 version = "0.1.0"
 authors = ["Robert Węcławski <r.weclawski@gmail.com>"]
 edition = "2018"
@@ -24,9 +24,9 @@ features = ["v2_44"]
 license-file = ["LICENSE", "0"]
 section = "graphics"
 assets = [
-    ["target/release/image_roll", "opt/image_roll/", "755"],
-    ["README.md", "usr/share/doc/image_roll/README", "644"],
-    ["src/resources/image_roll.desktop", "usr/share/applications/", "644"],
+    ["target/release/image-roll", "opt/image-roll/", "755"],
+    ["README.md", "usr/share/doc/image-roll/README", "644"],
+    ["src/resources/image-roll.desktop", "usr/share/applications/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll.Devel.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll-symbolic.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],

@@ -38,7 +38,7 @@ fn build_ui(application: &gtk::Application) {
     let resources = gio::Resource::from_data(&bytes).unwrap();
     gio::resources_register(&resources);
 
-    let builder = Builder::from_resource("/com/github/weclaw1/image_roll/image_roll_ui.glade");
+    let builder = Builder::from_resource("/com/github/weclaw1/image-roll/image-roll_ui.glade");
 
     let window: ApplicationWindow = builder
         .get_object("main_window")

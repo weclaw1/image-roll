@@ -2,7 +2,7 @@
 Type=Application
 Name=Image Roll
 Comment=Image viewer
-Exec=/opt/image_roll/image_roll
+Exec=/opt/image-roll/image-roll
 Icon=com.github.weclaw1.ImageRoll
 Terminal=false
 Categories=Graphics;
