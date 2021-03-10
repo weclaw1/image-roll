@@ -198,15 +198,15 @@ Author: Robert Węcławski
     <property name="can-focus">False</property>
     <property name="icon-name">go-previous</property>
   </object>
-  <object class="GtkImage" id="turn_90_degree_left_icon">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">object-rotate-left</property>
-  </object>
-  <object class="GtkImage" id="turn_90_degree_right_icon">
+  <object class="GtkImage" id="rotate_clockwise_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">object-rotate-right</property>
+  </object>
+  <object class="GtkImage" id="rotate_counterclockwise_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">object-rotate-left</property>
   </object>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can-focus">False</property>
@@ -232,9 +232,16 @@ Author: Robert Węcławski
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
-                  <object class="GtkImage" id="image_widget">
+                  <object class="GtkEventBox" id="image_event_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="visible-window">False</property>
+                    <child>
+                      <object class="GtkImage" id="image_widget">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -269,11 +276,11 @@ Author: Robert Węcławski
                 <property name="can-focus">False</property>
                 <property name="spacing">5</property>
                 <child>
-                  <object class="GtkButton" id="turn_90_degree_left_button">
+                  <object class="GtkButton" id="rotate_counterclockwise_button">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
-                    <property name="image">turn_90_degree_left_icon</property>
+                    <property name="image">rotate_counterclockwise_icon</property>
                     <property name="always-show-image">True</property>
                   </object>
                   <packing>
@@ -319,11 +326,11 @@ Author: Robert Węcławski
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="turn_90_degree_right_button">
+                  <object class="GtkButton" id="rotate_clockwise_button">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
-                    <property name="image">turn_90_degree_right_icon</property>
+                    <property name="image">rotate_clockwise_icon</property>
                     <property name="always-show-image">True</property>
                   </object>
                   <packing>

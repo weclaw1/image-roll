@@ -1,9 +1,12 @@
-use gio::{Cancellable, FileExt, FileQueryInfoFlags, FileType};
+use std::path::PathBuf;
+
+use gio::{Cancellable, FileExt, FileMonitorFlags, FileQueryInfoFlags, FileType};
 
 pub struct FileList {
     file_list: Vec<gio::FileInfo>,
     current_file: Option<(usize, gio::File)>,
     current_folder: Option<gio::File>,
+    current_folder_monitor: Option<gio::FileMonitor>,
 }
 
 impl FileList {
@@ -15,17 +18,22 @@ impl FileList {
                 .iter()
                 .position(|file| file.get_name() == current_file.get_basename())
                 .unwrap();
+            let folder_monitor = current_folder
+                .monitor_directory::<Cancellable>(FileMonitorFlags::NONE, None)
+                .expect("Couldn't get monitor for directory");
 
             FileList {
                 file_list,
                 current_file: Some((current_file_index, current_file)),
                 current_folder: Some(current_folder),
+                current_folder_monitor: Some(folder_monitor),
             }
         } else {
             FileList {
                 file_list: Vec::new(),
                 current_file: None,
                 current_folder: None,
+                current_folder_monitor: None,
             }
         }
     }
@@ -111,12 +119,18 @@ impl FileList {
         }
     }
 
-    pub fn current_folder(&self) -> Option<&gio::File> {
-        self.current_folder.as_ref()
-    }
+    // pub fn current_folder(&self) -> Option<&gio::File> {
+    //     self.current_folder.as_ref()
+    // }
 
     pub fn current_file(&self) -> Option<&gio::File> {
         self.current_file.as_ref().map(|(_, file)| file)
+    }
+
+    pub fn current_file_path(&self) -> Option<PathBuf> {
+        self.current_file
+            .as_ref()
+            .map(|(_, file)| file.get_path().unwrap())
     }
 
     pub fn len(&self) -> usize {
@@ -136,5 +150,9 @@ impl FileList {
                     .starts_with("image")
             })
             .collect()
+    }
+
+    pub fn current_folder_monitor_mut(&mut self) -> Option<&mut gio::FileMonitor> {
+        self.current_folder_monitor.as_mut()
     }
 }
