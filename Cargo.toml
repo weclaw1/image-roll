@@ -10,6 +10,7 @@ edition = "2018"
 glib = "0.10.3"
 gdk = "0.13.2"
 gdk-pixbuf = "0.9.0"
+cairo-rs = "0.9.1"
 approx = "0.4.0"
 
 [dependencies.gtk]

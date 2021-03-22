@@ -123,9 +123,9 @@ impl FileList {
     //     self.current_folder.as_ref()
     // }
 
-    pub fn current_file(&self) -> Option<&gio::File> {
-        self.current_file.as_ref().map(|(_, file)| file)
-    }
+    // pub fn current_file(&self) -> Option<&gio::File> {
+    //     self.current_file.as_ref().map(|(_, file)| file)
+    // }
 
     pub fn current_file_path(&self) -> Option<PathBuf> {
         self.current_file

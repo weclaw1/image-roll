@@ -48,6 +48,13 @@ impl ImageList {
             .map(move |image_path| self.images.get_mut(&image_path))
             .flatten()
     }
+
+    pub fn current_image(&self) -> Option<&Image> {
+        self.current_image_path
+            .as_ref()
+            .map(|image_path| self.images.get(image_path))
+            .flatten()
+    }
 }
 
 impl Index<&PathBuf> for ImageList {

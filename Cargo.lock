@@ -398,6 +398,7 @@ name = "image-roll"
 version = "0.1.0"
 dependencies = [
  "approx",
+ "cairo-rs",
  "gdk",
  "gdk-pixbuf",
  "gio",

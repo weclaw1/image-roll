@@ -5,6 +5,9 @@ use gdk_pixbuf::{InterpType, Pixbuf};
 
 use crate::image_operation::{ApplyImageOperation, ImageOperation};
 
+pub type Coordinates = (i32, i32);
+pub type CoordinatesPair = (Coordinates, Coordinates);
+
 pub struct Image {
     image_buffer: Option<Pixbuf>,
     preview_image_buffer: Option<Pixbuf>,
@@ -28,7 +31,7 @@ impl Image {
             .operations
             .iter()
             .fold(image_buffer, |image, operation| {
-                image.apply_operation(operation)
+                image.apply_operation(operation).unwrap_or(image)
             });
         let preview_image_buffer = image_buffer.clone();
         Image {
@@ -90,19 +93,56 @@ impl Image {
         self.preview_image_buffer.as_ref()
     }
 
-    pub fn preview_image_buffer_size(&self) -> Option<(i32, i32)> {
+    pub fn image_size(&self) -> Option<Coordinates> {
+        self.image_buffer
+            .as_ref()
+            .map(|image_buffer| (image_buffer.get_width(), image_buffer.get_height()))
+    }
+
+    pub fn preview_image_buffer_size(&self) -> Option<Coordinates> {
         self.preview_image_buffer
             .as_ref()
             .map(|image_buffer| (image_buffer.get_width(), image_buffer.get_height()))
     }
+
+    pub fn preview_coords_to_image_coords(
+        &self,
+        coords: CoordinatesPair,
+    ) -> Option<CoordinatesPair> {
+        let ((start_coord_x, start_coord_y), (end_coord_x, end_coord_y)) = coords;
+        if let Some((image_width, image_height)) = self.image_size() {
+            if let Some((preview_width, preview_height)) = self.preview_image_buffer_size() {
+                Some((
+                    (
+                        (start_coord_x as f32 * (image_width as f32 / preview_width as f32)) as i32,
+                        (start_coord_y as f32 * (image_height as f32 / preview_height as f32))
+                            as i32,
+                    ),
+                    (
+                        (end_coord_x as f32 * (image_width as f32 / preview_width as f32)) as i32,
+                        (end_coord_y as f32 * (image_height as f32 / preview_height as f32)) as i32,
+                    ),
+                ))
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
 }
 
 impl ApplyImageOperation for Image {
-    fn apply_operation(mut self, image_operation: &ImageOperation) -> Image {
-        self.image_buffer = self
-            .image_buffer
-            .map(|buffer| buffer.apply_operation(image_operation));
-        self.operations.push(*image_operation);
+    type Result = Self;
+
+    fn apply_operation(mut self, image_operation: &ImageOperation) -> Self::Result {
+        if let Some(image_buffer) = self.image_buffer {
+            let applied_operation_image_buffer = image_buffer.apply_operation(image_operation);
+            if applied_operation_image_buffer.is_some() {
+                self.operations.push(*image_operation);
+            }
+            self.image_buffer = Some(applied_operation_image_buffer.unwrap_or(image_buffer));
+        }
         self
     }
 }

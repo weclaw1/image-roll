@@ -307,6 +307,7 @@ Author: Robert Węcławski
                 </child>
                 <child>
                   <object class="GtkMenuButton" id="resize_button">
+                    <property name="related-action"/>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="focus-on-click">False</property>
