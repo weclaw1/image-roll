@@ -42,84 +42,15 @@ Author: Robert Węcławski
     <property name="can-focus">False</property>
     <property name="pixbuf">crop_icon.svg</property>
   </object>
+  <object class="GtkAdjustment" id="height_adjustment">
+    <property name="upper">2147483647</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkImage" id="link_aspect_ratio_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">insert-link</property>
-  </object>
-  <object class="GtkPopover" id="resize_popover">
-    <property name="can-focus">False</property>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="spacing">3</property>
-        <child>
-          <object class="GtkToggleButton" id="link_aspect_ratio_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="image">link_aspect_ratio_icon</property>
-            <property name="always-show-image">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinButton" id="height_spin_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="width-chars">4</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="x_label">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">x</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinButton" id="width_spin_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="width-chars">4</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="apply_resize_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="image">apply_icon</property>
-            <property name="always-show-image">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-      </object>
-    </child>
   </object>
   <object class="GtkImage" id="next_icon">
     <property name="visible">True</property>
@@ -207,6 +138,93 @@ Author: Robert Węcławski
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">object-rotate-left</property>
+  </object>
+  <object class="GtkAdjustment" id="width_adjustment">
+    <property name="upper">2147483647</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkPopover" id="resize_popover">
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="spacing">3</property>
+        <child>
+          <object class="GtkToggleButton" id="link_aspect_ratio_button">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="image">link_aspect_ratio_icon</property>
+            <property name="always-show-image">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="width_spin_button">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="width-chars">4</property>
+            <property name="input-purpose">number</property>
+            <property name="adjustment">width_adjustment</property>
+            <property name="climb-rate">0.5</property>
+            <property name="numeric">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="x_label">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">x</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="height_spin_button">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="width-chars">4</property>
+            <property name="input-purpose">number</property>
+            <property name="adjustment">height_adjustment</property>
+            <property name="climb-rate">0.5</property>
+            <property name="numeric">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="apply_resize_button">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="image">apply_icon</property>
+            <property name="always-show-image">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+      </object>
+    </child>
   </object>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can-focus">False</property>

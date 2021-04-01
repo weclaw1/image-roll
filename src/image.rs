@@ -93,13 +93,18 @@ impl Image {
         self.preview_image_buffer.as_ref()
     }
 
-    pub fn image_size(&self) -> Option<Coordinates> {
+    pub fn image_size(&self) -> Option<(i32, i32)> {
         self.image_buffer
             .as_ref()
             .map(|image_buffer| (image_buffer.get_width(), image_buffer.get_height()))
     }
 
-    pub fn preview_image_buffer_size(&self) -> Option<Coordinates> {
+    pub fn image_aspect_ratio(&self) -> Option<f64> {
+        self.image_size()
+            .map(|(image_width, image_height)| image_width as f64 / image_height as f64)
+    }
+
+    pub fn preview_image_buffer_size(&self) -> Option<(i32, i32)> {
         self.preview_image_buffer
             .as_ref()
             .map(|image_buffer| (image_buffer.get_width(), image_buffer.get_height()))

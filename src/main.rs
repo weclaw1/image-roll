@@ -114,6 +114,21 @@ fn build_ui(application: &gtk::Application) {
         .expect("Couldn't get resize_button");
     resize_button.set_sensitive(false);
 
+    let width_spin_button: gtk::SpinButton = builder
+        .get_object("width_spin_button")
+        .expect("Couldn't get width_spin_button");
+    let height_spin_button: gtk::SpinButton = builder
+        .get_object("height_spin_button")
+        .expect("Couldn't get height_spin_button");
+
+    let link_aspect_ratio_button: gtk::ToggleButton = builder
+        .get_object("link_aspect_ratio_button")
+        .expect("Couldn't get link_aspect_ratio_button");
+
+    let apply_resize_button: gtk::Button = builder
+        .get_object("apply_resize_button")
+        .expect("Couldn't get apply_resize_button");
+
     let settings: Rc<RefCell<Settings>> =
         Rc::new(RefCell::new(Settings::new(PreviewSize::BestFit(
             image_viewport.get_allocation().width,
@@ -126,7 +141,7 @@ fn build_ui(application: &gtk::Application) {
 
     let selection_coords: Rc<Cell<Option<CoordinatesPair>>> = Rc::new(Cell::new(None));
 
-    open_menu_button.connect_clicked(glib::clone!(@strong window, @strong popover_menu, @strong file_list, @strong image_widget, @strong image_list, @strong next_button, @strong previous_button, @strong rotate_clockwise_button, @strong rotate_counterclockwise_button, @strong crop_button, @strong settings => move |_| {
+    open_menu_button.connect_clicked(glib::clone!(@strong window, @strong popover_menu, @strong file_list, @strong image_widget, @strong image_list, @strong next_button, @strong previous_button, @strong rotate_clockwise_button, @strong rotate_counterclockwise_button, @strong crop_button, @strong resize_button, @strong settings => move |_| {
         popover_menu.popdown();
         let file_chooser = gtk::FileChooserDialog::new(
             Some("Open file"),
@@ -138,7 +153,7 @@ fn build_ui(application: &gtk::Application) {
             ("Open", gtk::ResponseType::Ok),
             ("Cancel", gtk::ResponseType::Cancel),
         ]);
-        file_chooser.connect_response(glib::clone!(@strong image_widget, @strong file_list, @strong image_list, @strong next_button, @strong previous_button, @strong rotate_clockwise_button, @strong rotate_counterclockwise_button, @strong crop_button, @strong settings => move |file_chooser, response| {
+        file_chooser.connect_response(glib::clone!(@strong image_widget, @strong file_list, @strong image_list, @strong next_button, @strong previous_button, @strong rotate_clockwise_button, @strong rotate_counterclockwise_button, @strong crop_button, @strong resize_button, @strong settings => move |file_chooser, response| {
             if response == gtk::ResponseType::Ok {
                 image_list.replace(ImageList::new());
                 let file = file_chooser.get_file().expect("Couldn't get file");
@@ -152,8 +167,9 @@ fn build_ui(application: &gtk::Application) {
                 rotate_counterclockwise_button.set_sensitive(buttons_active);
                 rotate_clockwise_button.set_sensitive(buttons_active);
                 crop_button.set_sensitive(buttons_active);
+                resize_button.set_sensitive(buttons_active);
 
-                new_file_list.current_folder_monitor_mut().unwrap().connect_changed(glib::clone!(@strong file_list, @strong image_widget, @strong image_list, @strong next_button, @strong previous_button, @strong rotate_clockwise_button, @strong rotate_counterclockwise_button, @strong crop_button, @strong settings => move |_, _, _, _| {
+                new_file_list.current_folder_monitor_mut().unwrap().connect_changed(glib::clone!(@strong file_list, @strong image_widget, @strong image_list, @strong next_button, @strong previous_button, @strong rotate_clockwise_button, @strong rotate_counterclockwise_button, @strong crop_button, @strong resize_button, @strong settings => move |_, _, _, _| {
                     let mut file_list = file_list.borrow_mut();
 
                     file_list.refresh();
@@ -164,6 +180,7 @@ fn build_ui(application: &gtk::Application) {
                     rotate_counterclockwise_button.set_sensitive(buttons_active);
                     rotate_clockwise_button.set_sensitive(buttons_active);
                     crop_button.set_sensitive(buttons_active);
+                    resize_button.set_sensitive(buttons_active);
 
                     load_image(&settings.borrow(), file_list.current_file_path(), &image_widget, &mut image_list.borrow_mut());
                 }));
@@ -309,7 +326,7 @@ fn build_ui(application: &gtk::Application) {
         gtk::Inhibit(false)
     }));
 
-    image_event_box.connect_button_release_event(glib::clone!(@strong image_widget, @strong file_list, @strong image_list, @strong selection_coords, @strong crop_button => move |image_event_box, _| {
+    image_event_box.connect_button_release_event(glib::clone!(@strong settings, @strong image_widget, @strong file_list, @strong image_list, @strong selection_coords, @strong crop_button => move |image_event_box, _| {
         if !crop_button.get_active() {
             return gtk::Inhibit(false)
         }
@@ -349,6 +366,49 @@ fn build_ui(application: &gtk::Application) {
             }
         }
         gtk::Inhibit(false)
+    }));
+
+    resize_button.connect_toggled(glib::clone!(@strong width_spin_button, @strong height_spin_button, @strong image_list => move |resize_button| {
+        if resize_button.get_active() {
+            let image_list = image_list.borrow();
+            if let Some(current_image) = image_list.current_image() {
+                let (image_width, image_height) = current_image.image_size().unwrap();
+                width_spin_button.set_value(image_width as f64);
+                height_spin_button.set_value(image_height as f64);
+            }
+        }
+    }));
+
+    width_spin_button.connect_value_changed(glib::clone!(@strong height_spin_button, @strong link_aspect_ratio_button, @strong image_list => move |width_spin_button| {
+        if link_aspect_ratio_button.get_active() {
+            let image_list = image_list.borrow();
+            if let Some(current_image) = image_list.current_image() {
+                let aspect_ratio = current_image.image_aspect_ratio().unwrap();
+                let new_width = width_spin_button.get_value();
+                height_spin_button.set_value(new_width / aspect_ratio);
+            }
+        }
+    }));
+
+    height_spin_button.connect_value_changed(glib::clone!(@strong width_spin_button, @strong link_aspect_ratio_button, @strong image_list => move |height_spin_button| {
+        if link_aspect_ratio_button.get_active() {
+            let image_list = image_list.borrow();
+            if let Some(current_image) = image_list.current_image() {
+                let aspect_ratio = current_image.image_aspect_ratio().unwrap();
+                let new_height = height_spin_button.get_value();
+                width_spin_button.set_value(new_height * aspect_ratio);
+            }
+        }
+    }));
+
+    apply_resize_button.connect_clicked(glib::clone!(@strong settings, @strong width_spin_button, @strong height_spin_button, @strong image_list, @strong image_widget, @strong file_list => move |_| {
+        let mut image_list = image_list.borrow_mut();
+        if let Some(mut current_image) = image_list.remove_current_image() {
+            current_image = current_image.apply_operation(&ImageOperation::Resize((width_spin_button.get_value() as i32, height_spin_button.get_value() as i32)));
+            current_image.create_preview_image_buffer(settings.borrow().scale());
+            image_widget.set_from_pixbuf(current_image.preview_image_buffer());
+            image_list.insert(file_list.borrow().current_file_path().unwrap(), current_image);
+        }
     }));
 
     window.show_all();

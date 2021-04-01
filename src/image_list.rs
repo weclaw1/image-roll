@@ -1,7 +1,7 @@
 use std::{
     collections::HashMap,
     ops::{Index, IndexMut},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use crate::image::Image;
@@ -19,7 +19,7 @@ impl ImageList {
         }
     }
 
-    pub fn remove(&mut self, key: &PathBuf) -> Option<Image> {
+    pub fn remove(&mut self, key: &Path) -> Option<Image> {
         self.images.remove(key)
     }
 

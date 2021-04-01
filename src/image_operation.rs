@@ -1,6 +1,6 @@
 use std::cmp;
 
-use gdk_pixbuf::{Pixbuf, PixbufRotation};
+use gdk_pixbuf::{InterpType, Pixbuf, PixbufRotation};
 
 use crate::image::CoordinatesPair;
 
@@ -8,6 +8,7 @@ use crate::image::CoordinatesPair;
 pub enum ImageOperation {
     Rotate(PixbufRotation),
     Crop(CoordinatesPair),
+    Resize((i32, i32)),
 }
 
 pub trait ApplyImageOperation {
@@ -31,6 +32,9 @@ impl ApplyImageOperation for &Pixbuf {
                 let width = *cmp::max(start_position_x, end_position_x) - x;
                 let height = *cmp::max(start_position_y, end_position_y) - y;
                 self.new_subpixbuf(x, y, width, height)
+            }
+            ImageOperation::Resize((width, height)) => {
+                self.scale_simple(*width, *height, InterpType::Bilinear)
             }
         }
     }
