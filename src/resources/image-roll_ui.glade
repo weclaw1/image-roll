@@ -239,6 +239,58 @@ Author: Robert Węcławski
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
+          <object class="GtkInfoBar" id="error_info_bar">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="message-type">error</property>
+            <property name="show-close-button">True</property>
+            <property name="revealed">False</property>
+            <child internal-child="action_area">
+              <object class="GtkButtonBox">
+                <property name="can-focus">False</property>
+                <property name="spacing">6</property>
+                <property name="layout-style">end</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child internal-child="content_area">
+              <object class="GtkBox">
+                <property name="can-focus">False</property>
+                <property name="spacing">16</property>
+                <child>
+                  <object class="GtkLabel" id="error_text_label">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Error message</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkScrolledWindow" id="image_scrolled_window">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
@@ -268,7 +320,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -384,7 +436,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
