@@ -265,10 +265,10 @@ Author: Robert Węcławski
                 <property name="can-focus">False</property>
                 <property name="spacing">16</property>
                 <child>
-                  <object class="GtkLabel" id="error_text_label">
+                  <object class="GtkLabel" id="error_info_bar_text">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Error message</property>
+                    <property name="label" translatable="yes">ERROR</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>

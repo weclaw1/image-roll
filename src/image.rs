@@ -3,6 +3,8 @@ use std::path::Path;
 use approx::abs_diff_eq;
 use gdk_pixbuf::{InterpType, Pixbuf};
 
+use anyhow::Result;
+
 use crate::image_operation::{ApplyImageOperation, ImageOperation};
 
 pub type Coordinates = (i32, i32);
@@ -15,18 +17,18 @@ pub struct Image {
 }
 
 impl Image {
-    pub fn load<P: AsRef<Path>>(path: P) -> Image {
-        let image_buffer = Pixbuf::from_file(path).expect("Couldn't load image");
+    pub fn load<P: AsRef<Path>>(path: P) -> Result<Image> {
+        let image_buffer = Pixbuf::from_file(path)?;
         let preview_image_buffer = image_buffer.clone();
-        Image {
+        Ok(Image {
             image_buffer: Some(image_buffer),
             preview_image_buffer: Some(preview_image_buffer),
             operations: Vec::new(),
-        }
+        })
     }
 
-    pub fn reload<P: AsRef<Path>>(self, path: P) -> Image {
-        let mut image_buffer = Pixbuf::from_file(path).expect("Couldn't load image");
+    pub fn reload<P: AsRef<Path>>(self, path: P) -> Result<Image> {
+        let mut image_buffer = Pixbuf::from_file(path)?;
         image_buffer = self
             .operations
             .iter()
@@ -34,11 +36,11 @@ impl Image {
                 image.apply_operation(operation).unwrap_or(image)
             });
         let preview_image_buffer = image_buffer.clone();
-        Image {
+        Ok(Image {
             image_buffer: Some(image_buffer),
             preview_image_buffer: Some(preview_image_buffer),
             operations: self.operations,
-        }
+        })
     }
 
     // pub fn image_buffer(&self) -> &Pixbuf {

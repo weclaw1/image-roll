@@ -397,6 +397,7 @@ dependencies = [
 name = "image-roll"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "approx",
  "cairo-rs",
  "gdk",

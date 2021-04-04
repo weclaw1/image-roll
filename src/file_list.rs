@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use gio::{Cancellable, FileExt, FileMonitorFlags, FileQueryInfoFlags, FileType};
 
+use anyhow::{anyhow, Context, Result};
+
 pub struct FileList {
     file_list: Vec<gio::FileInfo>,
     current_file: Option<(usize, gio::File)>,
@@ -10,43 +12,53 @@ pub struct FileList {
 }
 
 impl FileList {
-    pub fn new(current_file: Option<gio::File>) -> FileList {
+    pub fn new(current_file: Option<gio::File>) -> Result<FileList> {
         if let Some(current_file) = current_file {
-            let current_folder = current_file.get_parent().unwrap();
-            let file_list: Vec<gio::FileInfo> = FileList::enumerate_files(&current_folder);
+            let current_folder = current_file.get_parent().ok_or_else(|| {
+                anyhow!(
+                    "Couldn't get parent folder for file: {}",
+                    current_file.get_parse_name().unwrap()
+                )
+            })?;
+            let file_list: Vec<gio::FileInfo> = FileList::enumerate_files(&current_folder)?;
             let current_file_index = file_list
                 .iter()
                 .position(|file| file.get_name() == current_file.get_basename())
-                .unwrap();
+                .ok_or_else(|| {
+                    anyhow!(
+                        "Couldn't find {} in enumerated files",
+                        current_file.get_parse_name().unwrap()
+                    )
+                })?;
             let folder_monitor = current_folder
                 .monitor_directory::<Cancellable>(FileMonitorFlags::NONE, None)
-                .expect("Couldn't get monitor for directory");
+                .context("Couldn't get monitor for current file directory")?;
 
-            FileList {
+            Ok(FileList {
                 file_list,
                 current_file: Some((current_file_index, current_file)),
                 current_folder: Some(current_folder),
                 current_folder_monitor: Some(folder_monitor),
-            }
+            })
         } else {
-            FileList {
+            Ok(FileList {
                 file_list: Vec::new(),
                 current_file: None,
                 current_folder: None,
                 current_folder_monitor: None,
-            }
+            })
         }
     }
 
-    pub fn refresh(&mut self) {
+    pub fn refresh(&mut self) -> Result<()> {
         if let Some(current_folder) = &self.current_folder {
             if !current_folder.query_exists::<Cancellable>(None) {
                 self.file_list = Vec::new();
                 self.current_file = None;
                 self.current_folder = None;
-                return;
+                return Ok(());
             }
-            self.file_list = FileList::enumerate_files(&current_folder);
+            self.file_list = FileList::enumerate_files(&current_folder)?;
 
             match &self.current_file {
                 Some((_, current_file)) => {
@@ -57,15 +69,16 @@ impl FileList {
                     if let Some(file_index) = file_index {
                         self.current_file = Some((file_index, self.current_file.take().unwrap().1));
                     } else {
-                        self.next();
+                        self.next()?;
                     }
                 }
-                None => self.next(),
+                None => self.next()?,
             }
         }
+        Ok(())
     }
 
-    pub fn next(&mut self) {
+    pub fn next(&mut self) -> Result<()> {
         if let Some(current_folder) = &self.current_folder {
             self.current_file = match self.current_file.take() {
                 Some((_, _)) if self.file_list.is_empty() => None,
@@ -73,26 +86,27 @@ impl FileList {
                     index + 1,
                     current_folder
                         .get_child(self.file_list[index + 1].get_name().unwrap())
-                        .unwrap(),
+                        .ok_or_else(|| anyhow!("Couldn't load next file"))?,
                 )),
                 Some((index, _)) if index + 1 >= self.file_list.len() => Some((
                     0,
                     current_folder
                         .get_child(self.file_list[0].get_name().unwrap())
-                        .unwrap(),
+                        .ok_or_else(|| anyhow!("Couldn't load next file"))?,
                 )),
                 None if !self.file_list.is_empty() => Some((
                     0,
                     current_folder
                         .get_child(self.file_list[0].get_name().unwrap())
-                        .unwrap(),
+                        .ok_or_else(|| anyhow!("Couldn't load next file"))?,
                 )),
                 _ => None,
             }
         }
+        Ok(())
     }
 
-    pub fn previous(&mut self) {
+    pub fn previous(&mut self) -> Result<()> {
         if let Some(current_folder) = &self.current_folder {
             self.current_file = match self.current_file.take() {
                 Some((_, _)) if self.file_list.is_empty() => None,
@@ -100,23 +114,24 @@ impl FileList {
                     index - 1,
                     current_folder
                         .get_child(self.file_list[index - 1].get_name().unwrap())
-                        .unwrap(),
+                        .ok_or_else(|| anyhow!("Couldn't load previous file"))?,
                 )),
                 Some((index, _)) if index as i64 - 1 < 0 => Some((
                     self.file_list.len() - 1,
                     current_folder
                         .get_child(self.file_list[self.file_list.len() - 1].get_name().unwrap())
-                        .unwrap(),
+                        .ok_or_else(|| anyhow!("Couldn't load previous file"))?,
                 )),
                 None if !self.file_list.is_empty() => Some((
                     0,
                     current_folder
                         .get_child(self.file_list[0].get_name().unwrap())
-                        .unwrap(),
+                        .ok_or_else(|| anyhow!("Couldn't load previous file"))?,
                 )),
                 _ => None,
             }
         }
+        Ok(())
     }
 
     // pub fn current_folder(&self) -> Option<&gio::File> {
@@ -130,17 +145,17 @@ impl FileList {
     pub fn current_file_path(&self) -> Option<PathBuf> {
         self.current_file
             .as_ref()
-            .map(|(_, file)| file.get_path().unwrap())
+            .map(|(_, file)| file.get_path())
+            .flatten()
     }
 
     pub fn len(&self) -> usize {
         self.file_list.len()
     }
 
-    fn enumerate_files(folder: &gio::File) -> Vec<gio::FileInfo> {
-        folder
-            .enumerate_children::<Cancellable>("", FileQueryInfoFlags::NONE, None)
-            .unwrap()
+    fn enumerate_files(folder: &gio::File) -> Result<Vec<gio::FileInfo>> {
+        Ok(folder
+            .enumerate_children::<Cancellable>("", FileQueryInfoFlags::NONE, None)?
             .into_iter()
             .filter_map(|file| file.ok())
             .filter(|file| file.get_file_type() == FileType::Regular)
@@ -149,7 +164,7 @@ impl FileList {
                     .0
                     .starts_with("image")
             })
-            .collect()
+            .collect())
     }
 
     pub fn current_folder_monitor_mut(&mut self) -> Option<&mut gio::FileMonitor> {

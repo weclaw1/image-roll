@@ -7,6 +7,8 @@ use gtk::{prelude::*, Builder};
 
 use widgets::Widgets;
 
+use anyhow::anyhow;
+
 use std::{
     cell::{Cell, RefCell},
     path::PathBuf,
@@ -20,24 +22,47 @@ use crate::settings::Settings;
 use crate::{file_list::FileList, image};
 
 fn load_image(
+    widgets: &Widgets,
     settings: &Settings,
     file_path: Option<PathBuf>,
-    image_widget: &gtk::Image,
     image_list: &mut ImageList,
 ) {
     if let Some(file_path) = &file_path {
-        let mut image = if let Some(image) = image_list.remove(&file_path) {
+        let image = if let Some(image) = image_list.remove(&file_path) {
             image.reload(file_path)
         } else {
             image::Image::load(file_path)
         };
+        let mut image = match image {
+            Ok(image) => image,
+            Err(error) => {
+                widgets.image_widget().set_from_pixbuf(None);
+                display_error(
+                    widgets.error_info_bar(),
+                    widgets.error_info_bar_text(),
+                    error,
+                );
+                return;
+            }
+        };
         image.create_preview_image_buffer(settings.scale());
-        image_widget.set_from_pixbuf(image.preview_image_buffer());
+        widgets
+            .image_widget()
+            .set_from_pixbuf(image.preview_image_buffer());
         image_list.insert(file_path.clone(), image);
     } else {
-        image_widget.set_from_pixbuf(None);
+        widgets.image_widget().set_from_pixbuf(None);
     }
     image_list.set_current_image_path(file_path);
+}
+
+fn display_error(
+    error_info_bar: &gtk::InfoBar,
+    error_info_bar_text: &gtk::Label,
+    error: anyhow::Error,
+) {
+    error_info_bar_text.set_text(&format!("ERROR: {:#}", error));
+    error_info_bar.set_revealed(true);
 }
 
 pub fn build_ui(application: &gtk::Application) {
@@ -51,7 +76,7 @@ pub fn build_ui(application: &gtk::Application) {
 
     let image_list: Rc<RefCell<ImageList>> = Rc::new(RefCell::new(ImageList::new()));
 
-    let file_list: Rc<RefCell<FileList>> = Rc::new(RefCell::new(FileList::new(None)));
+    let file_list: Rc<RefCell<FileList>> = Rc::new(RefCell::new(FileList::new(None).unwrap()));
 
     let selection_coords: Rc<Cell<Option<CoordinatesPair>>> = Rc::new(Cell::new(None));
 
@@ -75,11 +100,26 @@ pub fn build_ui(application: &gtk::Application) {
         ]);
         file_chooser.connect_response(glib::clone!(@strong widgets, @strong file_list, @strong image_list, @strong settings => move |file_chooser, response| {
             if response == gtk::ResponseType::Ok {
+                file_chooser.close();
+                widgets.error_info_bar().set_revealed(false);
                 image_list.replace(ImageList::new());
-                let file = file_chooser.get_file().expect("Couldn't get file");
-                load_image(&settings.borrow(), file.get_path(), widgets.image_widget(), &mut image_list.borrow_mut());
+                let file = if let Some(file) = file_chooser.get_file() {
+                    file
+                } else {
+                    file_chooser.close();
+                    display_error(widgets.error_info_bar(), widgets.error_info_bar_text(), anyhow!("Couldn't load file"));
+                    return;
+                };
+                load_image(&widgets, &settings.borrow(), file.get_path(), &mut image_list.borrow_mut());
 
-                let mut new_file_list = FileList::new(Some(file));
+                let mut new_file_list = match FileList::new(Some(file)) {
+                    Ok(file_list) => file_list,
+                    Err(error) => {
+                        file_chooser.close();
+                        display_error(widgets.error_info_bar(), widgets.error_info_bar_text(), error);
+                        return;
+                    },
+                };
                 let buttons_active = new_file_list.len() > 1;
 
                 widgets.next_button().set_sensitive(buttons_active);
@@ -90,9 +130,16 @@ pub fn build_ui(application: &gtk::Application) {
                 widgets.resize_button().set_sensitive(buttons_active);
 
                 new_file_list.current_folder_monitor_mut().unwrap().connect_changed(glib::clone!(@strong widgets, @strong file_list, @strong image_list, @strong settings => move |_, _, _, _| {
+                    widgets.error_info_bar().set_revealed(false);
                     let mut file_list = file_list.borrow_mut();
 
-                    file_list.refresh();
+                    match file_list.refresh() {
+                        Ok(_) => (),
+                        Err(error) => {
+                            display_error(widgets.error_info_bar(), widgets.error_info_bar_text(), error);
+                            return;
+                        },
+                    };
                     let buttons_active = file_list.len() > 1;
 
                     widgets.next_button().set_sensitive(buttons_active);
@@ -102,12 +149,11 @@ pub fn build_ui(application: &gtk::Application) {
                     widgets.crop_button().set_sensitive(buttons_active);
                     widgets.resize_button().set_sensitive(buttons_active);
 
-                    load_image(&settings.borrow(), file_list.current_file_path(), widgets.image_widget(), &mut image_list.borrow_mut());
+                    load_image(&widgets, &settings.borrow(), file_list.current_file_path(), &mut image_list.borrow_mut());
                 }));
 
                 file_list.replace(new_file_list);
             }
-            file_chooser.close();
         }));
         file_chooser.show_all();
     }));
@@ -117,8 +163,14 @@ pub fn build_ui(application: &gtk::Application) {
             let mut file_list = file_list.borrow_mut();
             let mut image_list = image_list.borrow_mut();
             image_list.current_image_mut().unwrap().remove_image_buffers();
-            file_list.next();
-            load_image(&settings.borrow(), file_list.current_file_path(), widgets.image_widget(), &mut image_list);
+            match file_list.next() {
+                Ok(_) => (),
+                Err(error) => {
+                    display_error(widgets.error_info_bar(), widgets.error_info_bar_text(), error);
+                    return;
+                },
+            };
+            load_image(&widgets, &settings.borrow(), file_list.current_file_path(), &mut image_list);
         }),
     );
 
@@ -127,8 +179,14 @@ pub fn build_ui(application: &gtk::Application) {
             let mut file_list = file_list.borrow_mut();
             let mut image_list = image_list.borrow_mut();
             image_list.current_image_mut().unwrap().remove_image_buffers();
-            file_list.previous();
-            load_image(&settings.borrow(), file_list.current_file_path(), widgets.image_widget(), &mut image_list);
+            match file_list.previous() {
+                Ok(_) => (),
+                Err(error) => {
+                    display_error(widgets.error_info_bar(), widgets.error_info_bar_text(), error);
+                    return;
+                },
+            };
+            load_image(&widgets, &settings.borrow(), file_list.current_file_path(), &mut image_list);
         }),
     );
 
@@ -340,6 +398,14 @@ pub fn build_ui(application: &gtk::Application) {
             image_list.insert(file_list.borrow().current_file_path().unwrap(), current_image);
         }
     }));
+
+    widgets
+        .error_info_bar()
+        .connect_response(|error_info_bar, response| {
+            if response == gtk::ResponseType::Close {
+                error_info_bar.set_revealed(false);
+            }
+        });
 
     widgets.window().show_all();
 }

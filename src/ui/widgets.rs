@@ -21,6 +21,8 @@ pub struct Widgets {
     height_spin_button: gtk::SpinButton,
     link_aspect_ratio_button: gtk::ToggleButton,
     apply_resize_button: gtk::Button,
+    error_info_bar: gtk::InfoBar,
+    error_info_bar_text: gtk::Label,
 }
 
 impl Widgets {
@@ -99,6 +101,14 @@ impl Widgets {
             .get_object("apply_resize_button")
             .expect("Couldn't get apply_resize_button");
 
+        let error_info_bar: gtk::InfoBar = builder
+            .get_object("error_info_bar")
+            .expect("Couldn't get error_info_bar");
+
+        let error_info_bar_text: gtk::Label = builder
+            .get_object("error_info_bar_text")
+            .expect("Couldn't get error_info_bar_text");
+
         Self {
             window,
             open_menu_button,
@@ -119,6 +129,8 @@ impl Widgets {
             height_spin_button,
             link_aspect_ratio_button,
             apply_resize_button,
+            error_info_bar,
+            error_info_bar_text,
         }
     }
 
@@ -215,5 +227,15 @@ impl Widgets {
     /// Get a reference to the widgets's apply resize button.
     pub fn apply_resize_button(&self) -> &gtk::Button {
         &self.apply_resize_button
+    }
+
+    /// Get a reference to the widgets's error info bar.
+    pub fn error_info_bar(&self) -> &gtk::InfoBar {
+        &self.error_info_bar
+    }
+
+    /// Get a reference to the widgets's error info bar text.
+    pub fn error_info_bar_text(&self) -> &gtk::Label {
+        &self.error_info_bar_text
     }
 }
