@@ -80,6 +80,21 @@ Author: Robert Węcławski
           </packing>
         </child>
         <child>
+          <object class="GtkButton" id="save_menu_button">
+            <property name="label" translatable="yes">Save</property>
+            <property name="visible">True</property>
+            <property name="sensitive">False</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkButton" id="print_menu_button">
             <property name="label" translatable="yes">Print</property>
             <property name="visible">True</property>
@@ -90,7 +105,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -104,7 +119,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>

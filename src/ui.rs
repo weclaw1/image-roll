@@ -47,11 +47,15 @@ fn load_image(
         };
         image.create_preview_image_buffer(settings.scale());
         widgets
+            .save_menu_button()
+            .set_sensitive(image.has_unsaved_operations());
+        widgets
             .image_widget()
             .set_from_pixbuf(image.preview_image_buffer());
         image_list.insert(file_path.clone(), image);
     } else {
         widgets.image_widget().set_from_pixbuf(None);
+        widgets.save_menu_button().set_sensitive(false);
     }
     image_list.set_current_image_path(file_path);
 }
@@ -99,8 +103,8 @@ pub fn build_ui(application: &gtk::Application) {
             ("Cancel", gtk::ResponseType::Cancel),
         ]);
         file_chooser.connect_response(glib::clone!(@strong widgets, @strong file_list, @strong image_list, @strong settings => move |file_chooser, response| {
+            file_chooser.close();
             if response == gtk::ResponseType::Ok {
-                file_chooser.close();
                 widgets.error_info_bar().set_revealed(false);
                 image_list.replace(ImageList::new());
                 let file = if let Some(file) = file_chooser.get_file() {
@@ -252,6 +256,7 @@ pub fn build_ui(application: &gtk::Application) {
             current_image = current_image.apply_operation(&ImageOperation::Rotate(PixbufRotation::Counterclockwise));
             current_image.create_preview_image_buffer(settings.borrow().scale());
             widgets.image_widget().set_from_pixbuf(current_image.preview_image_buffer());
+            widgets.save_menu_button().set_sensitive(current_image.has_unsaved_operations());
             image_list.insert(file_list.borrow().current_file_path().unwrap(), current_image);
         }
     }));
@@ -262,6 +267,7 @@ pub fn build_ui(application: &gtk::Application) {
             current_image = current_image.apply_operation(&ImageOperation::Rotate(PixbufRotation::Clockwise));
             current_image.create_preview_image_buffer(settings.borrow().scale());
             widgets.image_widget().set_from_pixbuf(current_image.preview_image_buffer());
+            widgets.save_menu_button().set_sensitive(current_image.has_unsaved_operations());
             image_list.insert(file_list.borrow().current_file_path().unwrap(), current_image);
         }
     }));
@@ -325,6 +331,7 @@ pub fn build_ui(application: &gtk::Application) {
                 current_image = current_image.apply_operation(&crop_operation);
                 current_image.create_preview_image_buffer(settings.borrow().scale());
                 widgets.image_widget().set_from_pixbuf(current_image.preview_image_buffer());
+                widgets.save_menu_button().set_sensitive(current_image.has_unsaved_operations());
                 image_list.insert(file_list.borrow().current_file_path().unwrap(), current_image);
 
                 widgets.image_widget().queue_draw();
@@ -395,9 +402,29 @@ pub fn build_ui(application: &gtk::Application) {
             current_image = current_image.apply_operation(&ImageOperation::Resize((widgets.width_spin_button().get_value() as i32, widgets.height_spin_button().get_value() as i32)));
             current_image.create_preview_image_buffer(settings.borrow().scale());
             widgets.image_widget().set_from_pixbuf(current_image.preview_image_buffer());
+            widgets.save_menu_button().set_sensitive(current_image.has_unsaved_operations());
             image_list.insert(file_list.borrow().current_file_path().unwrap(), current_image);
         }
     }));
+
+    widgets.save_menu_button().connect_clicked(
+        glib::clone!(@strong widgets, @strong image_list => move |save_menu_button| {
+            widgets.popover_menu().popdown();
+            match image_list.borrow_mut().save_current_image() {
+                Ok(()) => {
+                    save_menu_button.set_sensitive(false);
+                },
+                Err(error) => {
+                    display_error(
+                        widgets.error_info_bar(),
+                        widgets.error_info_bar_text(),
+                        error,
+                    );
+                },
+            };
+
+        }),
+    );
 
     widgets
         .error_info_bar()

@@ -23,6 +23,7 @@ pub struct Widgets {
     apply_resize_button: gtk::Button,
     error_info_bar: gtk::InfoBar,
     error_info_bar_text: gtk::Label,
+    save_menu_button: gtk::Button,
 }
 
 impl Widgets {
@@ -109,6 +110,10 @@ impl Widgets {
             .get_object("error_info_bar_text")
             .expect("Couldn't get error_info_bar_text");
 
+        let save_menu_button: gtk::Button = builder
+            .get_object("save_menu_button")
+            .expect("Couldn't get save_menu_button");
+
         Self {
             window,
             open_menu_button,
@@ -131,6 +136,7 @@ impl Widgets {
             apply_resize_button,
             error_info_bar,
             error_info_bar_text,
+            save_menu_button,
         }
     }
 
@@ -237,5 +243,10 @@ impl Widgets {
     /// Get a reference to the widgets's error info bar text.
     pub fn error_info_bar_text(&self) -> &gtk::Label {
         &self.error_info_bar_text
+    }
+
+    /// Get a reference to the widgets's save menu button.
+    pub fn save_menu_button(&self) -> &gtk::Button {
+        &self.save_menu_button
     }
 }

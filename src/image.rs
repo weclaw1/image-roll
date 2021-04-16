@@ -3,7 +3,7 @@ use std::path::Path;
 use approx::abs_diff_eq;
 use gdk_pixbuf::{InterpType, Pixbuf};
 
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 
 use crate::image_operation::{ApplyImageOperation, ImageOperation};
 
@@ -25,6 +25,38 @@ impl Image {
             preview_image_buffer: Some(preview_image_buffer),
             operations: Vec::new(),
         })
+    }
+
+    pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
+        let image_buffer = self
+            .image_buffer
+            .as_mut()
+            .ok_or_else(|| anyhow!("Couldn't load image buffer"))?;
+        let extension = path
+            .as_ref()
+            .extension()
+            .map(|extension| extension.to_str())
+            .flatten()
+            .ok_or_else(|| anyhow!("File path doesn't have file extension"))?;
+        let lowercase_extension = extension.to_lowercase();
+        let file_type = match lowercase_extension.as_str() {
+            file_type @ "jpeg"
+            | file_type @ "png"
+            | file_type @ "tiff"
+            | file_type @ "ico"
+            | file_type @ "bmp" => file_type,
+            "jpg" => "jpeg",
+            _ => "png",
+        };
+
+        let options: &[(&str, &str)] = match file_type {
+            "jpeg" => &[("quality", "100")],
+            "png" => &[("compression", "9")],
+            _ => &[],
+        };
+        image_buffer.savev(path.as_ref(), file_type, options)?;
+        self.operations.clear();
+        Ok(())
     }
 
     pub fn reload<P: AsRef<Path>>(self, path: P) -> Result<Image> {
@@ -136,6 +168,10 @@ impl Image {
         } else {
             None
         }
+    }
+
+    pub fn has_unsaved_operations(&self) -> bool {
+        !self.operations.is_empty()
     }
 }
 

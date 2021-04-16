@@ -6,6 +6,8 @@ use std::{
 
 use crate::image::Image;
 
+use anyhow::{anyhow, Result};
+
 pub struct ImageList {
     images: HashMap<PathBuf, Image>,
     current_image_path: Option<PathBuf>,
@@ -54,6 +56,14 @@ impl ImageList {
             .as_ref()
             .map(|image_path| self.images.get(image_path))
             .flatten()
+    }
+
+    pub fn save_current_image(&mut self) -> Result<()> {
+        let current_image_path = self.current_image_path.clone();
+        let current_image = self
+            .current_image_mut()
+            .ok_or_else(|| anyhow!("Couldn't load current image"))?;
+        current_image.save(current_image_path.as_ref().unwrap())
     }
 }
 
