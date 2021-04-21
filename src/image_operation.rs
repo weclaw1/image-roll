@@ -4,7 +4,7 @@ use gdk_pixbuf::{InterpType, Pixbuf, PixbufRotation};
 
 use crate::image::CoordinatesPair;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum ImageOperation {
     Rotate(PixbufRotation),
     Crop(CoordinatesPair),

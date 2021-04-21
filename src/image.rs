@@ -190,7 +190,7 @@ impl ApplyImageOperation for Image {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum PreviewSize {
     BestFit(i32, i32),
     OriginalSize,
