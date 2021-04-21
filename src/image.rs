@@ -86,14 +86,14 @@ impl Image {
 
     fn image_buffer_scale_to_fit(&self, canvas_width: i32, canvas_height: i32) -> Option<Pixbuf> {
         if let Some(image_buffer) = &self.image_buffer {
-            let image_width = image_buffer.get_width();
-            let image_height = image_buffer.get_height();
-            let width_ratio = canvas_width as f32 / image_width as f32;
-            let height_ratio = canvas_height as f32 / image_height as f32;
+            let image_width = image_buffer.get_width() as f32;
+            let image_height = image_buffer.get_height() as f32;
+            let width_ratio = canvas_width as f32 / image_width;
+            let height_ratio = canvas_height as f32 / image_height;
             let scale_ratio = width_ratio.min(height_ratio);
             image_buffer.scale_simple(
-                (image_width as f32 * scale_ratio) as i32,
-                (image_height as f32 * scale_ratio) as i32,
+                (image_width * scale_ratio) as i32,
+                (image_height * scale_ratio) as i32,
                 InterpType::Bilinear,
             )
         } else {
