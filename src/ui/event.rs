@@ -13,6 +13,7 @@ pub enum Event {
     ImageEdit(ImageOperation),
     StartSelection((i32, i32)),
     DragSelection((i32, i32)),
+    SetCurrentImageAsWallpaper,
     EndSelection,
     PreviewSmaller,
     PreviewLarger,
@@ -24,6 +25,7 @@ pub enum Event {
     UpdateResizePopoverWidth,
     UpdateResizePopoverHeight,
     SaveCurrentImage,
+    Print,
     DisplayError(anyhow::Error),
     HideErrorPanel,
 }

@@ -75,8 +75,8 @@ impl Image {
         })
     }
 
-    // pub fn image_buffer(&self) -> &Pixbuf {
-    //     &self.image_buffer
+    // pub fn image_buffer(&self) -> Option<&Pixbuf> {
+    //     self.image_buffer.as_ref()
     // }
 
     pub fn remove_image_buffers(&mut self) {
@@ -121,6 +121,22 @@ impl Image {
             PreviewSize::OriginalSize => self.image_buffer.clone(),
             PreviewSize::Resized(scale) => self.image_buffer_resize(scale),
         };
+    }
+
+    pub fn create_print_image_buffer(
+        &self,
+        canvas_width: i32,
+        canvas_height: i32,
+    ) -> Option<Pixbuf> {
+        if let Some((image_width, image_height)) = self.image_size() {
+            if image_width > canvas_width || image_height > canvas_height {
+                self.image_buffer_scale_to_fit(canvas_width, canvas_height)
+            } else {
+                self.image_buffer.clone()
+            }
+        } else {
+            None
+        }
     }
 
     pub fn preview_image_buffer(&self) -> Option<&Pixbuf> {

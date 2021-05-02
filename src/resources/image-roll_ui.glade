@@ -98,6 +98,7 @@ Author: Robert Węcławski
           <object class="GtkButton" id="print_menu_button">
             <property name="label" translatable="yes">Print</property>
             <property name="visible">True</property>
+            <property name="sensitive">False</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="relief">none</property>
@@ -112,6 +113,7 @@ Author: Robert Węcławski
           <object class="GtkButton" id="set_as_wallpaper_menu_button">
             <property name="label" translatable="yes">Set as wallpaper</property>
             <property name="visible">True</property>
+            <property name="sensitive">False</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="relief">none</property>

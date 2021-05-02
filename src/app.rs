@@ -95,6 +95,8 @@ impl App {
         self.connect_height_spin_button_value_changed();
         self.connect_apply_resize_button_clicked();
         self.connect_save_menu_button_clicked();
+        self.connect_print_menu_button_clicked();
+        self.connect_set_as_wallpaper_menu_button_clicked();
         self.connect_error_info_bar_response();
 
         self.widgets.window().show_all();
@@ -128,6 +130,8 @@ impl App {
             Event::UpdateResizePopoverWidth => self.update_resize_popover_width(),
             Event::UpdateResizePopoverHeight => self.update_resize_popover_height(),
             Event::SaveCurrentImage => self.save_current_image(),
+            Event::SetCurrentImageAsWallpaper => self.set_current_image_as_wallpaper(),
+            Event::Print => self.print(),
             Event::HideErrorPanel => self.hide_error_panel(),
             event => debug!("Discarded unused event: {:?}", event),
         }
@@ -382,6 +386,28 @@ impl App {
         });
     }
 
+    fn connect_print_menu_button_clicked(&self) {
+        let sender = self.sender.clone();
+        let widgets = self.widgets.clone();
+        self.widgets.print_menu_button().connect_clicked(move |_| {
+            widgets.popover_menu().popdown();
+
+            post_event(&sender, Event::Print);
+        });
+    }
+
+    fn connect_set_as_wallpaper_menu_button_clicked(&self) {
+        let sender = self.sender.clone();
+        let widgets = self.widgets.clone();
+        self.widgets
+            .set_as_wallpaper_menu_button()
+            .connect_clicked(move |_| {
+                widgets.popover_menu().popdown();
+
+                post_event(&sender, Event::SetCurrentImageAsWallpaper);
+            });
+    }
+
     fn connect_error_info_bar_response(&self) {
         self.widgets
             .error_info_bar()
@@ -393,10 +419,15 @@ impl App {
     }
 
     fn file_list_changed(&self) {
-        let buttons_active = self.file_list.len() > 1;
+        let previous_next_active = self.file_list.len() > 1;
+        let buttons_active = self.file_list.len() > 0;
 
-        self.widgets.next_button().set_sensitive(buttons_active);
-        self.widgets.previous_button().set_sensitive(buttons_active);
+        self.widgets
+            .next_button()
+            .set_sensitive(previous_next_active);
+        self.widgets
+            .previous_button()
+            .set_sensitive(previous_next_active);
         self.widgets
             .rotate_counterclockwise_button()
             .set_sensitive(buttons_active);
@@ -405,6 +436,12 @@ impl App {
             .set_sensitive(buttons_active);
         self.widgets.crop_button().set_sensitive(buttons_active);
         self.widgets.resize_button().set_sensitive(buttons_active);
+        self.widgets
+            .print_menu_button()
+            .set_sensitive(buttons_active);
+        self.widgets
+            .set_as_wallpaper_menu_button()
+            .set_sensitive(buttons_active);
     }
 
     fn refresh_file_list(&mut self) {
@@ -695,6 +732,63 @@ impl App {
             Ok(()) => self.widgets.save_menu_button().set_sensitive(false),
             Err(error) => post_event(&self.sender, Event::DisplayError(error)),
         };
+    }
+
+    fn print(&self) {
+        let print_operation = gtk::PrintOperation::new();
+
+        print_operation.connect_begin_print(move |print_operation, _| {
+            print_operation.set_n_pages(1);
+        });
+
+        let image_list = self.image_list.clone();
+        print_operation.connect_draw_page(move |_, print_context, _| {
+            if let Some(print_image_buffer) = image_list
+                .borrow()
+                .current_image()
+                .map(|current_image| {
+                    current_image.create_print_image_buffer(
+                        print_context.get_width() as i32,
+                        print_context.get_height() as i32,
+                    )
+                })
+                .flatten()
+            {
+                let cairo_context = print_context
+                    .get_cairo_context()
+                    .expect("Couldn't get cairo context");
+                cairo_context.set_source_pixbuf(
+                    &print_image_buffer,
+                    (print_context.get_width() - print_image_buffer.get_width() as f64) / 2.0,
+                    (print_context.get_height() - print_image_buffer.get_height() as f64) / 2.0,
+                );
+                cairo_context.paint();
+            }
+        });
+
+        print_operation.set_allow_async(true);
+        match print_operation.run(
+            gtk::PrintOperationAction::PrintDialog,
+            Option::from(self.widgets.window()),
+        ) {
+            Ok(_) => (),
+            Err(error) => post_event(
+                &self.sender,
+                Event::DisplayError(anyhow!("Couldn't print current image: {}", error)),
+            ),
+        };
+    }
+
+    fn set_current_image_as_wallpaper(&self) {
+        if let Some(path) = self.file_list.current_file_path() {
+            match wallpaper::set_from_path(path.to_str().unwrap()) {
+                Ok(_) => (),
+                Err(error) => post_event(
+                    &self.sender,
+                    Event::DisplayError(anyhow!("Couldn't set image as wallpaper: {}", error)),
+                ),
+            };
+        }
     }
 
     fn display_error(&self, error: anyhow::Error) {
