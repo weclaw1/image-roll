@@ -11,27 +11,30 @@ pub type Coordinates = (i32, i32);
 pub type CoordinatesPair = (Coordinates, Coordinates);
 
 pub struct Image {
-    image_buffer: Option<Pixbuf>,
+    original_image_buffer: Option<Pixbuf>,
+    current_image_buffer: Option<Pixbuf>,
     preview_image_buffer: Option<Pixbuf>,
     operations: Vec<ImageOperation>,
+    current_operation_index: Option<usize>,
 }
 
 impl Image {
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Image> {
         let image_buffer = Pixbuf::from_file(path)?;
-        let preview_image_buffer = image_buffer.clone();
         Ok(Image {
-            image_buffer: Some(image_buffer),
-            preview_image_buffer: Some(preview_image_buffer),
+            original_image_buffer: Some(image_buffer.clone()),
+            current_image_buffer: Some(image_buffer),
+            preview_image_buffer: None,
             operations: Vec::new(),
+            current_operation_index: None,
         })
     }
 
     pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
-        let image_buffer = self
-            .image_buffer
+        let current_image_buffer = self
+            .current_image_buffer
             .as_mut()
-            .ok_or_else(|| anyhow!("Couldn't load image buffer"))?;
+            .ok_or_else(|| anyhow!("Image buffer is missing!"))?;
         let extension = path
             .as_ref()
             .extension()
@@ -54,24 +57,31 @@ impl Image {
             "png" => &[("compression", "9")],
             _ => &[],
         };
-        image_buffer.savev(path.as_ref(), file_type, options)?;
+        current_image_buffer.savev(path.as_ref(), file_type, options)?;
+        self.original_image_buffer = Some(current_image_buffer.clone());
+        self.current_operation_index = None;
         self.operations.clear();
         Ok(())
     }
 
     pub fn reload<P: AsRef<Path>>(self, path: P) -> Result<Image> {
-        let mut image_buffer = Pixbuf::from_file(path)?;
-        image_buffer = self
-            .operations
-            .iter()
-            .fold(image_buffer, |image, operation| {
-                image.apply_operation(operation).unwrap_or(image)
-            });
-        let preview_image_buffer = image_buffer.clone();
+        let original_image_buffer = Pixbuf::from_file(path)?;
+        let mut current_image_buffer = original_image_buffer.clone();
+        if let Some(current_operation_index) = self.current_operation_index {
+            current_image_buffer = self
+                .operations
+                .iter()
+                .take(current_operation_index + 1)
+                .fold(current_image_buffer, |image, operation| {
+                    image.apply_operation(operation).unwrap_or(image)
+                });
+        }
         Ok(Image {
-            image_buffer: Some(image_buffer),
-            preview_image_buffer: Some(preview_image_buffer),
+            original_image_buffer: Some(original_image_buffer),
+            current_image_buffer: Some(current_image_buffer),
+            preview_image_buffer: None,
             operations: self.operations,
+            current_operation_index: self.current_operation_index,
         })
     }
 
@@ -80,12 +90,13 @@ impl Image {
     // }
 
     pub fn remove_image_buffers(&mut self) {
-        self.image_buffer = None;
+        self.original_image_buffer = None;
+        self.current_image_buffer = None;
         self.preview_image_buffer = None;
     }
 
     fn image_buffer_scale_to_fit(&self, canvas_width: i32, canvas_height: i32) -> Option<Pixbuf> {
-        if let Some(image_buffer) = &self.image_buffer {
+        if let Some(image_buffer) = &self.current_image_buffer {
             let image_width = image_buffer.get_width() as f32;
             let image_height = image_buffer.get_height() as f32;
             let width_ratio = canvas_width as f32 / image_width;
@@ -102,7 +113,7 @@ impl Image {
     }
 
     fn image_buffer_resize(&self, scale: f32) -> Option<Pixbuf> {
-        if let Some(image_buffer) = &self.image_buffer {
+        if let Some(image_buffer) = &self.current_image_buffer {
             image_buffer.scale_simple(
                 (image_buffer.get_width() as f32 * scale) as i32,
                 (image_buffer.get_height() as f32 * scale) as i32,
@@ -118,7 +129,7 @@ impl Image {
             PreviewSize::BestFit(canvas_width, canvas_height) => {
                 self.image_buffer_scale_to_fit(canvas_width, canvas_height)
             }
-            PreviewSize::OriginalSize => self.image_buffer.clone(),
+            PreviewSize::OriginalSize => self.current_image_buffer.clone(),
             PreviewSize::Resized(scale) => self.image_buffer_resize(scale),
         };
     }
@@ -132,7 +143,7 @@ impl Image {
             if image_width > canvas_width || image_height > canvas_height {
                 self.image_buffer_scale_to_fit(canvas_width, canvas_height)
             } else {
-                self.image_buffer.clone()
+                self.current_image_buffer.clone()
             }
         } else {
             None
@@ -144,7 +155,7 @@ impl Image {
     }
 
     pub fn image_size(&self) -> Option<(i32, i32)> {
-        self.image_buffer
+        self.current_image_buffer
             .as_ref()
             .map(|image_buffer| (image_buffer.get_width(), image_buffer.get_height()))
     }
@@ -187,7 +198,55 @@ impl Image {
     }
 
     pub fn has_unsaved_operations(&self) -> bool {
-        !self.operations.is_empty()
+        !self.operations.is_empty() && self.current_operation_index.is_some()
+    }
+
+    pub fn can_undo_operation(&self) -> bool {
+        self.current_operation_index.is_some()
+    }
+
+    pub fn undo_operation(&mut self) {
+        if self.can_undo_operation() {
+            self.current_operation_index = self.current_operation_index.unwrap().checked_sub(1);
+            self.current_image_buffer = Some(
+                self.operations
+                    .iter()
+                    .take(
+                        self.current_operation_index
+                            .map_or(0, |operation_index| operation_index + 1),
+                    )
+                    .fold(
+                        self.original_image_buffer.clone().unwrap(),
+                        |image, operation| image.apply_operation(operation).unwrap_or(image),
+                    ),
+            );
+        }
+    }
+
+    pub fn can_redo_operation(&self) -> bool {
+        match self.current_operation_index {
+            Some(operation_index) => operation_index + 1 < self.operations.len(),
+            None => !self.operations.is_empty(),
+        }
+    }
+
+    pub fn redo_operation(&mut self) {
+        if self.can_redo_operation() {
+            self.current_operation_index = self
+                .current_operation_index
+                .map_or(Some(0), |current_operation_index| {
+                    Some(current_operation_index + 1)
+                });
+            self.current_image_buffer = Some(
+                self.operations
+                    .iter()
+                    .take(self.current_operation_index.unwrap() + 1)
+                    .fold(
+                        self.original_image_buffer.clone().unwrap(),
+                        |image, operation| image.apply_operation(operation).unwrap_or(image),
+                    ),
+            );
+        }
     }
 }
 
@@ -195,12 +254,17 @@ impl ApplyImageOperation for Image {
     type Result = Self;
 
     fn apply_operation(mut self, image_operation: &ImageOperation) -> Self::Result {
-        if let Some(image_buffer) = self.image_buffer {
+        if let Some(image_buffer) = self.current_image_buffer {
             let applied_operation_image_buffer = image_buffer.apply_operation(image_operation);
             if applied_operation_image_buffer.is_some() {
+                if let Some(current_operation_index) = self.current_operation_index {
+                    self.operations.truncate(current_operation_index + 1);
+                }
                 self.operations.push(*image_operation);
+                self.current_operation_index = Some(self.operations.len() - 1);
             }
-            self.image_buffer = Some(applied_operation_image_buffer.unwrap_or(image_buffer));
+            self.current_image_buffer =
+                Some(applied_operation_image_buffer.unwrap_or(image_buffer));
         }
         self
     }

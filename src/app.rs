@@ -97,6 +97,8 @@ impl App {
         self.connect_save_menu_button_clicked();
         self.connect_print_menu_button_clicked();
         self.connect_set_as_wallpaper_menu_button_clicked();
+        self.connect_undo_button_clicked();
+        self.connect_redo_button_clicked();
         self.connect_error_info_bar_response();
 
         self.widgets.window().show_all();
@@ -131,6 +133,8 @@ impl App {
             Event::UpdateResizePopoverHeight => self.update_resize_popover_height(),
             Event::SaveCurrentImage => self.save_current_image(),
             Event::SetCurrentImageAsWallpaper => self.set_current_image_as_wallpaper(),
+            Event::UndoOperation => self.undo_operation(),
+            Event::RedoOperation => self.redo_operation(),
             Event::Print => self.print(),
             Event::HideErrorPanel => self.hide_error_panel(),
             event => debug!("Discarded unused event: {:?}", event),
@@ -408,6 +412,20 @@ impl App {
             });
     }
 
+    fn connect_undo_button_clicked(&self) {
+        let sender = self.sender.clone();
+        self.widgets.undo_button().connect_clicked(move |_| {
+            post_event(&sender, Event::UndoOperation);
+        });
+    }
+
+    fn connect_redo_button_clicked(&self) {
+        let sender = self.sender.clone();
+        self.widgets.redo_button().connect_clicked(move |_| {
+            post_event(&sender, Event::RedoOperation);
+        });
+    }
+
     fn connect_error_info_bar_response(&self) {
         self.widgets
             .error_info_bar()
@@ -421,6 +439,19 @@ impl App {
     fn file_list_changed(&self) {
         let previous_next_active = self.file_list.len() > 1;
         let buttons_active = self.file_list.len() > 0;
+
+        let image_list = self.image_list.borrow();
+        let undo_active = if let Some(current_image) = image_list.current_image() {
+            current_image.can_undo_operation()
+        } else {
+            false
+        };
+
+        let redo_active = if let Some(current_image) = image_list.current_image() {
+            current_image.can_redo_operation()
+        } else {
+            false
+        };
 
         self.widgets
             .next_button()
@@ -442,6 +473,8 @@ impl App {
         self.widgets
             .set_as_wallpaper_menu_button()
             .set_sensitive(buttons_active);
+        self.widgets.undo_button().set_sensitive(undo_active);
+        self.widgets.redo_button().set_sensitive(redo_active);
     }
 
     fn refresh_file_list(&mut self) {
@@ -507,12 +540,16 @@ impl App {
                 }
             };
             let image_has_unsaved_operations = image.has_unsaved_operations();
+            let image_can_undo = image.can_undo_operation();
+            let image_can_redo = image.can_redo_operation();
             image_list.insert(file_path.clone(), image);
             image_list.set_current_image_path(Some(file_path));
             post_event(&self.sender, Event::RefreshPreview(self.settings.scale()));
             self.widgets
                 .save_menu_button()
                 .set_sensitive(image_has_unsaved_operations);
+            self.widgets.undo_button().set_sensitive(image_can_undo);
+            self.widgets.redo_button().set_sensitive(image_can_redo);
         } else {
             self.widgets.image_widget().set_from_pixbuf(None);
             self.widgets.save_menu_button().set_sensitive(false);
@@ -612,6 +649,12 @@ impl App {
             self.widgets
                 .save_menu_button()
                 .set_sensitive(current_image.has_unsaved_operations());
+            self.widgets
+                .undo_button()
+                .set_sensitive(current_image.can_undo_operation());
+            self.widgets
+                .redo_button()
+                .set_sensitive(current_image.can_redo_operation());
             image_list.insert(self.file_list.current_file_path().unwrap(), current_image);
             post_event(&self.sender, Event::RefreshPreview(self.settings.scale()));
         }
@@ -788,6 +831,30 @@ impl App {
                     Event::DisplayError(anyhow!("Couldn't set image as wallpaper: {}", error)),
                 ),
             };
+        }
+    }
+
+    fn undo_operation(&mut self) {
+        if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
+            current_image.undo_operation();
+            self.widgets
+                .undo_button()
+                .set_sensitive(current_image.can_undo_operation());
+            self.widgets
+                .redo_button()
+                .set_sensitive(current_image.can_redo_operation());
+        }
+    }
+
+    fn redo_operation(&mut self) {
+        if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
+            current_image.redo_operation();
+            self.widgets
+                .undo_button()
+                .set_sensitive(current_image.can_undo_operation());
+            self.widgets
+                .redo_button()
+                .set_sensitive(current_image.can_redo_operation());
         }
     }
 

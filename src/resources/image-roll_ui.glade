@@ -146,6 +146,11 @@ Author: Robert Węcławski
     <property name="can-focus">False</property>
     <property name="icon-name">go-previous</property>
   </object>
+  <object class="GtkImage" id="redo_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">edit-redo</property>
+  </object>
   <object class="GtkImage" id="rotate_clockwise_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -155,6 +160,11 @@ Author: Robert Węcławski
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">object-rotate-left</property>
+  </object>
+  <object class="GtkImage" id="undo_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">edit-undo</property>
   </object>
   <object class="GtkAdjustment" id="width_adjustment">
     <property name="upper">2147483647</property>
@@ -363,6 +373,20 @@ Author: Robert Węcławski
                 <property name="can-focus">False</property>
                 <property name="spacing">5</property>
                 <child>
+                  <object class="GtkButton" id="undo_button">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">undo_icon</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkButton" id="rotate_counterclockwise_button">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
@@ -374,7 +398,7 @@ Author: Robert Węcławski
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
@@ -389,7 +413,7 @@ Author: Robert Węcławski
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -411,7 +435,7 @@ Author: Robert Węcławski
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -426,7 +450,21 @@ Author: Robert Węcławski
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">7</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="redo_button">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="image">redo_icon</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
               </object>

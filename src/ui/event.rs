@@ -25,6 +25,8 @@ pub enum Event {
     UpdateResizePopoverWidth,
     UpdateResizePopoverHeight,
     SaveCurrentImage,
+    UndoOperation,
+    RedoOperation,
     Print,
     DisplayError(anyhow::Error),
     HideErrorPanel,
