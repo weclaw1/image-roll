@@ -20,7 +20,6 @@ pub enum Event {
     NextImage,
     PreviousImage,
     RefreshFileList,
-    FileListChanged,
     ResizePopoverDisplayed,
     UpdateResizePopoverWidth,
     UpdateResizePopoverHeight,

@@ -127,7 +127,6 @@ impl App {
             Event::NextImage => self.next_image(),
             Event::PreviousImage => self.previous_image(),
             Event::RefreshFileList => self.refresh_file_list(),
-            Event::FileListChanged => self.file_list_changed(),
             Event::ResizePopoverDisplayed => self.resize_popover_displayed(),
             Event::UpdateResizePopoverWidth => self.update_resize_popover_width(),
             Event::UpdateResizePopoverHeight => self.update_resize_popover_height(),
@@ -139,6 +138,7 @@ impl App {
             Event::HideErrorPanel => self.hide_error_panel(),
             event => debug!("Discarded unused event: {:?}", event),
         }
+        self.update_buttons_state();
     }
 
     fn connect_open_menu_button_clicked(&self) {
@@ -436,62 +436,17 @@ impl App {
             });
     }
 
-    fn file_list_changed(&self) {
-        let previous_next_active = self.file_list.len() > 1;
-        let buttons_active = self.file_list.len() > 0;
-
-        let image_list = self.image_list.borrow();
-        let undo_active = if let Some(current_image) = image_list.current_image() {
-            current_image.can_undo_operation()
-        } else {
-            false
-        };
-
-        let redo_active = if let Some(current_image) = image_list.current_image() {
-            current_image.can_redo_operation()
-        } else {
-            false
-        };
-
-        self.widgets
-            .next_button()
-            .set_sensitive(previous_next_active);
-        self.widgets
-            .previous_button()
-            .set_sensitive(previous_next_active);
-        self.widgets
-            .rotate_counterclockwise_button()
-            .set_sensitive(buttons_active);
-        self.widgets
-            .rotate_clockwise_button()
-            .set_sensitive(buttons_active);
-        self.widgets.crop_button().set_sensitive(buttons_active);
-        self.widgets.resize_button().set_sensitive(buttons_active);
-        self.widgets
-            .print_menu_button()
-            .set_sensitive(buttons_active);
-        self.widgets
-            .set_as_wallpaper_menu_button()
-            .set_sensitive(buttons_active);
-        self.widgets.undo_button().set_sensitive(undo_active);
-        self.widgets.redo_button().set_sensitive(redo_active);
-    }
-
     fn refresh_file_list(&mut self) {
         post_event(&self.sender, Event::HideErrorPanel);
-        match self.file_list.refresh() {
-            Ok(_) => (),
-            Err(error) => {
-                post_event(&self.sender, Event::DisplayError(error));
-                return;
-            }
+        if let Err(error) = self.file_list.refresh() {
+            post_event(&self.sender, Event::DisplayError(error));
+            return;
         };
 
         post_event(
             &self.sender,
             Event::LoadImage(self.file_list.current_file_path()),
         );
-        post_event(&self.sender, Event::FileListChanged);
     }
 
     fn open_file(&mut self, file: gio::File) {
@@ -512,7 +467,6 @@ impl App {
             &self.sender,
             Event::LoadImage(self.file_list.current_file_path()),
         );
-        post_event(&self.sender, Event::FileListChanged);
 
         let sender = self.sender.clone();
         self.file_list
@@ -539,20 +493,11 @@ impl App {
                     return;
                 }
             };
-            let image_has_unsaved_operations = image.has_unsaved_operations();
-            let image_can_undo = image.can_undo_operation();
-            let image_can_redo = image.can_redo_operation();
             image_list.insert(file_path.clone(), image);
             image_list.set_current_image_path(Some(file_path));
             post_event(&self.sender, Event::RefreshPreview(self.settings.scale()));
-            self.widgets
-                .save_menu_button()
-                .set_sensitive(image_has_unsaved_operations);
-            self.widgets.undo_button().set_sensitive(image_can_undo);
-            self.widgets.redo_button().set_sensitive(image_can_redo);
         } else {
             self.widgets.image_widget().set_from_pixbuf(None);
-            self.widgets.save_menu_button().set_sensitive(false);
             image_list.set_current_image_path(None);
         }
     }
@@ -563,12 +508,9 @@ impl App {
             .current_image_mut()
             .unwrap()
             .remove_image_buffers();
-        match self.file_list.next() {
-            Ok(_) => (),
-            Err(error) => {
-                post_event(&self.sender, Event::DisplayError(error));
-                return;
-            }
+        if let Err(error) = self.file_list.next() {
+            post_event(&self.sender, Event::DisplayError(error));
+            return;
         };
         post_event(
             &self.sender,
@@ -582,12 +524,9 @@ impl App {
             .current_image_mut()
             .unwrap()
             .remove_image_buffers();
-        match self.file_list.previous() {
-            Ok(_) => (),
-            Err(error) => {
-                post_event(&self.sender, Event::DisplayError(error));
-                return;
-            }
+        if let Err(error) = self.file_list.previous() {
+            post_event(&self.sender, Event::DisplayError(error));
+            return;
         };
         post_event(
             &self.sender,
@@ -618,12 +557,6 @@ impl App {
             preview_size =
                 PreviewSize::BestFit(viewport_allocation.width, viewport_allocation.height);
         }
-        self.widgets
-            .preview_smaller_button()
-            .set_sensitive(preview_size.can_be_smaller());
-        self.widgets
-            .preview_larger_button()
-            .set_sensitive(preview_size.can_be_larger());
         self.settings.set_scale(preview_size);
         post_event(&self.sender, Event::RefreshPreview(preview_size));
     }
@@ -646,15 +579,6 @@ impl App {
         let mut image_list = self.image_list.borrow_mut();
         if let Some(mut current_image) = image_list.remove_current_image() {
             current_image = current_image.apply_operation(&image_operation);
-            self.widgets
-                .save_menu_button()
-                .set_sensitive(current_image.has_unsaved_operations());
-            self.widgets
-                .undo_button()
-                .set_sensitive(current_image.can_undo_operation());
-            self.widgets
-                .redo_button()
-                .set_sensitive(current_image.can_redo_operation());
             image_list.insert(self.file_list.current_file_path().unwrap(), current_image);
             post_event(&self.sender, Event::RefreshPreview(self.settings.scale()));
         }
@@ -771,10 +695,9 @@ impl App {
     }
 
     fn save_current_image(&mut self) {
-        match self.image_list.borrow_mut().save_current_image() {
-            Ok(()) => self.widgets.save_menu_button().set_sensitive(false),
-            Err(error) => post_event(&self.sender, Event::DisplayError(error)),
-        };
+        if let Err(error) = self.image_list.borrow_mut().save_current_image() {
+            post_event(&self.sender, Event::DisplayError(error));
+        }
     }
 
     fn print(&self) {
@@ -810,26 +733,24 @@ impl App {
         });
 
         print_operation.set_allow_async(true);
-        match print_operation.run(
+        if let Err(error) = print_operation.run(
             gtk::PrintOperationAction::PrintDialog,
             Option::from(self.widgets.window()),
         ) {
-            Ok(_) => (),
-            Err(error) => post_event(
+            post_event(
                 &self.sender,
                 Event::DisplayError(anyhow!("Couldn't print current image: {}", error)),
-            ),
+            );
         };
     }
 
     fn set_current_image_as_wallpaper(&self) {
         if let Some(path) = self.file_list.current_file_path() {
-            match wallpaper::set_from_path(path.to_str().unwrap()) {
-                Ok(_) => (),
-                Err(error) => post_event(
+            if let Err(error) = wallpaper::set_from_path(path.to_str().unwrap()) {
+                post_event(
                     &self.sender,
                     Event::DisplayError(anyhow!("Couldn't set image as wallpaper: {}", error)),
-                ),
+                );
             };
         }
     }
@@ -837,24 +758,12 @@ impl App {
     fn undo_operation(&mut self) {
         if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
             current_image.undo_operation();
-            self.widgets
-                .undo_button()
-                .set_sensitive(current_image.can_undo_operation());
-            self.widgets
-                .redo_button()
-                .set_sensitive(current_image.can_redo_operation());
         }
     }
 
     fn redo_operation(&mut self) {
         if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
             current_image.redo_operation();
-            self.widgets
-                .undo_button()
-                .set_sensitive(current_image.can_undo_operation());
-            self.widgets
-                .redo_button()
-                .set_sensitive(current_image.can_redo_operation());
         }
     }
 
@@ -867,5 +776,54 @@ impl App {
 
     fn hide_error_panel(&self) {
         self.widgets.error_info_bar().set_revealed(false);
+    }
+
+    fn update_buttons_state(&self) {
+        let previous_next_active = self.file_list.len() > 1;
+        let buttons_active = self.file_list.len() > 0;
+
+        self.widgets
+            .next_button()
+            .set_sensitive(previous_next_active);
+        self.widgets
+            .previous_button()
+            .set_sensitive(previous_next_active);
+        self.widgets
+            .rotate_counterclockwise_button()
+            .set_sensitive(buttons_active);
+        self.widgets
+            .rotate_clockwise_button()
+            .set_sensitive(buttons_active);
+        self.widgets.crop_button().set_sensitive(buttons_active);
+        self.widgets.resize_button().set_sensitive(buttons_active);
+        self.widgets
+            .print_menu_button()
+            .set_sensitive(buttons_active);
+        self.widgets
+            .set_as_wallpaper_menu_button()
+            .set_sensitive(buttons_active);
+
+        if let Some(current_image) = self.image_list.borrow().current_image() {
+            self.widgets
+                .undo_button()
+                .set_sensitive(current_image.can_undo_operation());
+            self.widgets
+                .redo_button()
+                .set_sensitive(current_image.can_redo_operation());
+            self.widgets
+                .save_menu_button()
+                .set_sensitive(current_image.has_unsaved_operations());
+        } else {
+            self.widgets.undo_button().set_sensitive(false);
+            self.widgets.redo_button().set_sensitive(false);
+            self.widgets.save_menu_button().set_sensitive(false);
+        }
+
+        self.widgets
+            .preview_smaller_button()
+            .set_sensitive(self.settings.scale().can_be_smaller());
+        self.widgets
+            .preview_larger_button()
+            .set_sensitive(self.settings.scale().can_be_larger());
     }
 }
