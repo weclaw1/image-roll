@@ -30,7 +30,7 @@ impl Image {
         })
     }
 
-    pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
+    pub fn save<P: AsRef<Path>>(&mut self, path: P, clear_operations: bool) -> Result<()> {
         let current_image_buffer = self
             .current_image_buffer
             .as_mut()
@@ -58,9 +58,12 @@ impl Image {
             _ => &[],
         };
         current_image_buffer.savev(path.as_ref(), file_type, options)?;
-        self.original_image_buffer = Some(current_image_buffer.clone());
-        self.current_operation_index = None;
-        self.operations.clear();
+        if clear_operations {
+            self.original_image_buffer = Some(current_image_buffer.clone());
+            self.current_operation_index = None;
+            self.operations.clear();
+        }
+
         Ok(())
     }
 

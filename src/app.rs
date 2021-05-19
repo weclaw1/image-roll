@@ -99,6 +99,7 @@ impl App {
         self.connect_set_as_wallpaper_menu_button_clicked();
         self.connect_undo_button_clicked();
         self.connect_redo_button_clicked();
+        self.connect_save_as_menu_button_clicked();
         self.connect_error_info_bar_response();
 
         self.widgets.window().show_all();
@@ -121,6 +122,7 @@ impl App {
             Event::DragSelection(position) if self.widgets.crop_button().get_active() => {
                 self.drag_selection(position)
             }
+            Event::SaveCurrentImage(filename) => self.save_current_image(filename),
             Event::EndSelection if self.widgets.crop_button().get_active() => self.end_selection(),
             Event::PreviewSmaller => self.preview_smaller(),
             Event::PreviewLarger => self.preview_larger(),
@@ -130,7 +132,6 @@ impl App {
             Event::ResizePopoverDisplayed => self.resize_popover_displayed(),
             Event::UpdateResizePopoverWidth => self.update_resize_popover_width(),
             Event::UpdateResizePopoverHeight => self.update_resize_popover_height(),
-            Event::SaveCurrentImage => self.save_current_image(),
             Event::SetCurrentImageAsWallpaper => self.set_current_image_as_wallpaper(),
             Event::UndoOperation => self.undo_operation(),
             Event::RedoOperation => self.redo_operation(),
@@ -156,6 +157,13 @@ impl App {
                 ("Open", gtk::ResponseType::Ok),
                 ("Cancel", gtk::ResponseType::Cancel),
             ]);
+
+            let file_filter = gtk::FileFilter::new();
+            file_filter.add_mime_type("image/*");
+            file_filter.set_name(Some("Image"));
+
+            file_chooser.add_filter(&file_filter);
+
             let sender = sender.clone();
             file_chooser.connect_response(move |file_chooser, response| {
                 file_chooser.close();
@@ -386,8 +394,53 @@ impl App {
         let widgets = self.widgets.clone();
         self.widgets.save_menu_button().connect_clicked(move |_| {
             widgets.popover_menu().popdown();
-            post_event(&sender, Event::SaveCurrentImage);
+            post_event(&sender, Event::SaveCurrentImage(None));
         });
+    }
+
+    fn connect_save_as_menu_button_clicked(&self) {
+        let widgets = self.widgets.clone();
+        let image_list = self.image_list.clone();
+        let sender = self.sender.clone();
+        self.widgets
+            .save_as_menu_button()
+            .connect_clicked(move |_| {
+                widgets.popover_menu().popdown();
+                let file_chooser = gtk::FileChooserDialog::new(
+                    Some("Save as..."),
+                    Some(widgets.window()),
+                    gtk::FileChooserAction::Save,
+                );
+
+                file_chooser.add_buttons(&[
+                    ("Save", gtk::ResponseType::Ok),
+                    ("Cancel", gtk::ResponseType::Cancel),
+                ]);
+
+                if let Some(file_path) = image_list.borrow().current_image_path() {
+                    file_chooser.set_filename(file_path);
+                }
+
+                let file_filter = gtk::FileFilter::new();
+                file_filter.add_mime_type("image/*");
+                file_filter.set_name(Some("Image"));
+
+                file_chooser.add_filter(&file_filter);
+                let sender = sender.clone();
+                file_chooser.connect_response(move |file_chooser, response| {
+                    file_chooser.close();
+                    if response == gtk::ResponseType::Ok {
+                        let filename = if let Some(filename) = file_chooser.get_filename() {
+                            filename
+                        } else {
+                            post_event(&sender, Event::DisplayError(anyhow!("Couldn't save file")));
+                            return;
+                        };
+                        post_event(&sender, Event::SaveCurrentImage(Some(filename)));
+                    }
+                });
+                file_chooser.show_all();
+            });
     }
 
     fn connect_print_menu_button_clicked(&self) {
@@ -694,8 +747,8 @@ impl App {
         }
     }
 
-    fn save_current_image(&mut self) {
-        if let Err(error) = self.image_list.borrow_mut().save_current_image() {
+    fn save_current_image(&mut self, filename: Option<PathBuf>) {
+        if let Err(error) = self.image_list.borrow_mut().save_current_image(filename) {
             post_event(&self.sender, Event::DisplayError(error));
         }
     }
@@ -813,10 +866,12 @@ impl App {
             self.widgets
                 .save_menu_button()
                 .set_sensitive(current_image.has_unsaved_operations());
+            self.widgets.save_as_menu_button().set_sensitive(true);
         } else {
             self.widgets.undo_button().set_sensitive(false);
             self.widgets.redo_button().set_sensitive(false);
             self.widgets.save_menu_button().set_sensitive(false);
+            self.widgets.save_as_menu_button().set_sensitive(false);
         }
 
         self.widgets

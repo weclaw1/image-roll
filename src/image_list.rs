@@ -58,12 +58,23 @@ impl ImageList {
             .flatten()
     }
 
-    pub fn save_current_image(&mut self) -> Result<()> {
-        let current_image_path = self.current_image_path.clone();
+    pub fn current_image_path(&self) -> Option<PathBuf> {
+        self.current_image_path.clone()
+    }
+
+    pub fn save_current_image(&mut self, filename: Option<PathBuf>) -> Result<()> {
+        let (filename, clear_buffer) = if let Some(filename) = filename {
+            (filename, false)
+        } else {
+            (self.current_image_path.clone().unwrap(), true)
+        };
+
         let current_image = self
             .current_image_mut()
             .ok_or_else(|| anyhow!("Couldn't load current image"))?;
-        current_image.save(current_image_path.as_ref().unwrap())
+
+        current_image.save(filename, clear_buffer)?;
+        Ok(())
     }
 }
 
