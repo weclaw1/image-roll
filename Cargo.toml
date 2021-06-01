@@ -29,7 +29,7 @@ section = "graphics"
 assets = [
     ["target/release/image-roll", "opt/image-roll/", "755"],
     ["README.md", "usr/share/doc/image-roll/README", "644"],
-    ["src/resources/image-roll.desktop", "usr/share/applications/", "644"],
+    ["src/resources/com.github.weclaw1.ImageRoll.desktop", "usr/share/applications/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll.Devel.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll-symbolic.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
