@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Image Roll
+Comment=Image viewer with basic image manipulation tools
+Exec=image-roll
+Icon=com.github.weclaw1.ImageRoll
+Terminal=false
+StartupWMClass=image-roll
+TryExec=image-roll
+Categories=Graphics;

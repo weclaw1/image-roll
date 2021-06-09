@@ -1,0 +1,5 @@
+[Runtime]
+name=com.github.weclaw1.ImageRoll.Debug
+
+[ExtensionOf]
+ref=app/com.github.weclaw1.ImageRoll/x86_64/master

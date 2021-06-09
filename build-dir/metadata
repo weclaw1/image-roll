@@ -1,0 +1,19 @@
+[Application]
+name=com.github.weclaw1.ImageRoll
+runtime=org.gnome.Platform/x86_64/3.38
+sdk=org.gnome.Sdk/x86_64/3.38
+command=image-roll
+
+[Context]
+shared=ipc;
+sockets=x11;wayland;fallback-x11;
+devices=dri;
+filesystems=home;
+
+[Extension com.github.weclaw1.ImageRoll.Debug]
+directory=lib/debug
+autodelete=true
+no-autodownload=true
+
+[Build]
+built-extensions=com.github.weclaw1.ImageRoll.Debug;
