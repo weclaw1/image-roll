@@ -1,3 +1,4 @@
 /target
+/build-dir
 src/resources/image-roll_ui.glade~
 /.flatpak-builder
