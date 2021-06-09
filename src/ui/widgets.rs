@@ -27,7 +27,6 @@ pub struct Widgets {
     print_menu_button: gtk::Button,
     undo_button: gtk::Button,
     redo_button: gtk::Button,
-    set_as_wallpaper_menu_button: gtk::Button,
     save_as_menu_button: gtk::Button,
 }
 
@@ -123,10 +122,6 @@ impl Widgets {
             .get_object("print_menu_button")
             .expect("Couldn't get print_menu_button");
 
-        let set_as_wallpaper_menu_button: gtk::Button = builder
-            .get_object("set_as_wallpaper_menu_button")
-            .expect("Couldn't get set_as_wallpaper_menu_button");
-
         let undo_button: gtk::Button = builder
             .get_object("undo_button")
             .expect("Couldn't get undo_button");
@@ -165,7 +160,6 @@ impl Widgets {
             print_menu_button,
             undo_button,
             redo_button,
-            set_as_wallpaper_menu_button,
             save_as_menu_button,
         }
     }
@@ -283,11 +277,6 @@ impl Widgets {
     /// Get a reference to the widgets's print menu button.
     pub fn print_menu_button(&self) -> &gtk::Button {
         &self.print_menu_button
-    }
-
-    /// Get a reference to the widgets's set as wallpaper menu button.
-    pub fn set_as_wallpaper_menu_button(&self) -> &gtk::Button {
-        &self.set_as_wallpaper_menu_button
     }
 
     /// Get a reference to the widgets's undo button.

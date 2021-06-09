@@ -96,7 +96,6 @@ impl App {
         self.connect_apply_resize_button_clicked();
         self.connect_save_menu_button_clicked();
         self.connect_print_menu_button_clicked();
-        self.connect_set_as_wallpaper_menu_button_clicked();
         self.connect_undo_button_clicked();
         self.connect_redo_button_clicked();
         self.connect_save_as_menu_button_clicked();
@@ -132,7 +131,6 @@ impl App {
             Event::ResizePopoverDisplayed => self.resize_popover_displayed(),
             Event::UpdateResizePopoverWidth => self.update_resize_popover_width(),
             Event::UpdateResizePopoverHeight => self.update_resize_popover_height(),
-            Event::SetCurrentImageAsWallpaper => self.set_current_image_as_wallpaper(),
             Event::UndoOperation => self.undo_operation(),
             Event::RedoOperation => self.redo_operation(),
             Event::Print => self.print(),
@@ -451,18 +449,6 @@ impl App {
 
             post_event(&sender, Event::Print);
         });
-    }
-
-    fn connect_set_as_wallpaper_menu_button_clicked(&self) {
-        let sender = self.sender.clone();
-        let widgets = self.widgets.clone();
-        self.widgets
-            .set_as_wallpaper_menu_button()
-            .connect_clicked(move |_| {
-                widgets.popover_menu().popdown();
-
-                post_event(&sender, Event::SetCurrentImageAsWallpaper);
-            });
     }
 
     fn connect_undo_button_clicked(&self) {
@@ -797,17 +783,6 @@ impl App {
         };
     }
 
-    fn set_current_image_as_wallpaper(&self) {
-        if let Some(path) = self.file_list.current_file_path() {
-            if let Err(error) = wallpaper::set_from_path(path.to_str().unwrap()) {
-                post_event(
-                    &self.sender,
-                    Event::DisplayError(anyhow!("Couldn't set image as wallpaper: {}", error)),
-                );
-            };
-        }
-    }
-
     fn undo_operation(&mut self) {
         if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
             current_image.undo_operation();
@@ -851,9 +826,6 @@ impl App {
         self.widgets.resize_button().set_sensitive(buttons_active);
         self.widgets
             .print_menu_button()
-            .set_sensitive(buttons_active);
-        self.widgets
-            .set_as_wallpaper_menu_button()
             .set_sensitive(buttons_active);
 
         if let Some(current_image) = self.image_list.borrow().current_image() {
