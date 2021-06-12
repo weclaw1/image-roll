@@ -152,16 +152,15 @@ impl App {
         let sender = self.sender.clone();
         self.widgets.open_menu_button().connect_clicked(move |_| {
             widgets.popover_menu().popdown();
-            let file_chooser = gtk::FileChooserDialog::new(
+            let file_chooser = gtk::FileChooserNative::new(
                 Some("Open file"),
-                Some(widgets.window()),
+                gtk::NONE_WINDOW,
                 gtk::FileChooserAction::Open,
+                None,
+                None,
             );
 
-            file_chooser.add_buttons(&[
-                ("Open", gtk::ResponseType::Ok),
-                ("Cancel", gtk::ResponseType::Cancel),
-            ]);
+            file_chooser.set_transient_for(Some(widgets.window()));
 
             let file_filter = gtk::FileFilter::new();
             file_filter.add_mime_type("image/*");
@@ -170,9 +169,9 @@ impl App {
             file_chooser.add_filter(&file_filter);
 
             let sender = sender.clone();
+
             file_chooser.connect_response(move |file_chooser, response| {
-                file_chooser.close();
-                if response == gtk::ResponseType::Ok {
+                if response == gtk::ResponseType::Accept {
                     let file = if let Some(file) = file_chooser.get_file() {
                         file
                     } else {
@@ -181,8 +180,10 @@ impl App {
                     };
                     post_event(&sender, Event::OpenFile(file));
                 }
+                file_chooser.destroy();
             });
-            file_chooser.show_all();
+
+            file_chooser.run();
         });
     }
 
@@ -411,16 +412,15 @@ impl App {
             .save_as_menu_button()
             .connect_clicked(move |_| {
                 widgets.popover_menu().popdown();
-                let file_chooser = gtk::FileChooserDialog::new(
+                let file_chooser = gtk::FileChooserNative::new(
                     Some("Save as..."),
-                    Some(widgets.window()),
+                    gtk::NONE_WINDOW,
                     gtk::FileChooserAction::Save,
+                    None,
+                    None,
                 );
 
-                file_chooser.add_buttons(&[
-                    ("Save", gtk::ResponseType::Ok),
-                    ("Cancel", gtk::ResponseType::Cancel),
-                ]);
+                file_chooser.set_transient_for(Some(widgets.window()));
 
                 if let Some(file_path) = image_list.borrow().current_image_path() {
                     file_chooser.set_filename(file_path);
@@ -433,8 +433,7 @@ impl App {
                 file_chooser.add_filter(&file_filter);
                 let sender = sender.clone();
                 file_chooser.connect_response(move |file_chooser, response| {
-                    file_chooser.close();
-                    if response == gtk::ResponseType::Ok {
+                    if response == gtk::ResponseType::Accept {
                         let filename = if let Some(filename) = file_chooser.get_filename() {
                             filename
                         } else {
@@ -443,8 +442,9 @@ impl App {
                         };
                         post_event(&sender, Event::SaveCurrentImage(Some(filename)));
                     }
+                    file_chooser.destroy();
                 });
-                file_chooser.show_all();
+                file_chooser.run();
             });
     }
 
