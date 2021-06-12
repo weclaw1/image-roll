@@ -35,7 +35,7 @@ Author: Robert Węcławski
   <object class="GtkImage" id="apply_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">gtk-apply</property>
+    <property name="icon-name">emblem-ok-symbolic</property>
   </object>
   <object class="GtkImage" id="crop_icon">
     <property name="visible">True</property>
@@ -50,12 +50,12 @@ Author: Robert Węcławski
   <object class="GtkImage" id="link_aspect_ratio_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">insert-link</property>
+    <property name="icon-name">insert-link-symbolic</property>
   </object>
   <object class="GtkImage" id="next_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">go-next</property>
+    <property name="icon-name">go-next-symbolic</property>
   </object>
   <object class="GtkPopoverMenu" id="popover_menu">
     <property name="can-focus">False</property>
@@ -134,37 +134,37 @@ Author: Robert Węcławski
   <object class="GtkImage" id="preview_larger_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">zoom-in</property>
+    <property name="icon-name">zoom-in-symbolic</property>
   </object>
   <object class="GtkImage" id="preview_smaller_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">zoom-out</property>
+    <property name="icon-name">zoom-out-symbolic</property>
   </object>
   <object class="GtkImage" id="previous_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">go-previous</property>
+    <property name="icon-name">go-previous-symbolic</property>
   </object>
   <object class="GtkImage" id="redo_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">edit-redo</property>
+    <property name="icon-name">edit-redo-symbolic</property>
   </object>
   <object class="GtkImage" id="rotate_clockwise_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">object-rotate-right</property>
+    <property name="icon-name">object-rotate-right-symbolic</property>
   </object>
   <object class="GtkImage" id="rotate_counterclockwise_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">object-rotate-left</property>
+    <property name="icon-name">object-rotate-left-symbolic</property>
   </object>
   <object class="GtkImage" id="undo_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">edit-undo</property>
+    <property name="icon-name">edit-undo-symbolic</property>
   </object>
   <object class="GtkAdjustment" id="width_adjustment">
     <property name="upper">2147483647</property>
