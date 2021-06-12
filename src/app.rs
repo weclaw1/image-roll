@@ -31,7 +31,7 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(app: &gtk::Application) -> Rc<RefCell<Self>> {
+    pub fn new(app: &gtk::Application, args: Vec<String>) -> Rc<RefCell<Self>> {
         let bytes = glib::Bytes::from_static(include_bytes!("resources/resources.gresource"));
         let resources = gio::Resource::from_data(&bytes).expect("Couldn't load resources");
         gio::resources_register(&resources);
@@ -52,6 +52,10 @@ impl App {
         ));
 
         let (sender, receiver) = glib::MainContext::channel::<Event>(glib::PRIORITY_DEFAULT);
+
+        if args.len() > 1 {
+            post_event(&sender, Event::OpenFile(gio::File::new_for_commandline_arg(&args[1])));
+        }
 
         let app = Self {
             widgets,

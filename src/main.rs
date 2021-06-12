@@ -25,8 +25,8 @@ fn main() {
         .expect("Failed to initialize GTK application");
 
     application.connect_activate(|app| {
-        App::new(app);
+        App::new(app, args().collect::<Vec<_>>());
     });
 
-    application.run(&args().collect::<Vec<_>>());
+    application.run(&[]);
 }
