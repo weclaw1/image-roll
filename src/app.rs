@@ -31,7 +31,7 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(app: &gtk::Application, args: Vec<String>) -> Rc<RefCell<Self>> {
+    pub fn new(app: &gtk::Application, file: Option<&gio::File>) -> Rc<RefCell<Self>> {
         let bytes = glib::Bytes::from_static(include_bytes!("resources/resources.gresource"));
         let resources = gio::Resource::from_data(&bytes).expect("Couldn't load resources");
         gio::resources_register(&resources);
@@ -53,11 +53,9 @@ impl App {
 
         let (sender, receiver) = glib::MainContext::channel::<Event>(glib::PRIORITY_DEFAULT);
 
-        if args.len() > 1 {
-            post_event(
-                &sender,
-                Event::OpenFile(gio::File::new_for_commandline_arg(&args[1])),
-            );
+        let second_sender = sender.clone();
+        if let Some(file) = file {
+            post_event(&second_sender, Event::OpenFile(file.clone()));
         }
 
         let app = Self {
@@ -84,6 +82,7 @@ impl App {
         self.widgets
             .image_event_box()
             .set_events(gdk::EventMask::POINTER_MOTION_MASK);
+
         self.connect_open_menu_button_clicked();
         self.connect_next_button_clicked();
         self.connect_previous_button_clicked();

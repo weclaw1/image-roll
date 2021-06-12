@@ -26,3 +26,16 @@ features = ["v3_22_29"]
 [dependencies.gio]
 version = "0.9.1"
 features = ["v2_44"]
+
+[package.metadata.deb]
+license-file = ["LICENSE", "0"]
+section = "graphics"
+depends = "$auto"
+assets = [
+    ["target/release/image-roll", "usr/bin/", "755"],
+    ["README.md", "usr/share/doc/image-roll/README", "644"],
+    ["src/resources/com.github.weclaw1.ImageRoll.desktop", "usr/share/applications/", "644"],
+    ["src/resources/com.github.weclaw1.ImageRoll.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+    ["src/resources/com.github.weclaw1.ImageRoll.Devel.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+    ["src/resources/com.github.weclaw1.ImageRoll-symbolic.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+]

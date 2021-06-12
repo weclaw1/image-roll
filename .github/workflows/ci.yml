@@ -158,3 +158,14 @@ jobs:
         with:
           name: image-roll-appimage
           path: Image_Roll*.AppImage
+
+      - name: Create debian package
+        run: |
+          cargo install cargo-deb
+          cargo deb
+
+      - name: Upload debian Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: image-roll-deb
+          path: target/debian/image-roll*.deb
