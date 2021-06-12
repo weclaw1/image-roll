@@ -18,7 +18,7 @@
 ## Installation
 
 ### Requirements
-If you use Flatpak you may skip this section.
+If you use AUR or Flatpak you may skip this section.
 
 For this application you are required to have at least GTK 3.22.
 
@@ -36,6 +36,15 @@ Flatpak is the recommended install method.
 In order to install Image Roll using Flatpak run:
 ```
 flatpak install flathub com.github.weclaw1.ImageRoll
+```
+
+### AUR
+If you run Arch Linux, you can use one of the AUR packages.
+There are 3, `image-roll`, `image-roll-bin`, and `image-roll-git`.
+Replace `yay` with your AUR helper of choice.
+
+```
+yay -S image-roll
 ```
 
 ### Precompiled binaries
