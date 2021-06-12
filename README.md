@@ -47,6 +47,9 @@ Replace `yay` with your AUR helper of choice.
 yay -S image-roll
 ```
 
+### Debian package
+On the releases page can be found deb packages which can be used on Debian and its derivatives.
+
 ### Precompiled binaries
 Ready-to-go executables can be found on the releases page.
 
