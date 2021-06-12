@@ -54,7 +54,10 @@ impl App {
         let (sender, receiver) = glib::MainContext::channel::<Event>(glib::PRIORITY_DEFAULT);
 
         if args.len() > 1 {
-            post_event(&sender, Event::OpenFile(gio::File::new_for_commandline_arg(&args[1])));
+            post_event(
+                &sender,
+                Event::OpenFile(gio::File::new_for_commandline_arg(&args[1])),
+            );
         }
 
         let app = Self {
