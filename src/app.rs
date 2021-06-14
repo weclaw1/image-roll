@@ -40,9 +40,6 @@ impl App {
 
         let widgets: Widgets = Widgets::init(builder, app);
 
-        widgets.window().set_property_default_width(1024);
-        widgets.window().set_property_default_height(768);
-
         let image_list: Rc<RefCell<ImageList>> = Rc::new(RefCell::new(ImageList::new()));
 
         let file_list: FileList = FileList::new(None).unwrap();
