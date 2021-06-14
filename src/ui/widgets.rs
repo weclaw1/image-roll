@@ -37,6 +37,9 @@ impl Widgets {
             .expect("Couldn't get main_window");
         window.set_application(Some(application));
 
+        window.set_property_default_width(1024);
+        window.set_property_default_height(768);
+
         let open_menu_button: gtk::Button = builder
             .get_object("open_menu_button")
             .expect("Couldn't get open_menu_button");
