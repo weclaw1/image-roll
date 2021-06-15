@@ -3,7 +3,5 @@
   <gresource prefix="/com/github/weclaw1/image-roll">
     <file preprocess="xml-stripblanks">image-roll_ui.glade</file>
     <file>com.github.weclaw1.ImageRoll.svg</file>
-    <file>crop_icon.svg</file>
-    <file>resize_icon.svg</file>
   </gresource>
 </gresources>
