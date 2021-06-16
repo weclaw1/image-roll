@@ -523,6 +523,7 @@ impl App {
     }
 
     fn load_image(&mut self, file_path: Option<PathBuf>) {
+        self.hide_error_panel();
         let mut image_list = self.image_list.borrow_mut();
         if let Some(file_path) = file_path {
             let image = if let Some(image) = image_list.remove(&file_path) {
@@ -539,20 +540,26 @@ impl App {
                 }
             };
             image_list.insert(file_path.clone(), image);
+            self.widgets.window().set_title(
+                file_path
+                    .file_name()
+                    .map(|file_name| file_name.to_str())
+                    .flatten()
+                    .unwrap_or_default(),
+            );
             image_list.set_current_image_path(Some(file_path));
             post_event(&self.sender, Event::RefreshPreview(self.settings.scale()));
         } else {
             self.widgets.image_widget().set_from_pixbuf(None);
+            self.widgets.window().set_title("Image Roll");
             image_list.set_current_image_path(None);
         }
     }
 
     fn next_image(&mut self) {
-        self.image_list
-            .borrow_mut()
-            .current_image_mut()
-            .unwrap()
-            .remove_image_buffers();
+        if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
+            current_image.remove_image_buffers();
+        }
         if let Err(error) = self.file_list.next() {
             post_event(&self.sender, Event::DisplayError(error));
             return;
@@ -564,11 +571,9 @@ impl App {
     }
 
     fn previous_image(&mut self) {
-        self.image_list
-            .borrow_mut()
-            .current_image_mut()
-            .unwrap()
-            .remove_image_buffers();
+        if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
+            current_image.remove_image_buffers();
+        }
         if let Err(error) = self.file_list.previous() {
             post_event(&self.sender, Event::DisplayError(error));
             return;
