@@ -1,6 +1,6 @@
 use std::cmp;
 
-use gdk_pixbuf::{InterpType, Pixbuf, PixbufRotation};
+use gtk::gdk_pixbuf::{InterpType, Pixbuf, PixbufRotation};
 
 use crate::image::CoordinatesPair;
 

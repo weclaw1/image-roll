@@ -1,4 +1,7 @@
-use gtk::{prelude::BuilderExtManual, ApplicationWindow, Builder, GtkWindowExt, WidgetExt};
+use gtk::{
+    prelude::{BuilderExtManual, GtkWindowExt, WidgetExt},
+    ApplicationWindow, Builder,
+};
 
 #[derive(Clone)]
 pub struct Widgets {
@@ -33,108 +36,108 @@ pub struct Widgets {
 impl Widgets {
     pub fn init(builder: Builder, application: &gtk::Application) -> Self {
         let window: ApplicationWindow = builder
-            .get_object("main_window")
+            .object("main_window")
             .expect("Couldn't get main_window");
         window.set_application(Some(application));
 
-        window.set_property_default_width(1024);
-        window.set_property_default_height(768);
+        window.set_default_width(1024);
+        window.set_default_height(768);
 
         let open_menu_button: gtk::Button = builder
-            .get_object("open_menu_button")
+            .object("open_menu_button")
             .expect("Couldn't get open_menu_button");
 
         let image_widget: gtk::Image = builder
-            .get_object("image_widget")
+            .object("image_widget")
             .expect("Couldn't get image_widget");
 
         let popover_menu: gtk::PopoverMenu = builder
-            .get_object("popover_menu")
+            .object("popover_menu")
             .expect("Couldn't get popover_menu");
 
         let next_button: gtk::Button = builder
-            .get_object("next_button")
+            .object("next_button")
             .expect("Couldn't get next_button");
         let previous_button: gtk::Button = builder
-            .get_object("previous_button")
+            .object("previous_button")
             .expect("Couldn't get previous_button");
 
         let preview_smaller_button: gtk::Button = builder
-            .get_object("preview_smaller_button")
+            .object("preview_smaller_button")
             .expect("Couldn't get preview_smaller_button");
         let preview_larger_button: gtk::Button = builder
-            .get_object("preview_larger_button")
+            .object("preview_larger_button")
             .expect("Couldn't get preview_larger_button");
 
         let image_viewport: gtk::Viewport = builder
-            .get_object("image_viewport")
+            .object("image_viewport")
             .expect("Couldn't get image_viewport");
 
         let preview_size_combobox: gtk::ComboBoxText = builder
-            .get_object("preview_size_combobox")
+            .object("preview_size_combobox")
             .expect("Couldn't get preview_size_combobox");
 
         let image_event_box: gtk::EventBox = builder
-            .get_object("image_event_box")
+            .object("image_event_box")
             .expect("Couldn't get image_preview_box");
 
         let rotate_counterclockwise_button: gtk::Button = builder
-            .get_object("rotate_counterclockwise_button")
+            .object("rotate_counterclockwise_button")
             .expect("Couldn't get rotate_counterclockwise_button");
         let rotate_clockwise_button: gtk::Button = builder
-            .get_object("rotate_clockwise_button")
+            .object("rotate_clockwise_button")
             .expect("Couldn't get rotate_clockwise_button");
 
         let crop_button: gtk::ToggleButton = builder
-            .get_object("crop_button")
+            .object("crop_button")
             .expect("Couldn't get crop_button");
 
         let resize_button: gtk::MenuButton = builder
-            .get_object("resize_button")
+            .object("resize_button")
             .expect("Couldn't get resize_button");
         resize_button.set_sensitive(false);
 
         let width_spin_button: gtk::SpinButton = builder
-            .get_object("width_spin_button")
+            .object("width_spin_button")
             .expect("Couldn't get width_spin_button");
         let height_spin_button: gtk::SpinButton = builder
-            .get_object("height_spin_button")
+            .object("height_spin_button")
             .expect("Couldn't get height_spin_button");
 
         let link_aspect_ratio_button: gtk::ToggleButton = builder
-            .get_object("link_aspect_ratio_button")
+            .object("link_aspect_ratio_button")
             .expect("Couldn't get link_aspect_ratio_button");
 
         let apply_resize_button: gtk::Button = builder
-            .get_object("apply_resize_button")
+            .object("apply_resize_button")
             .expect("Couldn't get apply_resize_button");
 
         let error_info_bar: gtk::InfoBar = builder
-            .get_object("error_info_bar")
+            .object("error_info_bar")
             .expect("Couldn't get error_info_bar");
 
         let error_info_bar_text: gtk::Label = builder
-            .get_object("error_info_bar_text")
+            .object("error_info_bar_text")
             .expect("Couldn't get error_info_bar_text");
 
         let save_menu_button: gtk::Button = builder
-            .get_object("save_menu_button")
+            .object("save_menu_button")
             .expect("Couldn't get save_menu_button");
 
         let print_menu_button: gtk::Button = builder
-            .get_object("print_menu_button")
+            .object("print_menu_button")
             .expect("Couldn't get print_menu_button");
 
         let undo_button: gtk::Button = builder
-            .get_object("undo_button")
+            .object("undo_button")
             .expect("Couldn't get undo_button");
 
         let redo_button: gtk::Button = builder
-            .get_object("redo_button")
+            .object("redo_button")
             .expect("Couldn't get redo_button");
 
         let save_as_menu_button: gtk::Button = builder
-            .get_object("save_as_menu_button")
+            .object("save_as_menu_button")
             .expect("Couldn't get save_as_menu_button");
 
         Self {

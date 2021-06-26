@@ -1,9 +1,9 @@
 use std::path::Path;
 
 use approx::abs_diff_eq;
-use gdk_pixbuf::{InterpType, Pixbuf};
 
 use anyhow::{anyhow, Result};
+use gtk::gdk_pixbuf::{InterpType, Pixbuf};
 
 use crate::image_operation::{ApplyImageOperation, ImageOperation};
 
@@ -100,8 +100,8 @@ impl Image {
 
     fn image_buffer_scale_to_fit(&self, canvas_width: i32, canvas_height: i32) -> Option<Pixbuf> {
         if let Some(image_buffer) = &self.current_image_buffer {
-            let image_width = image_buffer.get_width() as f32;
-            let image_height = image_buffer.get_height() as f32;
+            let image_width = image_buffer.width() as f32;
+            let image_height = image_buffer.height() as f32;
             let width_ratio = canvas_width as f32 / image_width;
             let height_ratio = canvas_height as f32 / image_height;
             let scale_ratio = width_ratio.min(height_ratio);
@@ -118,8 +118,8 @@ impl Image {
     fn image_buffer_resize(&self, scale: f32) -> Option<Pixbuf> {
         if let Some(image_buffer) = &self.current_image_buffer {
             image_buffer.scale_simple(
-                (image_buffer.get_width() as f32 * scale) as i32,
-                (image_buffer.get_height() as f32 * scale) as i32,
+                (image_buffer.width() as f32 * scale) as i32,
+                (image_buffer.height() as f32 * scale) as i32,
                 InterpType::Bilinear,
             )
         } else {
@@ -160,7 +160,7 @@ impl Image {
     pub fn image_size(&self) -> Option<(i32, i32)> {
         self.current_image_buffer
             .as_ref()
-            .map(|image_buffer| (image_buffer.get_width(), image_buffer.get_height()))
+            .map(|image_buffer| (image_buffer.width(), image_buffer.height()))
     }
 
     pub fn image_aspect_ratio(&self) -> Option<f64> {
@@ -171,7 +171,7 @@ impl Image {
     pub fn preview_image_buffer_size(&self) -> Option<(i32, i32)> {
         self.preview_image_buffer
             .as_ref()
-            .map(|image_buffer| (image_buffer.get_width(), image_buffer.get_height()))
+            .map(|image_buffer| (image_buffer.width(), image_buffer.height()))
     }
 
     pub fn preview_coords_to_image_coords(

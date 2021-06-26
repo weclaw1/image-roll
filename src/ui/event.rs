@@ -1,4 +1,4 @@
-use gdk::Rectangle;
+use gtk::{gdk::Rectangle, gio, glib};
 use std::path::PathBuf;
 
 use crate::{image::PreviewSize, image_operation::ImageOperation};

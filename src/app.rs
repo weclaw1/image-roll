@@ -1,7 +1,10 @@
-use gdk::{prelude::*, Rectangle};
-use gdk_pixbuf::PixbufRotation;
-use gio::prelude::*;
-use gtk::{prelude::*, Builder};
+use gtk::{
+    gdk::{self, Rectangle},
+    gdk_pixbuf::PixbufRotation,
+    gio, glib,
+    prelude::*,
+    Builder,
+};
 
 use anyhow::anyhow;
 
@@ -47,8 +50,8 @@ impl App {
         let selection_coords: Rc<Cell<Option<CoordinatesPair>>> = Rc::new(Cell::new(None));
 
         let settings: Settings = Settings::new(PreviewSize::BestFit(
-            widgets.image_viewport().get_allocation().width,
-            widgets.image_viewport().get_allocation().height,
+            widgets.image_viewport().allocation().width,
+            widgets.image_viewport().allocation().height,
         ));
 
         let (sender, receiver) = glib::MainContext::channel::<Event>(glib::PRIORITY_DEFAULT);
@@ -121,14 +124,14 @@ impl App {
             Event::RefreshPreview(preview_size) => self.refresh_preview(preview_size),
             Event::ChangePreviewSize(preview_size) => self.change_preview_size(preview_size),
             Event::ImageEdit(image_operation) => self.image_edit(image_operation),
-            Event::StartSelection(position) if self.widgets.crop_button().get_active() => {
+            Event::StartSelection(position) if self.widgets.crop_button().is_active() => {
                 self.start_selection(position)
             }
-            Event::DragSelection(position) if self.widgets.crop_button().get_active() => {
+            Event::DragSelection(position) if self.widgets.crop_button().is_active() => {
                 self.drag_selection(position)
             }
             Event::SaveCurrentImage(filename) => self.save_current_image(filename),
-            Event::EndSelection if self.widgets.crop_button().get_active() => self.end_selection(),
+            Event::EndSelection if self.widgets.crop_button().is_active() => self.end_selection(),
             Event::PreviewSmaller => self.preview_smaller(),
             Event::PreviewLarger => self.preview_larger(),
             Event::NextImage => self.next_image(),
@@ -171,7 +174,7 @@ impl App {
 
             file_chooser.connect_response(move |file_chooser, response| {
                 if response == gtk::ResponseType::Accept {
-                    let file = if let Some(file) = file_chooser.get_file() {
+                    let file = if let Some(file) = file_chooser.file() {
                         file
                     } else {
                         post_event(&sender, Event::DisplayError(anyhow!("Couldn't load file")));
@@ -217,7 +220,7 @@ impl App {
                 post_event(
                     &sender,
                     Event::ChangePreviewSize(PreviewSize::from(
-                        preview_size_combobox.get_active_id().unwrap().as_str(),
+                        preview_size_combobox.active_id().unwrap().as_str(),
                     )),
                 );
             });
@@ -270,7 +273,7 @@ impl App {
         self.widgets
             .image_event_box()
             .connect_button_press_event(move |_, button_event| {
-                let (position_x, position_y) = button_event.get_position();
+                let (position_x, position_y) = button_event.position();
                 post_event(
                     &sender,
                     Event::StartSelection((position_x as i32, position_y as i32)),
@@ -284,7 +287,7 @@ impl App {
         self.widgets
             .image_event_box()
             .connect_motion_notify_event(move |_, motion_event| {
-                let (position_x, position_y) = motion_event.get_position();
+                let (position_x, position_y) = motion_event.position();
                 post_event(
                     &sender,
                     Event::DragSelection((position_x as i32, position_y as i32)),
@@ -318,14 +321,16 @@ impl App {
                         let image_buffer = current_image.preview_image_buffer().unwrap();
                         cairo_context.set_source_pixbuf(
                             image_buffer,
-                            (image_widget.get_allocation().width as f64
-                                - image_buffer.get_width() as f64)
+                            (image_widget.allocation().width as f64 - image_buffer.width() as f64)
                                 / 2.0,
-                            (image_widget.get_allocation().height as f64
-                                - image_buffer.get_height() as f64)
+                            (image_widget.allocation().height as f64
+                                - image_buffer.height() as f64)
                                 / 2.0,
                         );
-                        cairo_context.paint();
+                        if let Err(error) = cairo_context.paint() {
+                            error!("{}", error);
+                            return gtk::Inhibit(true);
+                        }
                         cairo_context.set_source_rgb(0.0, 0.0, 0.0);
                         cairo_context.set_line_width(1.0);
                         cairo_context.rectangle(
@@ -334,7 +339,9 @@ impl App {
                             (end_selection_coord_x - start_selection_coord_x) as f64,
                             (end_selection_coord_y - start_selection_coord_y) as f64,
                         );
-                        cairo_context.stroke();
+                        if let Err(error) = cairo_context.stroke() {
+                            error!("{}", error);
+                        }
                         return gtk::Inhibit(true);
                     }
                 }
@@ -347,7 +354,7 @@ impl App {
         self.widgets
             .resize_button()
             .connect_toggled(move |resize_button| {
-                if resize_button.get_active() {
+                if resize_button.is_active() {
                     post_event(&sender, Event::ResizePopoverDisplayed);
                 }
             });
@@ -359,7 +366,7 @@ impl App {
         self.widgets
             .width_spin_button()
             .connect_value_changed(move |_| {
-                if widgets.link_aspect_ratio_button().get_active() {
+                if widgets.link_aspect_ratio_button().is_active() {
                     post_event(&sender, Event::UpdateResizePopoverHeight);
                 }
             });
@@ -371,7 +378,7 @@ impl App {
         self.widgets
             .height_spin_button()
             .connect_value_changed(move |_| {
-                if widgets.link_aspect_ratio_button().get_active() {
+                if widgets.link_aspect_ratio_button().is_active() {
                     post_event(&sender, Event::UpdateResizePopoverWidth);
                 }
             });
@@ -386,8 +393,8 @@ impl App {
                 post_event(
                     &sender,
                     Event::ImageEdit(ImageOperation::Resize((
-                        widgets.width_spin_button().get_value() as i32,
-                        widgets.height_spin_button().get_value() as i32,
+                        widgets.width_spin_button().value() as i32,
+                        widgets.height_spin_button().value() as i32,
                     ))),
                 );
                 widgets.resize_button().emit_clicked();
@@ -433,7 +440,7 @@ impl App {
                 let sender = sender.clone();
                 file_chooser.connect_response(move |file_chooser, response| {
                     if response == gtk::ResponseType::Accept {
-                        let filename = if let Some(filename) = file_chooser.get_filename() {
+                        let filename = if let Some(filename) = file_chooser.filename() {
                             filename
                         } else {
                             post_event(&sender, Event::DisplayError(anyhow!("Couldn't save file")));
@@ -560,10 +567,7 @@ impl App {
         if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
             current_image.remove_image_buffers();
         }
-        if let Err(error) = self.file_list.next() {
-            post_event(&self.sender, Event::DisplayError(error));
-            return;
-        };
+        self.file_list.next();
         post_event(
             &self.sender,
             Event::LoadImage(self.file_list.current_file_path()),
@@ -574,10 +578,7 @@ impl App {
         if let Some(current_image) = self.image_list.borrow_mut().current_image_mut() {
             current_image.remove_image_buffers();
         }
-        if let Err(error) = self.file_list.previous() {
-            post_event(&self.sender, Event::DisplayError(error));
-            return;
-        };
+        self.file_list.previous();
         post_event(
             &self.sender,
             Event::LoadImage(self.file_list.current_file_path()),
@@ -603,7 +604,7 @@ impl App {
 
     fn change_preview_size(&mut self, mut preview_size: PreviewSize) {
         if let PreviewSize::BestFit(_, _) = preview_size {
-            let viewport_allocation = self.widgets.image_viewport().get_allocation();
+            let viewport_allocation = self.widgets.image_viewport().allocation();
             preview_size =
                 PreviewSize::BestFit(viewport_allocation.width, viewport_allocation.height);
         }
@@ -638,7 +639,7 @@ impl App {
         if let Some(current_image) = self.image_list.borrow().current_image() {
             let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
             let (position_x, position_y) = position;
-            let event_box_allocation = self.widgets.image_event_box().get_allocation();
+            let event_box_allocation = self.widgets.image_event_box().allocation();
             let (image_coords_position_x, image_coords_position_y) = (
                 position_x - ((event_box_allocation.width - image_width) / 2),
                 position_y - ((event_box_allocation.height - image_height) / 2),
@@ -661,7 +662,7 @@ impl App {
                 let (image_width, image_height) =
                     current_image.preview_image_buffer_size().unwrap();
                 let (position_x, position_y) = position;
-                let event_box_allocation = self.widgets.image_event_box().get_allocation();
+                let event_box_allocation = self.widgets.image_event_box().allocation();
                 let (image_coords_position_x, image_coords_position_y) = (
                     position_x - ((event_box_allocation.width - image_width) / 2),
                     position_y - ((event_box_allocation.height - image_height) / 2),
@@ -688,7 +689,7 @@ impl App {
             if let Some(current_image) = self.image_list.borrow().current_image() {
                 let (image_width, image_height) =
                     current_image.preview_image_buffer_size().unwrap();
-                let event_box_allocation = self.widgets.image_event_box().get_allocation();
+                let event_box_allocation = self.widgets.image_event_box().allocation();
                 let (image_coords_start_position_x, image_coords_start_position_y) = (
                     start_position_x - ((event_box_allocation.width - image_width) / 2),
                     start_position_y - ((event_box_allocation.height - image_height) / 2),
@@ -731,7 +732,7 @@ impl App {
             let aspect_ratio = current_image.image_aspect_ratio().unwrap();
             self.widgets
                 .width_spin_button()
-                .set_value(self.widgets.height_spin_button().get_value() * aspect_ratio);
+                .set_value(self.widgets.height_spin_button().value() * aspect_ratio);
         }
     }
 
@@ -740,7 +741,7 @@ impl App {
             let aspect_ratio = current_image.image_aspect_ratio().unwrap();
             self.widgets
                 .height_spin_button()
-                .set_value(self.widgets.width_spin_button().get_value() / aspect_ratio);
+                .set_value(self.widgets.width_spin_button().value() / aspect_ratio);
         }
     }
 
@@ -757,6 +758,7 @@ impl App {
             print_operation.set_n_pages(1);
         });
 
+        let sender = self.sender.clone();
         let image_list = self.image_list.clone();
         print_operation.connect_draw_page(move |_, print_context, _| {
             if let Some(print_image_buffer) = image_list
@@ -764,21 +766,26 @@ impl App {
                 .current_image()
                 .map(|current_image| {
                     current_image.create_print_image_buffer(
-                        print_context.get_width() as i32,
-                        print_context.get_height() as i32,
+                        print_context.width() as i32,
+                        print_context.height() as i32,
                     )
                 })
                 .flatten()
             {
                 let cairo_context = print_context
-                    .get_cairo_context()
+                    .cairo_context()
                     .expect("Couldn't get cairo context");
                 cairo_context.set_source_pixbuf(
                     &print_image_buffer,
-                    (print_context.get_width() - print_image_buffer.get_width() as f64) / 2.0,
-                    (print_context.get_height() - print_image_buffer.get_height() as f64) / 2.0,
+                    (print_context.width() - print_image_buffer.width() as f64) / 2.0,
+                    (print_context.height() - print_image_buffer.height() as f64) / 2.0,
                 );
-                cairo_context.paint();
+                if let Err(error) = cairo_context.paint() {
+                    post_event(
+                        &sender,
+                        Event::DisplayError(anyhow!("Couldn't print current image: {}", error)),
+                    );
+                }
             }
         });
 
