@@ -1,11 +1,5 @@
-use std::env::args;
-
 use app::App;
-use gio::{prelude::ApplicationExtManual, ApplicationExt, ApplicationFlags};
-use gtk::Application;
-
-extern crate gio;
-extern crate gtk;
+use gtk::{gio::ApplicationFlags, prelude::*, Application};
 
 #[macro_use]
 extern crate log;
@@ -24,8 +18,7 @@ fn main() {
     let application = Application::new(
         Some("com.github.weclaw1.ImageRoll"),
         ApplicationFlags::HANDLES_OPEN | ApplicationFlags::NON_UNIQUE,
-    )
-    .expect("Failed to initialize GTK application");
+    );
 
     application.connect_activate(|app| {
         App::new(app, None);
@@ -35,5 +28,5 @@ fn main() {
         App::new(app, Some(&files[0]));
     });
 
-    application.run(&args().collect::<Vec<_>>());
+    application.run();
 }
