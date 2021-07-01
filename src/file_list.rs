@@ -60,7 +60,7 @@ impl FileList {
                 self.current_folder = None;
                 return Ok(());
             }
-            self.file_list = FileList::enumerate_files(&current_folder)?;
+            self.file_list = FileList::enumerate_files(current_folder)?;
 
             match &self.current_file {
                 Some((_, current_file)) => {
