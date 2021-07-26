@@ -43,6 +43,10 @@ impl App {
 
         let widgets: Widgets = Widgets::init(builder, app);
 
+        if let Some(theme) = gtk::IconTheme::default() {
+            theme.add_resource_path("/com/github/weclaw1/image-roll");
+        }
+
         let image_list: Rc<RefCell<ImageList>> = Rc::new(RefCell::new(ImageList::new()));
 
         let file_list: FileList = FileList::new(None).unwrap();

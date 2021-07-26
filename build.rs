@@ -45,6 +45,7 @@ fn main() {
 
     println!("cargo:rerun-if-changed=src/resources/resources.xml");
     println!("cargo:rerun-if-changed=src/resources/image-roll_ui.glade");
+    println!("cargo:rerun-if-changed=src/resources/crop-symbolic.svg");
     println!("cargo:rerun-if-changed=src/resources/com.github.weclaw1.ImageRoll.svg");
     println!("cargo:rerun-if-changed=Cargo.lock");
 }
