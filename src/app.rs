@@ -97,6 +97,7 @@ impl App {
         self.connect_preview_size_combobox_changed();
         self.connect_preview_smaller_button_clicked();
         self.connect_preview_larger_button_clicked();
+        self.connect_preview_fit_screen_button_clicked();
         self.connect_rotate_counterclockwise_button_clicked();
         self.connect_rotate_clockwise_button_clicked();
         self.connect_image_event_box_button_press_event();
@@ -138,6 +139,7 @@ impl App {
             Event::EndSelection if self.widgets.crop_button().is_active() => self.end_selection(),
             Event::PreviewSmaller => self.preview_smaller(),
             Event::PreviewLarger => self.preview_larger(),
+            Event::PreviewFitScreen => self.preview_fit_screen(),
             Event::NextImage => self.next_image(),
             Event::PreviousImage => self.previous_image(),
             Event::RefreshFileList => self.refresh_file_list(),
@@ -245,6 +247,15 @@ impl App {
             .preview_larger_button()
             .connect_clicked(move |_| {
                 post_event(&sender, Event::PreviewLarger);
+            });
+    }
+
+    fn connect_preview_fit_screen_button_clicked(&self) {
+        let sender = self.sender.clone();
+        self.widgets
+            .preview_fit_screen_button()
+            .connect_clicked(move |_| {
+                post_event(&sender, Event::PreviewFitScreen);
             });
     }
 
@@ -628,6 +639,12 @@ impl App {
         self.widgets
             .preview_size_combobox()
             .set_active_id(Some(String::from(new_scale).as_ref()));
+    }
+
+    fn preview_fit_screen(&self) {
+        self.widgets
+            .preview_size_combobox()
+            .set_active_id(Some(String::from(PreviewSize::BestFit(0, 0)).as_ref()));
     }
 
     fn image_edit(&mut self, image_operation: ImageOperation) {

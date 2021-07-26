@@ -17,6 +17,7 @@ pub enum Event {
     EndSelection,
     PreviewSmaller,
     PreviewLarger,
+    PreviewFitScreen,
     NextImage,
     PreviousImage,
     RefreshFileList,

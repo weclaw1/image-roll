@@ -135,6 +135,11 @@ Author: Robert Węcławski
       </packing>
     </child>
   </object>
+  <object class="GtkImage" id="preview_fit_screen_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">zoom-fit-best-symbolic</property>
+  </object>
   <object class="GtkImage" id="preview_larger_icon">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -572,6 +577,20 @@ Author: Robert Węcławski
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="preview_fit_screen_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="image">preview_fit_screen_icon</property>
+                <accelerator key="f" signal="clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>

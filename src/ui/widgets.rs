@@ -31,6 +31,7 @@ pub struct Widgets {
     undo_button: gtk::Button,
     redo_button: gtk::Button,
     save_as_menu_button: gtk::Button,
+    preview_fit_screen_button: gtk::Button,
 }
 
 impl Widgets {
@@ -140,6 +141,10 @@ impl Widgets {
             .object("save_as_menu_button")
             .expect("Couldn't get save_as_menu_button");
 
+        let preview_fit_screen_button: gtk::Button = builder
+            .object("preview_fit_screen_button")
+            .expect("Couldn't get preview_fit_screen_button");
+
         Self {
             window,
             open_menu_button,
@@ -167,6 +172,7 @@ impl Widgets {
             undo_button,
             redo_button,
             save_as_menu_button,
+            preview_fit_screen_button,
         }
     }
 
@@ -298,5 +304,10 @@ impl Widgets {
     /// Get a reference to the widgets's save as menu button.
     pub fn save_as_menu_button(&self) -> &gtk::Button {
         &self.save_as_menu_button
+    }
+
+    /// Get a reference to the widgets's preview fit screen button.
+    pub fn preview_fit_screen_button(&self) -> &gtk::Button {
+        &self.preview_fit_screen_button
     }
 }
