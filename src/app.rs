@@ -603,7 +603,9 @@ impl App {
     }
 
     fn refresh_preview(&mut self, preview_size: PreviewSize) {
-        self.widgets.preview_size_label().set_text(String::from(preview_size).as_str());
+        self.widgets
+            .preview_size_label()
+            .set_text(String::from(preview_size).as_str());
         if let Some(image) = self.image_list.borrow_mut().current_image_mut() {
             image.create_preview_image_buffer(preview_size);
             self.widgets
@@ -624,26 +626,17 @@ impl App {
 
     fn preview_smaller(&self) {
         let new_scale = self.settings.scale().smaller();
-        post_event(
-            &self.sender,
-            Event::ChangePreviewSize(new_scale),
-        );
+        post_event(&self.sender, Event::ChangePreviewSize(new_scale));
     }
 
     fn preview_larger(&self) {
         let new_scale = self.settings.scale().larger();
-        post_event(
-            &self.sender,
-            Event::ChangePreviewSize(new_scale),
-        );
+        post_event(&self.sender, Event::ChangePreviewSize(new_scale));
     }
 
     fn preview_fit_screen(&self) {
         let new_scale = PreviewSize::BestFit(0, 0);
-        post_event(
-            &self.sender,
-            Event::ChangePreviewSize(new_scale),
-        );
+        post_event(&self.sender, Event::ChangePreviewSize(new_scale));
     }
 
     fn image_edit(&mut self, image_operation: ImageOperation) {
