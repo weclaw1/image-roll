@@ -197,6 +197,7 @@ Author: Robert Węcławski
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Preserve ratio</property>
             <property name="image">link_aspect_ratio_icon</property>
             <property name="always-show-image">True</property>
           </object>
