@@ -29,4 +29,4 @@ modules:
   - cargo-sources.json
   - type: git
     url: https://github.com/weclaw1/image-roll.git
-    tag: 1.2.0
+    tag: 1.3.0
