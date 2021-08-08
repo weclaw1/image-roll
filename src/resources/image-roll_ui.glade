@@ -374,6 +374,7 @@ Author: Robert Węcławski
                 <property name="sensitive">False</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Previous</property>
                 <property name="image">previous_icon</property>
                 <property name="always-show-image">True</property>
                 <accelerator key="Left" signal="clicked" modifiers="GDK_LOCK_MASK"/>
@@ -393,6 +394,7 @@ Author: Robert Węcławski
                     <property name="sensitive">False</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Undo</property>
                     <property name="image">undo_icon</property>
                     <accelerator key="z" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                   </object>
@@ -408,6 +410,7 @@ Author: Robert Węcławski
                     <property name="sensitive">False</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Rotate counterclockwise</property>
                     <property name="image">rotate_counterclockwise_icon</property>
                     <property name="always-show-image">True</property>
                     <accelerator key="r" signal="clicked" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
@@ -424,6 +427,7 @@ Author: Robert Węcławski
                     <property name="sensitive">False</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Crop</property>
                     <property name="image">crop_icon</property>
                     <property name="always-show-image">True</property>
                     <accelerator key="c" signal="clicked" modifiers="GDK_SHIFT_MASK"/>
@@ -440,6 +444,7 @@ Author: Robert Węcławski
                     <property name="can-focus">True</property>
                     <property name="focus-on-click">False</property>
                     <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Resize</property>
                     <property name="direction">up</property>
                     <property name="popover">resize_popover</property>
                     <child>
@@ -463,6 +468,7 @@ Author: Robert Węcławski
                     <property name="sensitive">False</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Rotate clockwise</property>
                     <property name="image">rotate_clockwise_icon</property>
                     <property name="always-show-image">True</property>
                     <accelerator key="r" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
@@ -479,6 +485,7 @@ Author: Robert Węcławski
                     <property name="sensitive">False</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Redo</property>
                     <property name="image">redo_icon</property>
                     <accelerator key="y" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                   </object>
@@ -499,6 +506,7 @@ Author: Robert Węcławski
                 <property name="sensitive">False</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Next</property>
                 <property name="image">next_icon</property>
                 <property name="image-position">right</property>
                 <property name="always-show-image">True</property>
@@ -535,8 +543,8 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_smaller_icon</property>
-                <accelerator key="minus" signal="clicked"/>
                 <accelerator key="KP_Subtract" signal="clicked"/>
+                <accelerator key="minus" signal="clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -564,8 +572,8 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_larger_icon</property>
-                <accelerator key="plus" signal="clicked"/>
                 <accelerator key="KP_Add" signal="clicked"/>
+                <accelerator key="plus" signal="clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -598,6 +606,7 @@ Author: Robert Węcławski
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Delete this image</property>
                 <property name="image">delete_icon</property>
                 <accelerator key="Delete" signal="clicked"/>
               </object>
