@@ -609,6 +609,9 @@ Author: Robert Węcławski
                 <property name="tooltip-text" translatable="yes">Delete this image</property>
                 <property name="image">delete_icon</property>
                 <accelerator key="Delete" signal="clicked"/>
+                <style>
+                  <class name="destructive-action"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
