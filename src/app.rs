@@ -94,7 +94,6 @@ impl App {
         self.connect_next_button_clicked();
         self.connect_previous_button_clicked();
         self.connect_image_viewport_size_allocate();
-        self.connect_preview_size_combobox_changed();
         self.connect_preview_smaller_button_clicked();
         self.connect_preview_larger_button_clicked();
         self.connect_preview_fit_screen_button_clicked();
@@ -217,20 +216,6 @@ impl App {
             .image_viewport()
             .connect_size_allocate(move |_, allocation| {
                 post_event(&sender, Event::ImageViewportResize(*allocation));
-            });
-    }
-
-    fn connect_preview_size_combobox_changed(&self) {
-        let sender = self.sender.clone();
-        self.widgets
-            .preview_size_combobox()
-            .connect_changed(move |preview_size_combobox| {
-                post_event(
-                    &sender,
-                    Event::ChangePreviewSize(PreviewSize::from(
-                        preview_size_combobox.active_id().unwrap().as_str(),
-                    )),
-                );
             });
     }
 
@@ -618,6 +603,7 @@ impl App {
     }
 
     fn refresh_preview(&mut self, preview_size: PreviewSize) {
+        self.widgets.preview_size_label().set_text(String::from(preview_size).as_str());
         if let Some(image) = self.image_list.borrow_mut().current_image_mut() {
             image.create_preview_image_buffer(preview_size);
             self.widgets
@@ -638,22 +624,26 @@ impl App {
 
     fn preview_smaller(&self) {
         let new_scale = self.settings.scale().smaller();
-        self.widgets
-            .preview_size_combobox()
-            .set_active_id(Some(String::from(new_scale).as_ref()));
+        post_event(
+            &self.sender,
+            Event::ChangePreviewSize(new_scale),
+        );
     }
 
     fn preview_larger(&self) {
         let new_scale = self.settings.scale().larger();
-        self.widgets
-            .preview_size_combobox()
-            .set_active_id(Some(String::from(new_scale).as_ref()));
+        post_event(
+            &self.sender,
+            Event::ChangePreviewSize(new_scale),
+        );
     }
 
     fn preview_fit_screen(&self) {
-        self.widgets
-            .preview_size_combobox()
-            .set_active_id(Some(String::from(PreviewSize::BestFit(0, 0)).as_ref()));
+        let new_scale = PreviewSize::BestFit(0, 0);
+        post_event(
+            &self.sender,
+            Event::ChangePreviewSize(new_scale),
+        );
     }
 
     fn image_edit(&mut self, image_operation: ImageOperation) {

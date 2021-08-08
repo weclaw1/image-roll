@@ -280,39 +280,22 @@ pub enum PreviewSize {
     Resized(f32),
 }
 
-impl From<&str> for PreviewSize {
-    fn from(value: &str) -> Self {
-        match value {
-            "preview_fit_screen" => PreviewSize::BestFit(0, 0),
-            "preview_10" => PreviewSize::Resized(0.1),
-            "preview_25" => PreviewSize::Resized(0.25),
-            "preview_33" => PreviewSize::Resized(0.33),
-            "preview_50" => PreviewSize::Resized(0.5),
-            "preview_66" => PreviewSize::Resized(0.66),
-            "preview_75" => PreviewSize::Resized(0.75),
-            "preview_100" => PreviewSize::OriginalSize,
-            "preview_133" => PreviewSize::Resized(1.33),
-            "preview_150" => PreviewSize::Resized(1.5),
-            "preview_200" => PreviewSize::Resized(2.0),
-            _ => panic!("Cannot create PreviewSize from value: {}", value),
-        }
-    }
-}
-
 impl From<PreviewSize> for String {
     fn from(value: PreviewSize) -> Self {
         match value {
-            PreviewSize::BestFit(_, _) => String::from("preview_fit_screen"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.1) => String::from("preview_10"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.25) => String::from("preview_25"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.33) => String::from("preview_33"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.5) => String::from("preview_50"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.66) => String::from("preview_66"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.75) => String::from("preview_75"),
-            PreviewSize::OriginalSize => String::from("preview_100"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.33) => String::from("preview_133"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.5) => String::from("preview_150"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 2.0) => String::from("preview_200"),
+            PreviewSize::BestFit(_, _) => String::from("Fit screen"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.05) => String::from("5%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.1) => String::from("10%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.25) => String::from("25%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.33) => String::from("33%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.5) => String::from("50%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.66) => String::from("66%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.75) => String::from("75%"),
+            PreviewSize::OriginalSize => String::from("100%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.33) => String::from("133%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.5) => String::from("150%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 2.0) => String::from("200%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 5.0) => String::from("500%"),
             _ => panic!("Cannot create PreviewSize for this value"),
         }
     }
@@ -323,6 +306,7 @@ impl PreviewSize {
         match self {
             PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
             PreviewSize::OriginalSize => PreviewSize::Resized(0.75),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 5.0) => PreviewSize::Resized(2.0),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 2.0) => PreviewSize::Resized(1.5),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 1.5) => PreviewSize::Resized(1.33),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 1.33) => PreviewSize::OriginalSize,
@@ -331,18 +315,20 @@ impl PreviewSize {
             PreviewSize::Resized(value) if abs_diff_eq!(value, 0.5) => PreviewSize::Resized(0.33),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 0.33) => PreviewSize::Resized(0.25),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 0.25) => PreviewSize::Resized(0.1),
-            PreviewSize::Resized(_) => panic!("Preview size cannot be smaller than 10%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.1) => PreviewSize::Resized(0.05),
+            PreviewSize::Resized(_) => panic!("Preview size cannot be smaller than 5%"),
         }
     }
 
     pub fn can_be_smaller(&self) -> bool {
-        !matches!(self, PreviewSize::Resized(value) if value <= &0.1)
+        !matches!(self, PreviewSize::Resized(value) if value <= &0.05)
     }
 
     pub fn larger(self) -> PreviewSize {
         match self {
             PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
             PreviewSize::OriginalSize => PreviewSize::Resized(1.33),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.05) => PreviewSize::Resized(0.1),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 0.1) => PreviewSize::Resized(0.25),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 0.25) => PreviewSize::Resized(0.33),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 0.33) => PreviewSize::Resized(0.5),
@@ -351,11 +337,12 @@ impl PreviewSize {
             PreviewSize::Resized(value) if abs_diff_eq!(value, 0.75) => PreviewSize::OriginalSize,
             PreviewSize::Resized(value) if abs_diff_eq!(value, 1.33) => PreviewSize::Resized(1.5),
             PreviewSize::Resized(value) if abs_diff_eq!(value, 1.5) => PreviewSize::Resized(2.0),
-            PreviewSize::Resized(_) => panic!("Preview size cannot be larger than 200%"),
+            PreviewSize::Resized(value) if abs_diff_eq!(value, 2.0) => PreviewSize::Resized(5.0),
+            PreviewSize::Resized(_) => panic!("Preview size cannot be larger than 500%"),
         }
     }
 
     pub fn can_be_larger(&self) -> bool {
-        !matches!(self, PreviewSize::Resized(value) if value >= &2.0)
+        !matches!(self, PreviewSize::Resized(value) if value >= &5.0)
     }
 }

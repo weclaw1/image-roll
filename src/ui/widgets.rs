@@ -14,7 +14,7 @@ pub struct Widgets {
     preview_smaller_button: gtk::Button,
     preview_larger_button: gtk::Button,
     image_viewport: gtk::Viewport,
-    preview_size_combobox: gtk::ComboBoxText,
+    preview_size_label: gtk::Label,
     image_event_box: gtk::EventBox,
     rotate_counterclockwise_button: gtk::Button,
     rotate_clockwise_button: gtk::Button,
@@ -75,9 +75,9 @@ impl Widgets {
             .object("image_viewport")
             .expect("Couldn't get image_viewport");
 
-        let preview_size_combobox: gtk::ComboBoxText = builder
-            .object("preview_size_combobox")
-            .expect("Couldn't get preview_size_combobox");
+        let preview_size_label: gtk::Label = builder
+            .object("preview_size_label")
+            .expect("Couldn't get preview_size_label");
 
         let image_event_box: gtk::EventBox = builder
             .object("image_event_box")
@@ -160,7 +160,7 @@ impl Widgets {
             preview_smaller_button,
             preview_larger_button,
             image_viewport,
-            preview_size_combobox,
+            preview_size_label,
             image_event_box,
             rotate_counterclockwise_button,
             rotate_clockwise_button,
@@ -225,11 +225,6 @@ impl Widgets {
     /// Get a reference to the widgets's image viewport.
     pub fn image_viewport(&self) -> &gtk::Viewport {
         &self.image_viewport
-    }
-
-    /// Get a reference to the widgets's preview size combobox.
-    pub fn preview_size_combobox(&self) -> &gtk::ComboBoxText {
-        &self.preview_size_combobox
     }
 
     /// Get a reference to the widgets's image event box.
@@ -320,5 +315,10 @@ impl Widgets {
     /// Get a reference to the widgets's delete button.
     pub fn delete_button(&self) -> &gtk::Button {
         &self.delete_button
+    }
+
+    /// Get a reference to the widgets's preview size label.
+    pub fn preview_size_label(&self) -> &gtk::Label {
+        &self.preview_size_label
     }
 }

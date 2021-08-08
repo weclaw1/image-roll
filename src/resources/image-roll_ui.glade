@@ -535,8 +535,8 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_smaller_icon</property>
-                <accelerator key="KP_Subtract" signal="clicked"/>
                 <accelerator key="minus" signal="clicked"/>
+                <accelerator key="KP_Subtract" signal="clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -545,23 +545,12 @@ Author: Robert Węcławski
               </packing>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="preview_size_combobox">
+              <object class="GtkLabel" id="preview_size_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="active">0</property>
-                <items>
-                  <item id="preview_fit_screen" translatable="yes">Fit screen</item>
-                  <item id="preview_10" translatable="yes">10%</item>
-                  <item id="preview_25" translatable="yes">25%</item>
-                  <item id="preview_33" translatable="yes">33%</item>
-                  <item id="preview_50" translatable="yes">50%</item>
-                  <item id="preview_66" translatable="yes">66%</item>
-                  <item id="preview_75" translatable="yes">75%</item>
-                  <item id="preview_100" translatable="yes">100%</item>
-                  <item id="preview_133" translatable="yes">133%</item>
-                  <item id="preview_150" translatable="yes">150%</item>
-                  <item id="preview_200" translatable="yes">200%</item>
-                </items>
+                <property name="label" translatable="yes">Fit screen</property>
+                <property name="width-chars">9</property>
+                <property name="max-width-chars">9</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -575,8 +564,8 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_larger_icon</property>
-                <accelerator key="KP_Add" signal="clicked"/>
                 <accelerator key="plus" signal="clicked"/>
+                <accelerator key="KP_Add" signal="clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
