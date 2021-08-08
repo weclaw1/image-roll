@@ -14,6 +14,7 @@ pub enum Event {
     StartSelection((i32, i32)),
     DragSelection((i32, i32)),
     SaveCurrentImage(Option<PathBuf>),
+    DeleteCurrentImage,
     EndSelection,
     PreviewSmaller,
     PreviewLarger,

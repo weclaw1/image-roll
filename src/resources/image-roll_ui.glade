@@ -42,6 +42,11 @@ Author: Robert Węcławski
     <property name="can-focus">False</property>
     <property name="icon-name">crop-symbolic</property>
   </object>
+  <object class="GtkImage" id="delete_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">user-trash-symbolic</property>
+  </object>
   <object class="GtkAdjustment" id="height_adjustment">
     <property name="upper">2147483647</property>
     <property name="step-increment">1</property>
@@ -530,8 +535,8 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_smaller_icon</property>
-                <accelerator key="minus" signal="clicked"/>
                 <accelerator key="KP_Subtract" signal="clicked"/>
+                <accelerator key="minus" signal="clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -570,8 +575,8 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_larger_icon</property>
-                <accelerator key="plus" signal="clicked"/>
                 <accelerator key="KP_Add" signal="clicked"/>
+                <accelerator key="plus" signal="clicked"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -596,18 +601,43 @@ Author: Robert Węcławski
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton" id="menu_button">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="focus-on-click">False</property>
-            <property name="receives-default">True</property>
-            <property name="popover">popover_menu</property>
+            <property name="can-focus">False</property>
             <child>
-              <object class="GtkImage" id="menu_icon">
+              <object class="GtkButton" id="delete_button">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">open-menu</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="image">delete_icon</property>
+                <accelerator key="Delete" signal="clicked"/>
               </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="menu_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="focus-on-click">False</property>
+                <property name="receives-default">True</property>
+                <property name="popover">popover_menu</property>
+                <child>
+                  <object class="GtkImage" id="menu_icon">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">open-menu</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>

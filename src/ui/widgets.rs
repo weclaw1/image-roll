@@ -32,6 +32,7 @@ pub struct Widgets {
     redo_button: gtk::Button,
     save_as_menu_button: gtk::Button,
     preview_fit_screen_button: gtk::Button,
+    delete_button: gtk::Button,
 }
 
 impl Widgets {
@@ -145,6 +146,10 @@ impl Widgets {
             .object("preview_fit_screen_button")
             .expect("Couldn't get preview_fit_screen_button");
 
+        let delete_button: gtk::Button = builder
+            .object("delete_button")
+            .expect("Couldn't get delete_button");
+
         Self {
             window,
             open_menu_button,
@@ -173,6 +178,7 @@ impl Widgets {
             redo_button,
             save_as_menu_button,
             preview_fit_screen_button,
+            delete_button,
         }
     }
 
@@ -309,5 +315,10 @@ impl Widgets {
     /// Get a reference to the widgets's preview fit screen button.
     pub fn preview_fit_screen_button(&self) -> &gtk::Button {
         &self.preview_fit_screen_button
+    }
+
+    /// Get a reference to the widgets's delete button.
+    pub fn delete_button(&self) -> &gtk::Button {
+        &self.delete_button
     }
 }

@@ -76,6 +76,13 @@ impl ImageList {
         current_image.save(filename, clear_buffer)?;
         Ok(())
     }
+
+    pub fn delete_current_image(&mut self) -> Result<()> {
+        let current_image_path = self.current_image_path.as_ref().unwrap();
+        trash::delete(current_image_path)?;
+        self.images.remove(current_image_path);
+        Ok(())
+    }
 }
 
 impl Index<&PathBuf> for ImageList {

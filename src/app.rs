@@ -113,6 +113,7 @@ impl App {
         self.connect_undo_button_clicked();
         self.connect_redo_button_clicked();
         self.connect_save_as_menu_button_clicked();
+        self.connect_delete_button_clicked();
         self.connect_error_info_bar_response();
 
         self.widgets.window().show_all();
@@ -136,6 +137,7 @@ impl App {
                 self.drag_selection(position)
             }
             Event::SaveCurrentImage(filename) => self.save_current_image(filename),
+            Event::DeleteCurrentImage => self.delete_current_image(),
             Event::EndSelection if self.widgets.crop_button().is_active() => self.end_selection(),
             Event::PreviewSmaller => self.preview_smaller(),
             Event::PreviewLarger => self.preview_larger(),
@@ -493,6 +495,13 @@ impl App {
         });
     }
 
+    fn connect_delete_button_clicked(&self) {
+        let sender = self.sender.clone();
+        self.widgets.delete_button().connect_clicked(move |_| {
+            post_event(&sender, Event::DeleteCurrentImage);
+        });
+    }
+
     fn connect_error_info_bar_response(&self) {
         self.widgets
             .error_info_bar()
@@ -772,6 +781,12 @@ impl App {
         }
     }
 
+    fn delete_current_image(&mut self) {
+        if let Err(error) = self.image_list.borrow_mut().delete_current_image() {
+            post_event(&self.sender, Event::DisplayError(error));
+        }
+    }
+
     fn print(&self) {
         let print_operation = gtk::PrintOperation::new();
 
@@ -878,11 +893,13 @@ impl App {
                 .save_menu_button()
                 .set_sensitive(current_image.has_unsaved_operations());
             self.widgets.save_as_menu_button().set_sensitive(true);
+            self.widgets.delete_button().set_sensitive(true);
         } else {
             self.widgets.undo_button().set_sensitive(false);
             self.widgets.redo_button().set_sensitive(false);
             self.widgets.save_menu_button().set_sensitive(false);
             self.widgets.save_as_menu_button().set_sensitive(false);
+            self.widgets.delete_button().set_sensitive(false);
         }
 
         self.widgets

@@ -925,6 +925,19 @@
     {
         "type": "archive",
         "archive-type": "tar-gzip",
+        "url": "https://static.crates.io/crates/trash/trash-1.3.0.crate",
+        "sha256": "90df96afb154814e214f37eac04920c66886fd95962f22febb4d537b0dacd512",
+        "dest": "cargo/vendor/trash-1.3.0"
+    },
+    {
+        "type": "file",
+        "url": "data:%7B%22package%22%3A%20%2290df96afb154814e214f37eac04920c66886fd95962f22febb4d537b0dacd512%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "dest": "cargo/vendor/trash-1.3.0",
+        "dest-filename": ".cargo-checksum.json"
+    },
+    {
+        "type": "archive",
+        "archive-type": "tar-gzip",
         "url": "https://static.crates.io/crates/ucd-trie/ucd-trie-0.1.3.crate",
         "sha256": "56dee185309b50d1f11bfedef0fe6d036842e3fb77413abef29f8f8d1c5d4c1c",
         "dest": "cargo/vendor/ucd-trie-0.1.3"
