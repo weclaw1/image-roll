@@ -378,7 +378,8 @@ Author: Robert Węcławski
                 <property name="tooltip-text" translatable="yes">Previous</property>
                 <property name="image">previous_icon</property>
                 <property name="always-show-image">True</property>
-                <accelerator key="Left" signal="clicked" modifiers="GDK_LOCK_MASK"/>
+				<accelerator key="Left" signal="clicked" modifiers="GDK_LOCK_MASK"/>
+				<accelerator key="h" signal="clicked" modifiers="GDK_LOCK_MASK"/>
               </object>
               <packing>
                 <property name="position">0</property>
@@ -511,7 +512,8 @@ Author: Robert Węcławski
                 <property name="image">next_icon</property>
                 <property name="image-position">right</property>
                 <property name="always-show-image">True</property>
-                <accelerator key="Right" signal="clicked" modifiers="GDK_LOCK_MASK"/>
+				<accelerator key="Right" signal="clicked" modifiers="GDK_LOCK_MASK"/>
+				<accelerator key="l" signal="clicked" modifiers="GDK_LOCK_MASK"/>
               </object>
               <packing>
                 <property name="pack-type">end</property>
@@ -545,7 +547,8 @@ Author: Robert Węcławski
                 <property name="receives-default">True</property>
                 <property name="image">preview_smaller_icon</property>
                 <accelerator key="KP_Subtract" signal="clicked"/>
-                <accelerator key="minus" signal="clicked"/>
+				<accelerator key="minus" signal="clicked"/>
+				<accelerator key="j" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -574,7 +577,8 @@ Author: Robert Węcławski
                 <property name="receives-default">True</property>
                 <property name="image">preview_larger_icon</property>
                 <accelerator key="KP_Add" signal="clicked"/>
-                <accelerator key="plus" signal="clicked"/>
+				<accelerator key="plus" signal="clicked"/>
+				<accelerator key="k" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
               </object>
               <packing>
                 <property name="expand">False</property>
