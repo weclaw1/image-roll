@@ -31,5 +31,5 @@ assets = [
     ["src/resources/com.github.weclaw1.ImageRoll.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll.Devel.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll-symbolic.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
-    ["src/resources/com.github.weclaw1.ImageRoll.gschema", "/usr/share/glib-2.0/schemas/", "644"],
+    ["src/resources/com.github.weclaw1.ImageRoll.gschema.xml", "/usr/share/glib-2.0/schemas/", "644"],
 ]
