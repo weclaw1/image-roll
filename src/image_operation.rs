@@ -8,7 +8,7 @@ use crate::image::CoordinatesPair;
 pub enum ImageOperation {
     Rotate(PixbufRotation),
     Crop(CoordinatesPair),
-    Resize((i32, i32)),
+    Resize((u32, u32)),
 }
 
 pub trait ApplyImageOperation {
@@ -31,10 +31,10 @@ impl ApplyImageOperation for &Pixbuf {
                 let y = *cmp::min(start_position_y, end_position_y);
                 let width = *cmp::max(start_position_x, end_position_x) - x;
                 let height = *cmp::max(start_position_y, end_position_y) - y;
-                self.new_subpixbuf(x, y, width, height)
+                self.new_subpixbuf(x as i32, y as i32, width as i32, height as i32)
             }
             ImageOperation::Resize((width, height)) => {
-                self.scale_simple(*width, *height, InterpType::Bilinear)
+                self.scale_simple(*width as i32, *height as i32, InterpType::Bilinear)
             }
         }
     }

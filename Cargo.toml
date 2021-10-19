@@ -12,7 +12,6 @@ edition = "2018"
 [dependencies]
 log = "0.4.14"
 env_logger = "0.9.0"
-approx = "0.5.0"
 anyhow = "1.0.44"
 trash = "2.0.2"
 
@@ -24,6 +23,7 @@ features = ["v3_22_29"]
 license-file = ["LICENSE", "0"]
 section = "graphics"
 depends = "$auto"
+maintainer-scripts = "debian"
 assets = [
     ["target/release/image-roll", "usr/bin/", "755"],
     ["README.md", "usr/share/doc/image-roll/README", "644"],
@@ -31,4 +31,5 @@ assets = [
     ["src/resources/com.github.weclaw1.ImageRoll.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll.Devel.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
     ["src/resources/com.github.weclaw1.ImageRoll-symbolic.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+    ["src/resources/com.github.weclaw1.ImageRoll.gschema", "/usr/share/glib-2.0/schemas/", "644"],
 ]

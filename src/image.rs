@@ -1,13 +1,11 @@
 use std::path::Path;
 
-use approx::abs_diff_eq;
-
 use anyhow::{anyhow, Result};
 use gtk::gdk_pixbuf::{InterpType, Pixbuf};
 
 use crate::image_operation::{ApplyImageOperation, ImageOperation};
 
-pub type Coordinates = (i32, i32);
+pub type Coordinates = (u32, u32);
 pub type CoordinatesPair = (Coordinates, Coordinates);
 
 pub struct Image {
@@ -98,12 +96,12 @@ impl Image {
         self.preview_image_buffer = None;
     }
 
-    fn image_buffer_scale_to_fit(&self, canvas_width: i32, canvas_height: i32) -> Option<Pixbuf> {
+    fn image_buffer_scale_to_fit(&self, canvas_width: u32, canvas_height: u32) -> Option<Pixbuf> {
         if let Some(image_buffer) = &self.current_image_buffer {
-            let image_width = image_buffer.width() as f32;
-            let image_height = image_buffer.height() as f32;
-            let width_ratio = canvas_width as f32 / image_width;
-            let height_ratio = canvas_height as f32 / image_height;
+            let image_width = image_buffer.width() as f64;
+            let image_height = image_buffer.height() as f64;
+            let width_ratio = canvas_width as f64 / image_width;
+            let height_ratio = canvas_height as f64 / image_height;
             let scale_ratio = width_ratio.min(height_ratio);
             image_buffer.scale_simple(
                 (image_width * scale_ratio) as i32,
@@ -115,11 +113,11 @@ impl Image {
         }
     }
 
-    fn image_buffer_resize(&self, scale: f32) -> Option<Pixbuf> {
+    fn image_buffer_resize(&self, scale: u32) -> Option<Pixbuf> {
         if let Some(image_buffer) = &self.current_image_buffer {
             image_buffer.scale_simple(
-                (image_buffer.width() as f32 * scale) as i32,
-                (image_buffer.height() as f32 * scale) as i32,
+                (image_buffer.width() as f64 * (scale as f64 / 100.0)) as i32,
+                (image_buffer.height() as f64 * (scale as f64 / 100.0)) as i32,
                 InterpType::Bilinear,
             )
         } else {
@@ -139,8 +137,8 @@ impl Image {
 
     pub fn create_print_image_buffer(
         &self,
-        canvas_width: i32,
-        canvas_height: i32,
+        canvas_width: u32,
+        canvas_height: u32,
     ) -> Option<Pixbuf> {
         if let Some((image_width, image_height)) = self.image_size() {
             if image_width > canvas_width || image_height > canvas_height {
@@ -157,10 +155,10 @@ impl Image {
         self.preview_image_buffer.as_ref()
     }
 
-    pub fn image_size(&self) -> Option<(i32, i32)> {
+    pub fn image_size(&self) -> Option<(u32, u32)> {
         self.current_image_buffer
             .as_ref()
-            .map(|image_buffer| (image_buffer.width(), image_buffer.height()))
+            .map(|image_buffer| (image_buffer.width() as u32, image_buffer.height() as u32))
     }
 
     pub fn image_aspect_ratio(&self) -> Option<f64> {
@@ -168,10 +166,10 @@ impl Image {
             .map(|(image_width, image_height)| image_width as f64 / image_height as f64)
     }
 
-    pub fn preview_image_buffer_size(&self) -> Option<(i32, i32)> {
+    pub fn preview_image_buffer_size(&self) -> Option<(u32, u32)> {
         self.preview_image_buffer
             .as_ref()
-            .map(|image_buffer| (image_buffer.width(), image_buffer.height()))
+            .map(|image_buffer| (image_buffer.width() as u32, image_buffer.height() as u32))
     }
 
     pub fn preview_coords_to_image_coords(
@@ -183,13 +181,13 @@ impl Image {
             if let Some((preview_width, preview_height)) = self.preview_image_buffer_size() {
                 Some((
                     (
-                        (start_coord_x as f32 * (image_width as f32 / preview_width as f32)) as i32,
-                        (start_coord_y as f32 * (image_height as f32 / preview_height as f32))
-                            as i32,
+                        (start_coord_x as f64 * (image_width as f64 / preview_width as f64)) as u32,
+                        (start_coord_y as f64 * (image_height as f64 / preview_height as f64))
+                            as u32,
                     ),
                     (
-                        (end_coord_x as f32 * (image_width as f32 / preview_width as f32)) as i32,
-                        (end_coord_y as f32 * (image_height as f32 / preview_height as f32)) as i32,
+                        (end_coord_x as f64 * (image_width as f64 / preview_width as f64)) as u32,
+                        (end_coord_y as f64 * (image_height as f64 / preview_height as f64)) as u32,
                     ),
                 ))
             } else {
@@ -275,28 +273,17 @@ impl ApplyImageOperation for Image {
 
 #[derive(Clone, Copy, Debug)]
 pub enum PreviewSize {
-    BestFit(i32, i32),
+    BestFit(u32, u32),
     OriginalSize,
-    Resized(f32),
+    Resized(u32),
 }
 
 impl From<PreviewSize> for String {
     fn from(value: PreviewSize) -> Self {
         match value {
             PreviewSize::BestFit(_, _) => String::from("Fit screen"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.05) => String::from("5%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.1) => String::from("10%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.25) => String::from("25%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.33) => String::from("33%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.5) => String::from("50%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.66) => String::from("66%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.75) => String::from("75%"),
             PreviewSize::OriginalSize => String::from("100%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.33) => String::from("133%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.5) => String::from("150%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 2.0) => String::from("200%"),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 5.0) => String::from("500%"),
-            _ => panic!("Cannot create PreviewSize for this value"),
+            PreviewSize::Resized(value) => format!("{}%", value),
         }
     }
 }
@@ -305,44 +292,44 @@ impl PreviewSize {
     pub fn smaller(self) -> PreviewSize {
         match self {
             PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
-            PreviewSize::OriginalSize => PreviewSize::Resized(0.75),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 5.0) => PreviewSize::Resized(2.0),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 2.0) => PreviewSize::Resized(1.5),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.5) => PreviewSize::Resized(1.33),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.33) => PreviewSize::OriginalSize,
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.75) => PreviewSize::Resized(0.66),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.66) => PreviewSize::Resized(0.5),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.5) => PreviewSize::Resized(0.33),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.33) => PreviewSize::Resized(0.25),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.25) => PreviewSize::Resized(0.1),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.1) => PreviewSize::Resized(0.05),
-            PreviewSize::Resized(_) => panic!("Preview size cannot be smaller than 5%"),
+            PreviewSize::OriginalSize => PreviewSize::Resized(75),
+            PreviewSize::Resized(value) if value == 500 => PreviewSize::Resized(200),
+            PreviewSize::Resized(value) if value == 200 => PreviewSize::Resized(150),
+            PreviewSize::Resized(value) if value == 150 => PreviewSize::Resized(133),
+            PreviewSize::Resized(value) if value == 133 => PreviewSize::OriginalSize,
+            PreviewSize::Resized(value) if value == 75 => PreviewSize::Resized(66),
+            PreviewSize::Resized(value) if value == 66 => PreviewSize::Resized(50),
+            PreviewSize::Resized(value) if value == 50 => PreviewSize::Resized(33),
+            PreviewSize::Resized(value) if value == 33 => PreviewSize::Resized(25),
+            PreviewSize::Resized(value) if value == 25 => PreviewSize::Resized(10),
+            PreviewSize::Resized(value) if value == 10 => PreviewSize::Resized(5),
+            PreviewSize::Resized(_) => panic!("Preview size with given scale is not supported"),
         }
     }
 
     pub fn can_be_smaller(&self) -> bool {
-        !matches!(self, PreviewSize::Resized(value) if value <= &0.05)
+        !matches!(self, PreviewSize::Resized(value) if value <= &5)
     }
 
     pub fn larger(self) -> PreviewSize {
         match self {
             PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
-            PreviewSize::OriginalSize => PreviewSize::Resized(1.33),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.05) => PreviewSize::Resized(0.1),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.1) => PreviewSize::Resized(0.25),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.25) => PreviewSize::Resized(0.33),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.33) => PreviewSize::Resized(0.5),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.5) => PreviewSize::Resized(0.66),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.66) => PreviewSize::Resized(0.75),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 0.75) => PreviewSize::OriginalSize,
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.33) => PreviewSize::Resized(1.5),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 1.5) => PreviewSize::Resized(2.0),
-            PreviewSize::Resized(value) if abs_diff_eq!(value, 2.0) => PreviewSize::Resized(5.0),
-            PreviewSize::Resized(_) => panic!("Preview size cannot be larger than 500%"),
+            PreviewSize::OriginalSize => PreviewSize::Resized(133),
+            PreviewSize::Resized(value) if value == 5 => PreviewSize::Resized(10),
+            PreviewSize::Resized(value) if value == 10 => PreviewSize::Resized(25),
+            PreviewSize::Resized(value) if value == 25 => PreviewSize::Resized(33),
+            PreviewSize::Resized(value) if value == 33 => PreviewSize::Resized(50),
+            PreviewSize::Resized(value) if value == 50 => PreviewSize::Resized(66),
+            PreviewSize::Resized(value) if value == 66 => PreviewSize::Resized(75),
+            PreviewSize::Resized(value) if value == 75 => PreviewSize::OriginalSize,
+            PreviewSize::Resized(value) if value == 133 => PreviewSize::Resized(150),
+            PreviewSize::Resized(value) if value == 150 => PreviewSize::Resized(200),
+            PreviewSize::Resized(value) if value == 200 => PreviewSize::Resized(500),
+            PreviewSize::Resized(_) => panic!("Preview size with given scale is not supported"),
         }
     }
 
     pub fn can_be_larger(&self) -> bool {
-        !matches!(self, PreviewSize::Resized(value) if value >= &5.0)
+        !matches!(self, PreviewSize::Resized(value) if value >= &500)
     }
 }

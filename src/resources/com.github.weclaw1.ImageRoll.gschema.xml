@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema id="com.github.weclaw1.ImageRoll" path="/com/github/weclaw1/ImageRoll/">
+    <key name="window-width" type="u">
+      <default>1024</default>
+      <summary>Last window width</summary>
+    </key>
+    <key name="window-height" type="u">
+      <default>768</default>
+      <summary>Last window height</summary>
+    </key>
+  </schema>
+</schemalist>

@@ -1,4 +1,4 @@
-use std::process::Command;
+use std::{env, process::Command};
 
 fn main() {
     Command::new("glib-compile-resources")
@@ -43,9 +43,25 @@ fn main() {
             .unwrap();
     }
 
+    if Ok("debug".to_owned()) == env::var("PROFILE") {
+        Command::new("sh")
+            .args(&["-c", "mkdir -p $HOME/.local/share/glib-2.0/schemas"])
+            .status()
+            .unwrap();
+        Command::new("sh").args(&["-c", "install -D src/resources/com.github.weclaw1.ImageRoll.gschema.xml $HOME/.local/share/glib-2.0/schemas/"]).status().unwrap();
+        Command::new("sh")
+            .args(&[
+                "-c",
+                "glib-compile-schemas $HOME/.local/share/glib-2.0/schemas/",
+            ])
+            .status()
+            .unwrap();
+    }
+
     println!("cargo:rerun-if-changed=src/resources/resources.xml");
     println!("cargo:rerun-if-changed=src/resources/image-roll_ui.glade");
     println!("cargo:rerun-if-changed=src/resources/crop-symbolic.svg");
     println!("cargo:rerun-if-changed=src/resources/com.github.weclaw1.ImageRoll.svg");
+    println!("cargo:rerun-if-changed=src/resources/com.github.weclaw1.ImageRoll.gschema.xml");
     println!("cargo:rerun-if-changed=Cargo.lock");
 }

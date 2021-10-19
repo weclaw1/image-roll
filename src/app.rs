@@ -53,10 +53,12 @@ impl App {
 
         let selection_coords: Rc<Cell<Option<CoordinatesPair>>> = Rc::new(Cell::new(None));
 
-        let settings: Settings = Settings::new(PreviewSize::BestFit(
-            widgets.image_viewport().allocation().width,
-            widgets.image_viewport().allocation().height,
-        ));
+        let settings: Settings = Settings::new(app.application_id().unwrap().as_str());
+
+        let (window_width, window_height) = settings.window_size();
+        widgets
+            .window()
+            .set_default_size(window_width as i32, window_height as i32);
 
         let (sender, receiver) = glib::MainContext::channel::<Event>(glib::PRIORITY_DEFAULT);
 
@@ -114,6 +116,7 @@ impl App {
         self.connect_save_as_menu_button_clicked();
         self.connect_delete_button_clicked();
         self.connect_error_info_bar_response();
+        self.connect_window_resized();
 
         self.widgets.window().show_all();
 
@@ -278,7 +281,7 @@ impl App {
                 let (position_x, position_y) = button_event.position();
                 post_event(
                     &sender,
-                    Event::StartSelection((position_x as i32, position_y as i32)),
+                    Event::StartSelection((position_x as u32, position_y as u32)),
                 );
                 gtk::Inhibit(false)
             });
@@ -292,7 +295,7 @@ impl App {
                 let (position_x, position_y) = motion_event.position();
                 post_event(
                     &sender,
-                    Event::DragSelection((position_x as i32, position_y as i32)),
+                    Event::DragSelection((position_x as u32, position_y as u32)),
                 );
                 gtk::Inhibit(false)
             });
@@ -338,8 +341,8 @@ impl App {
                         cairo_context.rectangle(
                             start_selection_coord_x as f64,
                             start_selection_coord_y as f64,
-                            (end_selection_coord_x - start_selection_coord_x) as f64,
-                            (end_selection_coord_y - start_selection_coord_y) as f64,
+                            (end_selection_coord_x as i32 - start_selection_coord_x as i32) as f64,
+                            (end_selection_coord_y as i32 - start_selection_coord_y as i32) as f64,
                         );
                         if let Err(error) = cairo_context.stroke() {
                             error!("{}", error);
@@ -395,8 +398,8 @@ impl App {
                 post_event(
                     &sender,
                     Event::ImageEdit(ImageOperation::Resize((
-                        widgets.width_spin_button().value() as i32,
-                        widgets.height_spin_button().value() as i32,
+                        widgets.width_spin_button().value() as u32,
+                        widgets.height_spin_button().value() as u32,
                     ))),
                 );
                 widgets.resize_button().emit_clicked();
@@ -494,6 +497,15 @@ impl App {
                 if response == gtk::ResponseType::Close {
                     error_info_bar.set_revealed(false);
                 }
+            });
+    }
+
+    fn connect_window_resized(&self) {
+        let settings = self.settings.clone();
+        self.widgets
+            .window()
+            .connect_size_allocate(move |_, allocation| {
+                settings.set_window_size((allocation.width as u32, allocation.height as u32));
             });
     }
 
@@ -596,7 +608,7 @@ impl App {
 
     fn image_viewport_resize(&mut self, allocation: Rectangle) {
         if let PreviewSize::BestFit(_, _) = self.settings.scale() {
-            let new_scale = PreviewSize::BestFit(allocation.width, allocation.height);
+            let new_scale = PreviewSize::BestFit(allocation.width as u32, allocation.height as u32);
             self.settings.set_scale(new_scale);
             post_event(&self.sender, Event::RefreshPreview(new_scale));
         }
@@ -617,8 +629,10 @@ impl App {
     fn change_preview_size(&mut self, mut preview_size: PreviewSize) {
         if let PreviewSize::BestFit(_, _) = preview_size {
             let viewport_allocation = self.widgets.image_viewport().allocation();
-            preview_size =
-                PreviewSize::BestFit(viewport_allocation.width, viewport_allocation.height);
+            preview_size = PreviewSize::BestFit(
+                viewport_allocation.width as u32,
+                viewport_allocation.height as u32,
+            );
         }
         self.settings.set_scale(preview_size);
         post_event(&self.sender, Event::RefreshPreview(preview_size));
@@ -648,19 +662,19 @@ impl App {
         }
     }
 
-    fn start_selection(&mut self, position: (i32, i32)) {
+    fn start_selection(&mut self, position: (u32, u32)) {
         if let Some(current_image) = self.image_list.borrow().current_image() {
             let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
             let (position_x, position_y) = position;
             let event_box_allocation = self.widgets.image_event_box().allocation();
             let (image_coords_position_x, image_coords_position_y) = (
-                position_x - ((event_box_allocation.width - image_width) / 2),
-                position_y - ((event_box_allocation.height - image_height) / 2),
+                position_x as i32 - ((event_box_allocation.width - image_width as i32) / 2),
+                position_y as i32 - ((event_box_allocation.height - image_height as i32) / 2),
             );
             if image_coords_position_x >= 0
-                && image_coords_position_x < image_width
+                && image_coords_position_x < image_width as i32
                 && image_coords_position_y >= 0
-                && image_coords_position_y < image_height
+                && image_coords_position_y < image_height as i32
             {
                 self.selection_coords
                     .replace(Some(((position_x, position_y), (position_x, position_y))));
@@ -669,7 +683,7 @@ impl App {
         }
     }
 
-    fn drag_selection(&mut self, position: (i32, i32)) {
+    fn drag_selection(&mut self, position: (u32, u32)) {
         if let Some(((start_position_x, start_position_y), (_, _))) = self.selection_coords.get() {
             if let Some(current_image) = self.image_list.borrow().current_image() {
                 let (image_width, image_height) =
@@ -677,13 +691,13 @@ impl App {
                 let (position_x, position_y) = position;
                 let event_box_allocation = self.widgets.image_event_box().allocation();
                 let (image_coords_position_x, image_coords_position_y) = (
-                    position_x - ((event_box_allocation.width - image_width) / 2),
-                    position_y - ((event_box_allocation.height - image_height) / 2),
+                    position_x as i32 - ((event_box_allocation.width - image_width as i32) / 2),
+                    position_y as i32 - ((event_box_allocation.height - image_height as i32) / 2),
                 );
                 if image_coords_position_x >= 0
-                    && image_coords_position_x < image_width
+                    && image_coords_position_x < image_width as i32
                     && image_coords_position_y >= 0
-                    && image_coords_position_y < image_height
+                    && image_coords_position_y < image_height as i32
                 {
                     self.selection_coords.replace(Some((
                         (start_position_x, start_position_y),
@@ -704,19 +718,28 @@ impl App {
                     current_image.preview_image_buffer_size().unwrap();
                 let event_box_allocation = self.widgets.image_event_box().allocation();
                 let (image_coords_start_position_x, image_coords_start_position_y) = (
-                    start_position_x - ((event_box_allocation.width - image_width) / 2),
-                    start_position_y - ((event_box_allocation.height - image_height) / 2),
+                    start_position_x as i32
+                        - ((event_box_allocation.width - image_width as i32) / 2),
+                    start_position_y as i32
+                        - ((event_box_allocation.height - image_height as i32) / 2),
                 );
                 let (image_coords_end_position_x, image_coords_end_position_y) = (
-                    end_position_x - ((event_box_allocation.width - image_width) / 2),
-                    end_position_y - ((event_box_allocation.height - image_height) / 2),
+                    end_position_x as i32 - ((event_box_allocation.width - image_width as i32) / 2),
+                    end_position_y as i32
+                        - ((event_box_allocation.height - image_height as i32) / 2),
                 );
 
                 let crop_operation = ImageOperation::Crop(
                     current_image
                         .preview_coords_to_image_coords((
-                            (image_coords_start_position_x, image_coords_start_position_y),
-                            (image_coords_end_position_x, image_coords_end_position_y),
+                            (
+                                image_coords_start_position_x as u32,
+                                image_coords_start_position_y as u32,
+                            ),
+                            (
+                                image_coords_end_position_x as u32,
+                                image_coords_end_position_y as u32,
+                            ),
                         ))
                         .unwrap(),
                 );
@@ -785,8 +808,8 @@ impl App {
                 .current_image()
                 .map(|current_image| {
                     current_image.create_print_image_buffer(
-                        print_context.width() as i32,
-                        print_context.height() as i32,
+                        print_context.width() as u32,
+                        print_context.height() as u32,
                     )
                 })
                 .flatten()
