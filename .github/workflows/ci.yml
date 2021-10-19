@@ -18,7 +18,9 @@ jobs:
           override: true
 
       - name: Install dependencies
-        run: sudo apt install libgtk-3-dev
+        run: |
+          sudo apt update
+          sudo apt install -y libgtk-3-dev
 
       - name: Set up cache
         uses: actions/cache@v2
@@ -49,7 +51,9 @@ jobs:
           override: true
 
       - name: Install dependencies
-        run: sudo apt install libgtk-3-dev
+        run: |
+          sudo apt update
+          sudo apt install -y libgtk-3-dev
 
       - name: Set up cache
         uses: actions/cache@v2
@@ -87,7 +91,9 @@ jobs:
           args: --all -- --check
 
       - name: Install dependencies
-        run: sudo apt install libgtk-3-dev
+        run: |
+          sudo apt update
+          sudo apt install -y libgtk-3-dev
 
       - name: Set up cache
         uses: actions/cache@v2
@@ -120,7 +126,9 @@ jobs:
           override: true
 
       - name: Install dependencies
-        run: sudo apt install libgtk-3-dev wget patchelf librsvg2-dev
+        run: |
+          sudo apt update
+          sudo apt install -y libgtk-3-dev wget patchelf librsvg2-dev
 
       - name: Set up cache
         uses: actions/cache@v2
