@@ -28,7 +28,7 @@ sudo apt install libgtk-3-dev
 ```
 #### Fedora/CentOS
 ```
-sudo yum install gtk3-devel glib2-devel
+sudo dnf install gtk3-devel glib2-devel
 ```
 
 ### Flatpak
