@@ -192,10 +192,10 @@ impl App {
                     };
                     post_event(&sender, Event::OpenFile(file));
                 }
-                file_chooser.destroy();
             });
 
             file_chooser.run();
+            file_chooser.destroy();
         });
     }
 
