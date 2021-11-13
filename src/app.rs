@@ -453,9 +453,9 @@ impl App {
                         };
                         post_event(&sender, Event::SaveCurrentImage(Some(filename)));
                     }
-                    file_chooser.destroy();
                 });
                 file_chooser.run();
+                file_chooser.destroy();
             });
     }
 
