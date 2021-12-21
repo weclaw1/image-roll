@@ -449,7 +449,7 @@ dependencies = [
 
 [[package]]
 name = "image-roll"
-version = "1.3.1"
+version = "1.4.0"
 dependencies = [
  "anyhow",
  "env_logger",
