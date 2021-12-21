@@ -139,14 +139,14 @@ impl FileList {
 
     fn enumerate_files(folder: &gio::File) -> Result<Vec<gio::FileInfo>> {
         Ok(folder
-            .enumerate_children::<Cancellable>("", FileQueryInfoFlags::NONE, None)?
+            .enumerate_children::<Cancellable>("standard::*", FileQueryInfoFlags::NONE, None)?
             .into_iter()
             .filter_map(|file| file.ok())
             .filter(|file| file.file_type() == FileType::Regular)
             .filter(|file| {
-                gio::content_type_guess(file.name().to_str(), &[])
-                    .0
-                    .starts_with("image")
+                file.content_type()
+                    .filter(|content_type| content_type.to_string().starts_with("image"))
+                    .is_some()
             })
             .collect())
     }
