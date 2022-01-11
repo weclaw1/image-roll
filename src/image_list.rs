@@ -4,6 +4,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use gtk::{
+    gio::{Cancellable, File},
+    prelude::FileExt,
+};
+
 use crate::image::Image;
 
 use anyhow::{anyhow, Result};
@@ -79,7 +84,8 @@ impl ImageList {
 
     pub fn delete_current_image(&mut self) -> Result<()> {
         let current_image_path = self.current_image_path.as_ref().unwrap();
-        trash::delete(current_image_path)?;
+        let current_image_file = File::for_path(current_image_path);
+        current_image_file.trash::<Cancellable>(None)?;
         self.images.remove(current_image_path);
         Ok(())
     }
