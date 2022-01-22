@@ -28,8 +28,8 @@ pub enum Event {
     UndoOperation,
     RedoOperation,
     Print,
-    DisplayError(anyhow::Error),
-    HideErrorPanel,
+    DisplayMessage(String, gtk::MessageType),
+    HideInfoPanel,
 }
 
 pub fn post_event(sender: &glib::Sender<Event>, action: Event) {

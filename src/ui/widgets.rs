@@ -24,8 +24,8 @@ pub struct Widgets {
     height_spin_button: gtk::SpinButton,
     link_aspect_ratio_button: gtk::ToggleButton,
     apply_resize_button: gtk::Button,
-    error_info_bar: gtk::InfoBar,
-    error_info_bar_text: gtk::Label,
+    info_bar: gtk::InfoBar,
+    info_bar_text: gtk::Label,
     save_menu_button: gtk::Button,
     print_menu_button: gtk::Button,
     undo_button: gtk::Button,
@@ -167,8 +167,8 @@ impl Widgets {
             height_spin_button,
             link_aspect_ratio_button,
             apply_resize_button,
-            error_info_bar,
-            error_info_bar_text,
+            info_bar: error_info_bar,
+            info_bar_text: error_info_bar_text,
             save_menu_button,
             print_menu_button,
             undo_button,
@@ -270,13 +270,13 @@ impl Widgets {
     }
 
     /// Get a reference to the widgets's error info bar.
-    pub fn error_info_bar(&self) -> &gtk::InfoBar {
-        &self.error_info_bar
+    pub fn info_bar(&self) -> &gtk::InfoBar {
+        &self.info_bar
     }
 
     /// Get a reference to the widgets's error info bar text.
-    pub fn error_info_bar_text(&self) -> &gtk::Label {
-        &self.error_info_bar_text
+    pub fn info_bar_text(&self) -> &gtk::Label {
+        &self.info_bar_text
     }
 
     /// Get a reference to the widgets's save menu button.

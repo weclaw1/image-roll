@@ -1,12 +1,11 @@
 use gtk::{
     gdk::{self, Rectangle},
     gdk_pixbuf::PixbufRotation,
-    gio, glib,
+    gio,
+    glib::{self, timeout_future_seconds},
     prelude::*,
-    Builder,
+    Builder, MessageType,
 };
-
-use anyhow::anyhow;
 
 use std::{
     cell::{Cell, RefCell},
@@ -115,7 +114,7 @@ impl App {
         self.connect_redo_button_clicked();
         self.connect_save_as_menu_button_clicked();
         self.connect_delete_button_clicked();
-        self.connect_error_info_bar_response();
+        self.connect_info_bar_response();
         self.connect_window_resized();
 
         self.widgets.window().show_all();
@@ -127,7 +126,9 @@ impl App {
         match event {
             Event::OpenFile(file) => self.open_file(file),
             Event::LoadImage(file_path) => self.load_image(file_path),
-            Event::DisplayError(error) => self.display_error(error),
+            Event::DisplayMessage(message, message_type) => {
+                self.display_message(message.as_str(), message_type)
+            }
             Event::ImageViewportResize(allocation) => self.image_viewport_resize(allocation),
             Event::RefreshPreview(preview_size) => self.refresh_preview(preview_size),
             Event::ChangePreviewSize(preview_size) => self.change_preview_size(preview_size),
@@ -153,7 +154,7 @@ impl App {
             Event::UndoOperation => self.undo_operation(),
             Event::RedoOperation => self.redo_operation(),
             Event::Print => self.print(),
-            Event::HideErrorPanel => self.hide_error_panel(),
+            Event::HideInfoPanel => self.hide_info_panel(),
             event => debug!("Discarded unused event: {:?}", event),
         }
         self.update_buttons_state();
@@ -187,7 +188,13 @@ impl App {
                     let file = if let Some(file) = file_chooser.file() {
                         file
                     } else {
-                        post_event(&sender, Event::DisplayError(anyhow!("Couldn't load file")));
+                        post_event(
+                            &sender,
+                            Event::DisplayMessage(
+                                String::from("Couldn't load file"),
+                                MessageType::Error,
+                            ),
+                        );
                         return;
                     };
                     post_event(&sender, Event::OpenFile(file));
@@ -448,7 +455,13 @@ impl App {
                         let filename = if let Some(filename) = file_chooser.filename() {
                             filename
                         } else {
-                            post_event(&sender, Event::DisplayError(anyhow!("Couldn't save file")));
+                            post_event(
+                                &sender,
+                                Event::DisplayMessage(
+                                    String::from("Couldn't save file"),
+                                    MessageType::Error,
+                                ),
+                            );
                             return;
                         };
                         post_event(&sender, Event::SaveCurrentImage(Some(filename)));
@@ -490,12 +503,12 @@ impl App {
         });
     }
 
-    fn connect_error_info_bar_response(&self) {
+    fn connect_info_bar_response(&self) {
         self.widgets
-            .error_info_bar()
-            .connect_response(|error_info_bar, response| {
+            .info_bar()
+            .connect_response(|info_bar, response| {
                 if response == gtk::ResponseType::Close {
-                    error_info_bar.set_revealed(false);
+                    info_bar.set_revealed(false);
                 }
             });
     }
@@ -510,9 +523,12 @@ impl App {
     }
 
     fn refresh_file_list(&mut self) {
-        post_event(&self.sender, Event::HideErrorPanel);
+        post_event(&self.sender, Event::HideInfoPanel);
         if let Err(error) = self.file_list.refresh() {
-            post_event(&self.sender, Event::DisplayError(error));
+            post_event(
+                &self.sender,
+                Event::DisplayMessage(error.to_string(), MessageType::Error),
+            );
             return;
         };
 
@@ -523,13 +539,16 @@ impl App {
     }
 
     fn open_file(&mut self, file: gio::File) {
-        post_event(&self.sender, Event::HideErrorPanel);
+        post_event(&self.sender, Event::HideInfoPanel);
         self.image_list.replace(ImageList::new());
 
         let new_file_list = match FileList::new(Some(file)) {
             Ok(file_list) => file_list,
             Err(error) => {
-                post_event(&self.sender, Event::DisplayError(error));
+                post_event(
+                    &self.sender,
+                    Event::DisplayMessage(error.to_string(), MessageType::Error),
+                );
                 return;
             }
         };
@@ -551,7 +570,7 @@ impl App {
     }
 
     fn load_image(&mut self, file_path: Option<PathBuf>) {
-        self.hide_error_panel();
+        self.hide_info_panel();
         let mut image_list = self.image_list.borrow_mut();
         if let Some(file_path) = file_path {
             let image = if let Some(image) = image_list.remove(&file_path) {
@@ -563,7 +582,10 @@ impl App {
                 Ok(image) => image,
                 Err(error) => {
                     self.widgets.image_widget().set_from_pixbuf(None);
-                    post_event(&self.sender, Event::DisplayError(error));
+                    post_event(
+                        &self.sender,
+                        Event::DisplayMessage(error.to_string(), MessageType::Error),
+                    );
                     return;
                 }
             };
@@ -783,13 +805,26 @@ impl App {
 
     fn save_current_image(&mut self, filename: Option<PathBuf>) {
         if let Err(error) = self.image_list.borrow_mut().save_current_image(filename) {
-            post_event(&self.sender, Event::DisplayError(error));
+            post_event(
+                &self.sender,
+                Event::DisplayMessage(error.to_string(), MessageType::Error),
+            );
         }
     }
 
     fn delete_current_image(&mut self) {
-        if let Err(error) = self.image_list.borrow_mut().delete_current_image() {
-            post_event(&self.sender, Event::DisplayError(error));
+        match self.image_list.borrow_mut().delete_current_image() {
+            Ok(image_name) => post_event(
+                &self.sender,
+                Event::DisplayMessage(
+                    format!("Image {} was moved to trash", image_name),
+                    MessageType::Info,
+                ),
+            ),
+            Err(error) => post_event(
+                &self.sender,
+                Event::DisplayMessage(error.to_string(), MessageType::Error),
+            ),
         }
     }
 
@@ -825,7 +860,10 @@ impl App {
                 if let Err(error) = cairo_context.paint() {
                     post_event(
                         &sender,
-                        Event::DisplayError(anyhow!("Couldn't print current image: {}", error)),
+                        Event::DisplayMessage(
+                            format!("Couldn't print current image: {}", error),
+                            MessageType::Error,
+                        ),
                     );
                 }
             }
@@ -838,7 +876,10 @@ impl App {
         ) {
             post_event(
                 &self.sender,
-                Event::DisplayError(anyhow!("Couldn't print current image: {}", error)),
+                Event::DisplayMessage(
+                    format!("Couldn't print current image: {}", error),
+                    MessageType::Error,
+                ),
             );
         };
     }
@@ -855,15 +896,30 @@ impl App {
         }
     }
 
-    fn display_error(&self, error: anyhow::Error) {
-        let error_text = format!("ERROR: {:#}", error);
-        error!("{}", error_text);
-        self.widgets.error_info_bar_text().set_text(&error_text);
-        self.widgets.error_info_bar().set_revealed(true);
+    fn display_message(&self, message: &str, message_type: gtk::MessageType) {
+        match message_type {
+            MessageType::Error => error!("{}", message),
+            MessageType::Warning => warn!("{}", message),
+            MessageType::Info => info!("{}", message),
+            _ => info!("{}", message),
+        };
+        self.widgets.info_bar().set_message_type(message_type);
+        self.widgets.info_bar_text().set_text(message);
+        self.widgets.info_bar().set_revealed(true);
+        let main_context = glib::MainContext::default();
+        let info_bar = self.widgets.info_bar().clone();
+        main_context.spawn_local(async move {
+            timeout_future_seconds(5).await;
+            info_bar.set_revealed(false);
+        });
     }
 
-    fn hide_error_panel(&self) {
-        self.widgets.error_info_bar().set_revealed(false);
+    fn hide_info_panel(&self) {
+        if self.widgets.info_bar().message_type() != gtk::MessageType::Info
+            && self.widgets.info_bar().message_type() != gtk::MessageType::Warning
+        {
+            self.widgets.info_bar().set_revealed(false);
+        }
     }
 
     fn update_buttons_state(&self) {

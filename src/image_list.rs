@@ -82,12 +82,13 @@ impl ImageList {
         Ok(())
     }
 
-    pub fn delete_current_image(&mut self) -> Result<()> {
+    pub fn delete_current_image(&mut self) -> Result<String> {
         let current_image_path = self.current_image_path.as_ref().unwrap();
         let current_image_file = File::for_path(current_image_path);
+        let current_image_name = current_image_file.parse_name();
         current_image_file.trash::<Cancellable>(None)?;
         self.images.remove(current_image_path);
-        Ok(())
+        Ok(current_image_name.to_string())
     }
 }
 
