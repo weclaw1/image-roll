@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{anyhow, Result};
 use gtk::{
     gio::{self, Cancellable, FileMonitorFlags, FileQueryInfoFlags, FileType},
     prelude::FileExt,
@@ -42,13 +42,20 @@ impl FileList {
                 })?;
             let folder_monitor = current_folder
                 .monitor_directory::<Cancellable>(FileMonitorFlags::NONE, None)
-                .context("Couldn't get monitor for current file directory")?;
+                .ok();
+
+            if folder_monitor.is_none() {
+                warn!(
+                    "Couldn't get monitor for directory: {}",
+                    current_folder.path().unwrap().to_str().unwrap()
+                );
+            }
 
             Ok(FileList {
                 file_list,
                 current_file: Some((current_file_index, current_file)),
                 current_folder: Some(current_folder),
-                current_folder_monitor: Some(folder_monitor),
+                current_folder_monitor: folder_monitor,
             })
         } else {
             Ok(FileList {

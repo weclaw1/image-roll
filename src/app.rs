@@ -143,10 +143,16 @@ impl App {
                 )
             }
             Event::SaveCurrentImage(filename) => {
-                action::save_current_image(&self.sender, self.image_list.clone(), filename)
+                action::save_current_image(&self.sender, self.image_list.clone(), filename);
+                if self.file_list.current_folder_monitor_mut().is_none() {
+                    action::refresh_file_list(&self.sender, &mut self.file_list);
+                }
             }
             Event::DeleteCurrentImage => {
-                action::delete_current_image(&self.sender, self.image_list.clone())
+                action::delete_current_image(&self.sender, self.image_list.clone());
+                if self.file_list.current_folder_monitor_mut().is_none() {
+                    action::refresh_file_list(&self.sender, &mut self.file_list);
+                }
             }
             Event::EndSelection if self.widgets.crop_button().is_active() => action::end_selection(
                 &self.sender,
