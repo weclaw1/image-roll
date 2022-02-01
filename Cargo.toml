@@ -14,6 +14,11 @@ log = "0.4.14"
 env_logger = "0.9.0"
 anyhow = "1.0.52"
 
+[dev-dependencies]
+itertools = "0.10.3"
+rand = "0.8.4"
+infer = "0.6.0"
+
 [dependencies.gtk]
 version = "0.14.3"
 features = ["v3_22_29"]

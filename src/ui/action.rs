@@ -493,7 +493,7 @@ pub fn update_buttons_state(
             .set_sensitive(current_image.can_redo_operation());
         widgets
             .save_menu_button()
-            .set_sensitive(current_image.has_unsaved_operations());
+            .set_sensitive(current_image.has_operations());
         widgets.save_as_menu_button().set_sensitive(true);
         widgets.delete_button().set_sensitive(true);
     } else {
