@@ -33,19 +33,3 @@ fn main() {
 
     application.run();
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn create_app() {
-        let application = Application::new(
-            Some("com.github.weclaw1.ImageRoll"),
-            ApplicationFlags::HANDLES_OPEN | ApplicationFlags::NON_UNIQUE,
-        );
-
-        gtk::init().unwrap();
-        App::new(&application, None);
-    }
-}
