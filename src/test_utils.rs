@@ -1,13 +1,15 @@
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 
 pub struct TestResources {
     file_folder: PathBuf,
 }
 
 impl TestResources {
-    pub fn new<P: AsRef<Path>>(file_folder: P) -> Self { 
+    pub fn new<P: AsRef<Path>>(file_folder: P) -> Self {
         std::fs::create_dir_all(&file_folder).unwrap();
-        Self { file_folder: file_folder.as_ref().to_path_buf() } 
+        Self {
+            file_folder: file_folder.as_ref().to_path_buf(),
+        }
     }
 
     pub fn add_file<T: AsRef<str>, C: AsRef<[u8]>>(&mut self, file_name: T, contents: C) {

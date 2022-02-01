@@ -11,6 +11,8 @@ mod image_list;
 mod image_operation;
 mod settings;
 mod ui;
+
+#[cfg(test)]
 mod test_utils;
 
 fn main() {

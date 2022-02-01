@@ -42,8 +42,6 @@ impl ApplyImageOperation for &Pixbuf {
 
 #[cfg(test)]
 mod tests {
-    use std::path::{Path, PathBuf};
-
     use crate::test_utils::TestResources;
 
     use super::*;
@@ -52,34 +50,61 @@ mod tests {
 
     #[test]
     fn test_apply_rotate_image_operation_on_pixbuf() {
-        let mut test_resources = TestResources::new("test/test_apply_rotate_image_operation_on_pixbuf");
+        let mut test_resources =
+            TestResources::new("test/test_apply_rotate_image_operation_on_pixbuf");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let pixbuf = Pixbuf::from_file(test_resources.file_folder().join("test.png")).unwrap();
         let image_operation = ImageOperation::Rotate(PixbufRotation::Clockwise);
 
-        assert_eq!(pixbuf.rotate_simple(PixbufRotation::Clockwise).unwrap().pixel_bytes(), pixbuf.apply_operation(&image_operation).unwrap().pixel_bytes());
+        assert_eq!(
+            pixbuf
+                .rotate_simple(PixbufRotation::Clockwise)
+                .unwrap()
+                .pixel_bytes(),
+            pixbuf
+                .apply_operation(&image_operation)
+                .unwrap()
+                .pixel_bytes()
+        );
     }
 
     #[test]
     fn test_apply_crop_image_operation_on_pixbuf() {
-        let mut test_resources = TestResources::new("test/test_apply_crop_image_operation_on_pixbuf");
+        let mut test_resources =
+            TestResources::new("test/test_apply_crop_image_operation_on_pixbuf");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
-        let pixbuf = Pixbuf::from_file(test_resources.file_folder().join("test.png")).unwrap();
-        let image_operation = ImageOperation::Crop(((10, 10),(20, 20)));
 
-        assert_eq!(pixbuf.new_subpixbuf(10, 10, 10, 10).unwrap().pixel_bytes(), pixbuf.apply_operation(&image_operation).unwrap().pixel_bytes());
+        let pixbuf = Pixbuf::from_file(test_resources.file_folder().join("test.png")).unwrap();
+        let image_operation = ImageOperation::Crop(((10, 10), (20, 20)));
+
+        assert_eq!(
+            pixbuf.new_subpixbuf(10, 10, 10, 10).unwrap().pixel_bytes(),
+            pixbuf
+                .apply_operation(&image_operation)
+                .unwrap()
+                .pixel_bytes()
+        );
     }
 
     #[test]
     fn test_apply_resize_image_operation_on_pixbuf() {
-        let mut test_resources = TestResources::new("test/test_apply_resize_image_operation_on_pixbuf");
+        let mut test_resources =
+            TestResources::new("test/test_apply_resize_image_operation_on_pixbuf");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
-        let pixbuf = Pixbuf::from_file(test_resources.file_folder().join("test.png")).unwrap();
-        let image_operation = ImageOperation::Resize((10,10));
 
-        assert_eq!(pixbuf.scale_simple(10, 10, InterpType::Bilinear).unwrap().pixel_bytes(), pixbuf.apply_operation(&image_operation).unwrap().pixel_bytes());
+        let pixbuf = Pixbuf::from_file(test_resources.file_folder().join("test.png")).unwrap();
+        let image_operation = ImageOperation::Resize((10, 10));
+
+        assert_eq!(
+            pixbuf
+                .scale_simple(10, 10, InterpType::Bilinear)
+                .unwrap()
+                .pixel_bytes(),
+            pixbuf
+                .apply_operation(&image_operation)
+                .unwrap()
+                .pixel_bytes()
+        );
     }
 }

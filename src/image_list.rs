@@ -71,7 +71,12 @@ impl ImageList {
         let (filename, clear_operations) = if let Some(filename) = filename {
             (filename, false)
         } else {
-            (self.current_image_path.clone().ok_or_else(|| anyhow!("Current image path is not set"))?, true)
+            (
+                self.current_image_path
+                    .clone()
+                    .ok_or_else(|| anyhow!("Current image path is not set"))?,
+                true,
+            )
         };
 
         let current_image = self
@@ -83,9 +88,16 @@ impl ImageList {
     }
 
     pub fn delete_current_image(&mut self) -> Result<String> {
-        let current_image_path = self.current_image_path.as_ref().ok_or_else(|| anyhow!("Current image path is not set"))?;
+        let current_image_path = self
+            .current_image_path
+            .as_ref()
+            .ok_or_else(|| anyhow!("Current image path is not set"))?;
         let current_image_file = File::for_path(current_image_path);
-        let current_image_name = current_image_path.file_name().map(|file_name| file_name.to_str()).flatten().ok_or_else(|| anyhow!("Current image file name is not a valid name"))?;
+        let current_image_name = current_image_path
+            .file_name()
+            .map(|file_name| file_name.to_str())
+            .flatten()
+            .ok_or_else(|| anyhow!("Current image file name is not a valid name"))?;
         current_image_file.trash::<Cancellable>(None)?;
         self.images.remove(current_image_path);
         Ok(current_image_name.to_string())
@@ -108,7 +120,10 @@ impl IndexMut<&PathBuf> for ImageList {
 
 #[cfg(test)]
 mod tests {
-    use crate::{image_operation::{ApplyImageOperation, ImageOperation}, test_utils::TestResources};
+    use crate::{
+        image_operation::{ApplyImageOperation, ImageOperation},
+        test_utils::TestResources,
+    };
 
     use super::*;
 
@@ -118,10 +133,15 @@ mod tests {
     fn save_current_image_overwrites_image_at_current_image_path_when_filename_is_set_to_none() {
         let mut test_resources = TestResources::new("test/save_current_image_overwrites_image_at_current_image_path_when_filename_is_set_to_none");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let image_path = test_resources.file_folder().join("test.png");
 
-        let creation_date = std::fs::File::open(&image_path).unwrap().metadata().unwrap().created().unwrap();
+        let creation_date = std::fs::File::open(&image_path)
+            .unwrap()
+            .metadata()
+            .unwrap()
+            .created()
+            .unwrap();
 
         let image = Image::load(&image_path).unwrap();
 
@@ -130,15 +150,21 @@ mod tests {
         image_list.set_current_image_path(Some(image_path.clone()));
         image_list.save_current_image(None).unwrap();
 
-        let modification_date = std::fs::File::open(&image_path).unwrap().metadata().unwrap().modified().unwrap();
+        let modification_date = std::fs::File::open(&image_path)
+            .unwrap()
+            .metadata()
+            .unwrap()
+            .modified()
+            .unwrap();
         assert!(modification_date > creation_date);
     }
 
     #[test]
     fn save_current_image_creates_a_new_image_when_filename_is_set() {
-        let mut test_resources = TestResources::new("test/save_current_image_creates_a_new_image_when_filename_is_set");
+        let mut test_resources =
+            TestResources::new("test/save_current_image_creates_a_new_image_when_filename_is_set");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let image_path = test_resources.file_folder().join("test.png");
         let image = Image::load(&image_path).unwrap();
 
@@ -147,16 +173,20 @@ mod tests {
         image_list.set_current_image_path(Some(image_path.clone()));
 
         let new_image_path = test_resources.file_folder().join("test2.png");
-        image_list.save_current_image(Some(new_image_path.clone())).unwrap();
+        image_list
+            .save_current_image(Some(new_image_path.clone()))
+            .unwrap();
 
         assert!(std::fs::File::open(new_image_path).is_ok());
     }
 
     #[test]
     fn save_current_image_clears_image_operations_when_filename_is_set_to_none() {
-        let mut test_resources = TestResources::new("test/save_current_image_clears_image_operations_when_filename_is_set_to_none");
+        let mut test_resources = TestResources::new(
+            "test/save_current_image_clears_image_operations_when_filename_is_set_to_none",
+        );
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let image_path = test_resources.file_folder().join("test.png");
 
         let mut image = Image::load(&image_path).unwrap();
@@ -175,9 +205,11 @@ mod tests {
 
     #[test]
     fn save_current_image_does_not_clear_image_operations_when_filename_is_set() {
-        let mut test_resources = TestResources::new("test/save_current_image_does_not_clear_image_operations_when_filename_is_set");
+        let mut test_resources = TestResources::new(
+            "test/save_current_image_does_not_clear_image_operations_when_filename_is_set",
+        );
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let image_path = test_resources.file_folder().join("test.png");
 
         let mut image = Image::load(&image_path).unwrap();
@@ -189,16 +221,19 @@ mod tests {
 
         assert!(image_list.current_image().unwrap().has_operations());
 
-        image_list.save_current_image(Some(test_resources.file_folder().join("test2.png"))).unwrap();
+        image_list
+            .save_current_image(Some(test_resources.file_folder().join("test2.png")))
+            .unwrap();
 
         assert!(image_list.current_image().unwrap().has_operations());
     }
 
     #[test]
     fn delete_current_image_deletes_file_from_filesystem() {
-        let mut test_resources = TestResources::new("test/delete_current_image_deletes_file_from_filesystem");
+        let mut test_resources =
+            TestResources::new("test/delete_current_image_deletes_file_from_filesystem");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let image_path = test_resources.file_folder().join("test.png");
         let image = Image::load(&image_path).unwrap();
 
@@ -213,9 +248,10 @@ mod tests {
 
     #[test]
     fn delete_current_image_returns_deleted_file_name() {
-        let mut test_resources = TestResources::new("test/delete_current_image_returns_deleted_file_name");
+        let mut test_resources =
+            TestResources::new("test/delete_current_image_returns_deleted_file_name");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let image_path = test_resources.file_folder().join("test.png");
         let image = Image::load(&image_path).unwrap();
 

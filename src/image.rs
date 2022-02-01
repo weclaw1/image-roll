@@ -345,10 +345,20 @@ mod tests {
     fn test_load_image() {
         let mut test_resources = TestResources::new("test/test_load_image");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
-        assert_eq!(Pixbuf::from_file(test_resources.file_folder().join("test.png")).unwrap().pixel_bytes(), image.original_image_buffer.unwrap().pixel_bytes());
-        assert_eq!(Pixbuf::from_file(test_resources.file_folder().join("test.png")).unwrap().pixel_bytes(), image.current_image_buffer.unwrap().pixel_bytes());
+        assert_eq!(
+            Pixbuf::from_file(test_resources.file_folder().join("test.png"))
+                .unwrap()
+                .pixel_bytes(),
+            image.original_image_buffer.unwrap().pixel_bytes()
+        );
+        assert_eq!(
+            Pixbuf::from_file(test_resources.file_folder().join("test.png"))
+                .unwrap()
+                .pixel_bytes(),
+            image.current_image_buffer.unwrap().pixel_bytes()
+        );
         assert!(image.operations.is_empty());
     }
 
@@ -356,7 +366,7 @@ mod tests {
     fn save_image() {
         let mut test_resources = TestResources::new("test/save_image");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         let saved_file_path = test_resources.file_folder().join("test2.png");
         image.save(&saved_file_path, false).unwrap();
@@ -365,41 +375,59 @@ mod tests {
 
     #[test]
     fn test_save_image_without_clear_operations() {
-        let mut test_resources = TestResources::new("test/test_save_image_without_clear_operations");
+        let mut test_resources =
+            TestResources::new("test/test_save_image_without_clear_operations");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image = image.apply_operation(&ImageOperation::Rotate(PixbufRotation::Clockwise));
         assert!(image.has_operations());
-        image.save(test_resources.file_folder().join("test2.png"), false).unwrap();
+        image
+            .save(test_resources.file_folder().join("test2.png"), false)
+            .unwrap();
         assert!(image.has_operations());
-        assert_ne!(image.original_image_buffer.unwrap().pixel_bytes(), image.current_image_buffer.unwrap().pixel_bytes())
+        assert_ne!(
+            image.original_image_buffer.unwrap().pixel_bytes(),
+            image.current_image_buffer.unwrap().pixel_bytes()
+        )
     }
 
     #[test]
     fn test_save_image_with_clear_operations() {
         let mut test_resources = TestResources::new("test/test_save_image_with_clear_operations");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image = image.apply_operation(&ImageOperation::Rotate(PixbufRotation::Clockwise));
         assert!(image.has_operations());
-        image.save(test_resources.file_folder().join("test2.png"), true).unwrap();
+        image
+            .save(test_resources.file_folder().join("test2.png"), true)
+            .unwrap();
         assert!(!image.has_operations());
-        assert_eq!(image.original_image_buffer.unwrap().pixel_bytes(), image.current_image_buffer.unwrap().pixel_bytes())
+        assert_eq!(
+            image.original_image_buffer.unwrap().pixel_bytes(),
+            image.current_image_buffer.unwrap().pixel_bytes()
+        )
     }
 
     #[test]
     fn save_image_uses_extensions_for_file_types_supported_by_pixbuf_save() {
-        let mut test_resources = TestResources::new("test/save_image_uses_extensions_for_file_types_supported_by_pixbuf_save");
+        let mut test_resources = TestResources::new(
+            "test/save_image_uses_extensions_for_file_types_supported_by_pixbuf_save",
+        );
         let file_extensions = vec!["png", "jpg", "tif", "ico", "bmp"];
         for extension in file_extensions {
             let file_name = format!("{}.{}", "test", extension);
             test_resources.add_file(&file_name, TEST_IMAGE);
             let mut image = Image::load(test_resources.file_folder().join(file_name)).unwrap();
-            let saved_file_path = test_resources.file_folder().join(format!("{}.{}", "test2", extension));
+            let saved_file_path = test_resources
+                .file_folder()
+                .join(format!("{}.{}", "test2", extension));
             image.save(&saved_file_path, false).unwrap();
-            let saved_file_inferred_extension = infer::get_from_path(saved_file_path).unwrap().unwrap().extension();
+            let saved_file_inferred_extension = infer::get_from_path(saved_file_path)
+                .unwrap()
+                .unwrap()
+                .extension();
 
             assert_eq!(saved_file_inferred_extension, extension);
         }
@@ -407,13 +435,17 @@ mod tests {
 
     #[test]
     fn file_extensions_jpg_and_jpeg_are_supported() {
-        let mut test_resources = TestResources::new("test/save_file_extensions_jpg_and_jpeg_are_supported");
+        let mut test_resources =
+            TestResources::new("test/save_file_extensions_jpg_and_jpeg_are_supported");
         test_resources.add_file("test.jpg", TEST_IMAGE);
 
         let mut image = Image::load(test_resources.file_folder().join("test.jpg")).unwrap();
         let saved_file_path = test_resources.file_folder().join("test2.jpg");
         image.save(&saved_file_path, false).unwrap();
-        let saved_file_inferred_extension = infer::get_from_path(saved_file_path).unwrap().unwrap().extension();
+        let saved_file_inferred_extension = infer::get_from_path(saved_file_path)
+            .unwrap()
+            .unwrap()
+            .extension();
         assert_eq!(saved_file_inferred_extension, "jpg");
 
         test_resources.add_file("test.jpeg", TEST_IMAGE);
@@ -421,7 +453,10 @@ mod tests {
         let mut image = Image::load(test_resources.file_folder().join("test.jpeg")).unwrap();
         let saved_file_path = test_resources.file_folder().join("test2.jpeg");
         image.save(&saved_file_path, false).unwrap();
-        let saved_file_inferred_extension = infer::get_from_path(saved_file_path).unwrap().unwrap().extension();
+        let saved_file_inferred_extension = infer::get_from_path(saved_file_path)
+            .unwrap()
+            .unwrap()
+            .extension();
         assert_eq!(saved_file_inferred_extension, "jpg");
     }
 
@@ -429,7 +464,7 @@ mod tests {
     fn test_image_reload() {
         let mut test_resources = TestResources::new("test/test_image_reload");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image = image.apply_operation(&ImageOperation::Rotate(PixbufRotation::Clockwise));
         let original_image_buffer = image.original_image_buffer.clone();
@@ -437,27 +472,38 @@ mod tests {
         image.remove_image_buffers();
         assert!(image.original_image_buffer.is_none() && image.current_image_buffer.is_none());
 
-        image = image.reload(test_resources.file_folder().join("test.png")).unwrap();
-        assert_eq!(original_image_buffer.unwrap().pixel_bytes(), image.original_image_buffer.unwrap().pixel_bytes());
-        assert_eq!(current_image_buffer.unwrap().pixel_bytes(), image.current_image_buffer.unwrap().pixel_bytes());
+        image = image
+            .reload(test_resources.file_folder().join("test.png"))
+            .unwrap();
+        assert_eq!(
+            original_image_buffer.unwrap().pixel_bytes(),
+            image.original_image_buffer.unwrap().pixel_bytes()
+        );
+        assert_eq!(
+            current_image_buffer.unwrap().pixel_bytes(),
+            image.current_image_buffer.unwrap().pixel_bytes()
+        );
     }
 
     #[test]
     fn create_preview_original_size() {
         let mut test_resources = TestResources::new("test/create_preview_original_size");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image.create_preview_image_buffer(PreviewSize::OriginalSize);
 
-        assert_eq!(image.current_image_buffer.unwrap().pixel_bytes(), image.preview_image_buffer.unwrap().pixel_bytes());
+        assert_eq!(
+            image.current_image_buffer.unwrap().pixel_bytes(),
+            image.preview_image_buffer.unwrap().pixel_bytes()
+        );
     }
 
     #[test]
     fn create_preview_scale_to_fit() {
         let mut test_resources = TestResources::new("test/create_preview_scale_to_fit");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image = image.apply_operation(&ImageOperation::Resize((1000, 500)));
         image.create_preview_image_buffer(PreviewSize::BestFit(500, 500));
@@ -469,68 +515,92 @@ mod tests {
     fn create_preview_resized() {
         let mut test_resources = TestResources::new("test/create_preview_resized");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
-        image = image.apply_operation(&ImageOperation::Resize((100,100)));
+        image = image.apply_operation(&ImageOperation::Resize((100, 100)));
         image.create_preview_image_buffer(PreviewSize::Resized(90));
 
-        assert_eq!((90,90), image.preview_image_buffer_size().unwrap());
+        assert_eq!((90, 90), image.preview_image_buffer_size().unwrap());
     }
 
     #[test]
     fn preview_coords_to_image_coords() {
         let mut test_resources = TestResources::new("test/preview_coords_to_image_coords");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image = image.apply_operation(&ImageOperation::Resize((100, 100)));
         image.create_preview_image_buffer(PreviewSize::Resized(200));
 
-        assert_eq!(((10,10),(20, 20)), image.preview_coords_to_image_coords(((20, 20),(40, 40))).unwrap());
+        assert_eq!(
+            ((10, 10), (20, 20)),
+            image
+                .preview_coords_to_image_coords(((20, 20), (40, 40)))
+                .unwrap()
+        );
     }
 
     #[test]
     fn undo_operation() {
         let mut test_resources = TestResources::new("test/undo_operation");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image = image.apply_operation(&ImageOperation::Resize((100, 100)));
         image = image.apply_operation(&ImageOperation::Rotate(PixbufRotation::Clockwise));
 
         assert!(image.can_undo_operation());
         image.undo_operation();
-        assert!(image.can_redo_operation() && image.current_operation_index == Some(0) && image.operations.len() == 2);
+        assert!(
+            image.can_redo_operation()
+                && image.current_operation_index == Some(0)
+                && image.operations.len() == 2
+        );
         image.undo_operation();
-        assert!(image.can_redo_operation() && image.current_operation_index == None && image.operations.len() == 2);
+        assert!(
+            image.can_redo_operation()
+                && image.current_operation_index == None
+                && image.operations.len() == 2
+        );
     }
 
     #[test]
     fn redo_operation() {
         let mut test_resources = TestResources::new("test/redo_operation");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
         image = image.apply_operation(&ImageOperation::Resize((100, 100)));
         image = image.apply_operation(&ImageOperation::Rotate(PixbufRotation::Clockwise));
 
         assert!(!image.can_redo_operation());
         image.undo_operation();
-        assert!(image.can_redo_operation() && image.current_operation_index == Some(0) && image.operations.len() == 2);
+        assert!(
+            image.can_redo_operation()
+                && image.current_operation_index == Some(0)
+                && image.operations.len() == 2
+        );
         image.redo_operation();
-        assert!(!image.can_redo_operation() && image.current_operation_index == Some(1) && image.operations.len() == 2);
+        assert!(
+            !image.can_redo_operation()
+                && image.current_operation_index == Some(1)
+                && image.operations.len() == 2
+        );
     }
 
     #[test]
     fn apply_operation() {
         let mut test_resources = TestResources::new("test/apply_operation");
         test_resources.add_file("test.png", TEST_IMAGE);
-        
+
         let mut image = Image::load(test_resources.file_folder().join("test.png")).unwrap();
 
         assert!(image.operations.is_empty() && image.current_operation_index.is_none());
         image = image.apply_operation(&ImageOperation::Resize((100, 100)));
         assert!(image.operations.len() == 1 && image.current_operation_index == Some(0));
-        assert!(image.original_image_buffer.unwrap().pixel_bytes() != image.current_image_buffer.unwrap().pixel_bytes());
+        assert!(
+            image.original_image_buffer.unwrap().pixel_bytes()
+                != image.current_image_buffer.unwrap().pixel_bytes()
+        );
     }
 }
