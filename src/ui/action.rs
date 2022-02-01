@@ -8,8 +8,8 @@ use gtk::{
     gdk, gio,
     glib::{self, timeout_future_seconds, Sender},
     prelude::{
-        FileMonitorExt, GdkContextExt, GtkWindowExt, ImageExt, InfoBarExt, LabelExt,
-        PrintOperationExt, SpinButtonExt, ToggleButtonExt, WidgetExt,
+        FileMonitorExt, GdkContextExt, GtkApplicationExt, GtkWindowExt, ImageExt, InfoBarExt,
+        LabelExt, PrintOperationExt, SpinButtonExt, ToggleButtonExt, WidgetExt,
     },
     MessageType,
 };
@@ -459,6 +459,23 @@ pub fn hide_info_panel(widgets: &Widgets) {
     {
         widgets.info_bar().set_revealed(false);
     }
+}
+
+pub fn toggle_fullscreen(widgets: &Widgets, settings: &mut Settings) {
+    if !settings.fullscreen() {
+        widgets.window().fullscreen();
+        settings.set_fullscreen(true);
+    } else {
+        widgets.window().unfullscreen();
+        settings.set_fullscreen(false);
+    }
+}
+
+pub fn quit(application: &gtk::Application) {
+    application
+        .windows()
+        .iter()
+        .for_each(|window| window.close());
 }
 
 pub fn update_buttons_state(

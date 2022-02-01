@@ -8,6 +8,7 @@ use crate::image::PreviewSize;
 pub struct Settings {
     gio_settings: Option<gio::Settings>,
     scale: PreviewSize,
+    fullscreen: bool,
 }
 
 impl Settings {
@@ -26,6 +27,7 @@ impl Settings {
         Settings {
             gio_settings,
             scale: PreviewSize::BestFit(0, 0),
+            fullscreen: false,
         }
     }
 
@@ -57,5 +59,13 @@ impl Settings {
 
     pub fn scale(&self) -> PreviewSize {
         self.scale
+    }
+
+    pub fn set_fullscreen(&mut self, fullscreen: bool) {
+        self.fullscreen = fullscreen;
+    }
+
+    pub fn fullscreen(&self) -> bool {
+        self.fullscreen
     }
 }

@@ -18,6 +18,7 @@ use crate::{
 };
 
 pub struct App {
+    application: gtk::Application,
     widgets: Widgets,
     image_list: Rc<RefCell<ImageList>>,
     file_list: FileList,
@@ -27,14 +28,14 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(app: &gtk::Application, file: Option<&gio::File>) -> Rc<RefCell<Self>> {
+    pub fn create(application: &gtk::Application, file: Option<&gio::File>) {
         let bytes = glib::Bytes::from_static(include_bytes!("resources/resources.gresource"));
         let resources = gio::Resource::from_data(&bytes).expect("Couldn't load resources");
         gio::resources_register(&resources);
 
         let builder = Builder::from_resource("/com/github/weclaw1/image-roll/image-roll_ui.glade");
 
-        let widgets: Widgets = Widgets::init(builder, app);
+        let widgets: Widgets = Widgets::init(builder, application);
 
         if let Some(theme) = gtk::IconTheme::default() {
             theme.add_resource_path("/com/github/weclaw1/image-roll");
@@ -46,7 +47,7 @@ impl App {
 
         let selection_coords: Rc<Cell<Option<CoordinatesPair>>> = Rc::new(Cell::new(None));
 
-        let settings: Settings = Settings::new(app.application_id().unwrap().as_str());
+        let settings: Settings = Settings::new(application.application_id().unwrap().as_str());
 
         let (window_width, window_height) = settings.window_size();
         widgets
@@ -60,7 +61,11 @@ impl App {
             post_event(&second_sender, Event::OpenFile(file.clone()));
         }
 
-        let app = Self {
+        application.set_accels_for_action("win.toggle-fullscreen", &["F11"]);
+        application.set_accels_for_action("app.quit", &["<Primary>Q"]);
+
+        let mut app = Self {
+            application: application.clone(),
             widgets,
             image_list,
             file_list,
@@ -70,6 +75,7 @@ impl App {
         };
 
         event::connect_events(
+            app.application.clone(),
             app.widgets.clone(),
             app.sender.clone(),
             app.image_list.clone(),
@@ -77,15 +83,10 @@ impl App {
             app.settings.clone(),
         );
 
-        let app = Rc::new(RefCell::new(app));
-        let this = app.clone();
-
         receiver.attach(None, move |e| {
-            this.borrow_mut().process_event(e);
+            app.process_event(e);
             glib::Continue(true)
         });
-
-        app
     }
 
     pub fn process_event(&mut self, event: Event) {
@@ -176,6 +177,8 @@ impl App {
             Event::RedoOperation => action::redo_operation(self.image_list.clone()),
             Event::Print => action::print(&self.sender, &self.widgets, self.image_list.clone()),
             Event::HideInfoPanel => action::hide_info_panel(&self.widgets),
+            Event::ToggleFullscreen => action::toggle_fullscreen(&self.widgets, &mut self.settings),
+            Event::Quit => action::quit(&self.application),
             event => debug!("Discarded unused event: {:?}", event),
         }
         action::update_buttons_state(

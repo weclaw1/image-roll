@@ -24,11 +24,11 @@ fn main() {
     );
 
     application.connect_activate(|app| {
-        App::new(app, None);
+        App::create(app, None);
     });
 
     application.connect_open(move |app, files, _| {
-        App::new(app, Some(&files[0]));
+        App::create(app, Some(&files[0]));
     });
 
     application.run();

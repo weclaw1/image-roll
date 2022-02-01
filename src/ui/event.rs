@@ -1,11 +1,11 @@
 use gtk::{
     gdk::{self, Rectangle},
     gdk_pixbuf::PixbufRotation,
-    gio,
+    gio::{self, SimpleAction},
     glib::{self, Sender},
     prelude::{
-        ButtonExt, FileChooserExt, GdkContextExt, InfoBarExt, NativeDialogExt, PopoverExt,
-        SpinButtonExt, ToggleButtonExt, WidgetExt, WidgetExtManual,
+        ActionMapExt, ButtonExt, FileChooserExt, GdkContextExt, InfoBarExt, NativeDialogExt,
+        PopoverExt, SpinButtonExt, ToggleButtonExt, WidgetExt, WidgetExtManual,
     },
     MessageType, SpinButtonSignals,
 };
@@ -51,6 +51,8 @@ pub enum Event {
     Print,
     DisplayMessage(String, gtk::MessageType),
     HideInfoPanel,
+    ToggleFullscreen,
+    Quit,
 }
 
 pub fn post_event(sender: &glib::Sender<Event>, action: Event) {
@@ -60,6 +62,7 @@ pub fn post_event(sender: &glib::Sender<Event>, action: Event) {
 }
 
 pub fn connect_events(
+    application: gtk::Application,
     widgets: Widgets,
     sender: Sender<Event>,
     image_list: Rc<RefCell<ImageList>>,
@@ -92,9 +95,11 @@ pub fn connect_events(
     connect_undo_button_clicked(widgets.clone(), sender.clone());
     connect_redo_button_clicked(widgets.clone(), sender.clone());
     connect_save_as_menu_button_clicked(widgets.clone(), image_list, sender.clone());
-    connect_delete_button_clicked(widgets.clone(), sender);
+    connect_delete_button_clicked(widgets.clone(), sender.clone());
     connect_info_bar_response(widgets.clone());
     connect_window_resized(widgets.clone(), settings);
+    connect_toggle_fullscreen(widgets.clone(), sender.clone());
+    connect_quit(application, sender);
 
     widgets.window().show_all();
 }
@@ -438,4 +443,20 @@ fn connect_window_resized(widgets: Widgets, settings: Settings) {
         .connect_size_allocate(move |_, allocation| {
             settings.set_window_size((allocation.width as u32, allocation.height as u32));
         });
+}
+
+fn connect_toggle_fullscreen(widgets: Widgets, sender: Sender<Event>) {
+    let action_toggle_fullscreen = SimpleAction::new("toggle-fullscreen", None);
+    action_toggle_fullscreen.connect_activate(move |_, _| {
+        post_event(&sender, Event::ToggleFullscreen);
+    });
+    widgets.window().add_action(&action_toggle_fullscreen);
+}
+
+fn connect_quit(application: gtk::Application, sender: Sender<Event>) {
+    let action_quit = SimpleAction::new("quit", None);
+    action_quit.connect_activate(move |_, _| {
+        post_event(&sender, Event::Quit);
+    });
+    application.add_action(&action_quit);
 }
