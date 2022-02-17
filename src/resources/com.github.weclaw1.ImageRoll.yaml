@@ -6,15 +6,18 @@ sdk-extensions:
 - org.freedesktop.Sdk.Extension.rust-stable
 command: image-roll
 finish-args:
-- "--share=ipc"
-- "--socket=fallback-x11"
-- "--socket=wayland"
-- "--filesystem=home"
-- "--device=dri"
+- --share=ipc
+- --socket=fallback-x11
+- --socket=wayland
+- --filesystem=home
+- --filesystem=/mnt
+- --filesystem=/media
+- --filesystem=/run/media
+- --device=dri
 build-options:
-  append-path: "/usr/lib/sdk/rust-stable/bin"
+  append-path: /usr/lib/sdk/rust-stable/bin
   env:
-    CARGO_HOME: "/run/build/image-roll/cargo"
+    CARGO_HOME: /run/build/image-roll/cargo
 modules:
 - name: image-roll
   buildsystem: simple
