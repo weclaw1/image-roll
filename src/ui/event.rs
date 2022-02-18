@@ -1,5 +1,5 @@
 use gtk::{
-    gdk::{self, Rectangle},
+    gdk::{self, Rectangle, ScrollDirection},
     gdk_pixbuf::PixbufRotation,
     gio::{self, SimpleAction},
     glib::{self, Sender},
@@ -7,7 +7,7 @@ use gtk::{
         ActionMapExt, ButtonExt, FileChooserExt, GdkContextExt, InfoBarExt, NativeDialogExt,
         PopoverExt, SpinButtonExt, ToggleButtonExt, WidgetExt, WidgetExtManual,
     },
-    MessageType, SpinButtonSignals,
+    MessageType, SpinButtonSignals, Window,
 };
 use std::{
     cell::{Cell, RefCell},
@@ -37,8 +37,8 @@ pub enum Event {
     SaveCurrentImage(Option<PathBuf>),
     DeleteCurrentImage,
     EndSelection,
-    PreviewSmaller,
-    PreviewLarger,
+    PreviewSmaller(Option<u32>),
+    PreviewLarger(Option<u32>),
     PreviewFitScreen,
     NextImage,
     PreviousImage,
@@ -99,7 +99,8 @@ pub fn connect_events(
     connect_info_bar_response(widgets.clone());
     connect_window_resized(widgets.clone(), settings);
     connect_toggle_fullscreen(widgets.clone(), sender.clone());
-    connect_quit(application, sender);
+    connect_quit(application, sender.clone());
+    connect_image_scrolled_window_scroll_event(widgets.clone(), sender);
 
     widgets.window().show_all();
 }
@@ -112,7 +113,7 @@ fn connect_open_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
             widgets.popover_menu().popdown();
             let file_chooser = gtk::FileChooserNative::new(
                 Some("Open file"),
-                gtk::NONE_WINDOW,
+                <Option<&Window>>::None,
                 gtk::FileChooserAction::Open,
                 None,
                 None,
@@ -173,13 +174,13 @@ fn connect_image_viewport_size_allocate(widgets: Widgets, sender: Sender<Event>)
 
 fn connect_preview_smaller_button_clicked(widgets: Widgets, sender: Sender<Event>) {
     widgets.preview_smaller_button().connect_clicked(move |_| {
-        post_event(&sender, Event::PreviewSmaller);
+        post_event(&sender, Event::PreviewSmaller(None));
     });
 }
 
 fn connect_preview_larger_button_clicked(widgets: Widgets, sender: Sender<Event>) {
     widgets.preview_larger_button().connect_clicked(move |_| {
-        post_event(&sender, Event::PreviewLarger);
+        post_event(&sender, Event::PreviewLarger(None));
     });
 }
 
@@ -263,9 +264,9 @@ fn connect_image_widget_draw(
                     let image_buffer = current_image.preview_image_buffer().unwrap();
                     cairo_context.set_source_pixbuf(
                         image_buffer,
-                        (image_widget.allocation().width as f64 - image_buffer.width() as f64)
+                        (image_widget.allocation().width() as f64 - image_buffer.width() as f64)
                             / 2.0,
-                        (image_widget.allocation().height as f64 - image_buffer.height() as f64)
+                        (image_widget.allocation().height() as f64 - image_buffer.height() as f64)
                             / 2.0,
                     );
                     if let Err(error) = cairo_context.paint() {
@@ -360,7 +361,7 @@ fn connect_save_as_menu_button_clicked(
             widgets.popover_menu().popdown();
             let file_chooser = gtk::FileChooserNative::new(
                 Some("Save as..."),
-                gtk::NONE_WINDOW,
+                <Option<&Window>>::None,
                 gtk::FileChooserAction::Save,
                 None,
                 None,
@@ -441,7 +442,7 @@ fn connect_window_resized(widgets: Widgets, settings: Settings) {
     widgets
         .window()
         .connect_size_allocate(move |_, allocation| {
-            settings.set_window_size((allocation.width as u32, allocation.height as u32));
+            settings.set_window_size((allocation.width() as u32, allocation.height() as u32));
         });
 }
 
@@ -459,4 +460,19 @@ fn connect_quit(application: gtk::Application, sender: Sender<Event>) {
         post_event(&sender, Event::Quit);
     });
     application.add_action(&action_quit);
+}
+
+fn connect_image_scrolled_window_scroll_event(widgets: Widgets, sender: Sender<Event>) {
+    widgets
+        .image_scrolled_window()
+        .connect_scroll_event(move |_, scroll_event| {
+            if scroll_event.direction() == ScrollDirection::Up || scroll_event.delta().1 < 0.0 {
+                post_event(&sender, Event::PreviewLarger(Some(5)));
+            }
+            if scroll_event.direction() == ScrollDirection::Down || scroll_event.delta().1 > 0.0 {
+                post_event(&sender, Event::PreviewSmaller(Some(5)));
+            }
+
+            gtk::Inhibit(true)
+        });
 }

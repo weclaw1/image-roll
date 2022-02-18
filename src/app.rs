@@ -160,8 +160,12 @@ impl App {
                 self.image_list.clone(),
                 self.selection_coords.clone(),
             ),
-            Event::PreviewSmaller => action::preview_smaller(&self.sender, &self.settings),
-            Event::PreviewLarger => action::preview_larger(&self.sender, &self.settings),
+            Event::PreviewSmaller(value) => {
+                action::preview_smaller(&self.sender, &self.settings, value)
+            }
+            Event::PreviewLarger(value) => {
+                action::preview_larger(&self.sender, &self.settings, value)
+            }
             Event::PreviewFitScreen => action::preview_fit_screen(&self.sender),
             Event::NextImage => {
                 action::next_image(&self.sender, self.image_list.clone(), &mut self.file_list)

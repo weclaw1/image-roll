@@ -146,7 +146,7 @@ pub fn image_viewport_resize(
     allocation: gdk::Rectangle,
 ) {
     if let PreviewSize::BestFit(_, _) = settings.scale() {
-        let new_scale = PreviewSize::BestFit(allocation.width as u32, allocation.height as u32);
+        let new_scale = PreviewSize::BestFit(allocation.width() as u32, allocation.height() as u32);
         settings.set_scale(new_scale);
         post_event(sender, Event::RefreshPreview(new_scale));
     }
@@ -177,22 +177,32 @@ pub fn change_preview_size(
     if let PreviewSize::BestFit(_, _) = preview_size {
         let viewport_allocation = widgets.image_viewport().allocation();
         preview_size = PreviewSize::BestFit(
-            viewport_allocation.width as u32,
-            viewport_allocation.height as u32,
+            viewport_allocation.width() as u32,
+            viewport_allocation.height() as u32,
         );
     }
     settings.set_scale(preview_size);
     post_event(sender, Event::RefreshPreview(preview_size));
 }
 
-pub fn preview_smaller(sender: &Sender<Event>, settings: &Settings) {
-    let new_scale = settings.scale().smaller();
-    post_event(sender, Event::ChangePreviewSize(new_scale));
+pub fn preview_smaller(sender: &Sender<Event>, settings: &Settings, value: Option<u32>) {
+    let new_scale = match value {
+        None => settings.scale().smaller(),
+        Some(value) => settings.scale().smaller_by(value),
+    };
+    if let Some(new_scale) = new_scale {
+        post_event(sender, Event::ChangePreviewSize(new_scale));
+    }
 }
 
-pub fn preview_larger(sender: &Sender<Event>, settings: &Settings) {
-    let new_scale = settings.scale().larger();
-    post_event(sender, Event::ChangePreviewSize(new_scale));
+pub fn preview_larger(sender: &Sender<Event>, settings: &Settings, value: Option<u32>) {
+    let new_scale = match value {
+        None => settings.scale().larger(),
+        Some(value) => settings.scale().larger_by(value),
+    };
+    if let Some(new_scale) = new_scale {
+        post_event(sender, Event::ChangePreviewSize(new_scale));
+    }
 }
 
 pub fn preview_fit_screen(sender: &Sender<Event>) {
@@ -226,8 +236,8 @@ pub fn start_selection(
         let (position_x, position_y) = position;
         let event_box_allocation = widgets.image_event_box().allocation();
         let (image_coords_position_x, image_coords_position_y) = (
-            position_x as i32 - ((event_box_allocation.width - image_width as i32) / 2),
-            position_y as i32 - ((event_box_allocation.height - image_height as i32) / 2),
+            position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
+            position_y as i32 - ((event_box_allocation.height() - image_height as i32) / 2),
         );
         if image_coords_position_x >= 0
             && image_coords_position_x < image_width as i32
@@ -252,8 +262,8 @@ pub fn drag_selection(
             let (position_x, position_y) = position;
             let event_box_allocation = widgets.image_event_box().allocation();
             let (image_coords_position_x, image_coords_position_y) = (
-                position_x as i32 - ((event_box_allocation.width - image_width as i32) / 2),
-                position_y as i32 - ((event_box_allocation.height - image_height as i32) / 2),
+                position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
+                position_y as i32 - ((event_box_allocation.height() - image_height as i32) / 2),
             );
             if image_coords_position_x >= 0
                 && image_coords_position_x < image_width as i32
@@ -283,12 +293,13 @@ pub fn end_selection(
             let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
             let event_box_allocation = widgets.image_event_box().allocation();
             let (image_coords_start_position_x, image_coords_start_position_y) = (
-                start_position_x as i32 - ((event_box_allocation.width - image_width as i32) / 2),
-                start_position_y as i32 - ((event_box_allocation.height - image_height as i32) / 2),
+                start_position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
+                start_position_y as i32
+                    - ((event_box_allocation.height() - image_height as i32) / 2),
             );
             let (image_coords_end_position_x, image_coords_end_position_y) = (
-                end_position_x as i32 - ((event_box_allocation.width - image_width as i32) / 2),
-                end_position_y as i32 - ((event_box_allocation.height - image_height as i32) / 2),
+                end_position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
+                end_position_y as i32 - ((event_box_allocation.height() - image_height as i32) / 2),
             );
 
             let crop_operation = ImageOperation::Crop(

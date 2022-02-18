@@ -41,7 +41,7 @@ impl FileList {
                     )
                 })?;
             let folder_monitor = current_folder
-                .monitor_directory::<Cancellable>(FileMonitorFlags::NONE, None)
+                .monitor_directory(FileMonitorFlags::NONE, <Option<&Cancellable>>::None)
                 .ok();
 
             if folder_monitor.is_none() {
@@ -69,7 +69,7 @@ impl FileList {
 
     pub fn refresh(&mut self) -> Result<()> {
         if let Some(current_folder) = &self.current_folder {
-            if !current_folder.query_exists::<Cancellable>(None) {
+            if !current_folder.query_exists(<Option<&Cancellable>>::None) {
                 self.file_list = Vec::new();
                 self.current_file = None;
                 self.current_folder = None;
@@ -163,7 +163,11 @@ impl FileList {
 
     fn enumerate_files(folder: &gio::File) -> Result<Vec<gio::FileInfo>> {
         Ok(folder
-            .enumerate_children::<Cancellable>("standard::*", FileQueryInfoFlags::NONE, None)?
+            .enumerate_children(
+                "standard::*",
+                FileQueryInfoFlags::NONE,
+                <Option<&Cancellable>>::None,
+            )?
             .into_iter()
             .filter_map(|file| file.ok())
             .filter(|file| file.file_type() == FileType::Regular)

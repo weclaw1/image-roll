@@ -98,7 +98,7 @@ impl ImageList {
             .map(|file_name| file_name.to_str())
             .flatten()
             .ok_or_else(|| anyhow!("Current image file name is not a valid name"))?;
-        current_image_file.trash::<Cancellable>(None)?;
+        current_image_file.trash(<Option<&Cancellable>>::None)?;
         self.images.remove(current_image_path);
         Ok(current_image_name.to_string())
     }

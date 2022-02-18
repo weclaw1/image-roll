@@ -13,6 +13,7 @@ pub struct Widgets {
     previous_button: gtk::Button,
     preview_smaller_button: gtk::Button,
     preview_larger_button: gtk::Button,
+    image_scrolled_window: gtk::ScrolledWindow,
     image_viewport: gtk::Viewport,
     preview_size_label: gtk::Label,
     image_event_box: gtk::EventBox,
@@ -67,6 +68,10 @@ impl Widgets {
         let preview_larger_button: gtk::Button = builder
             .object("preview_larger_button")
             .expect("Couldn't get preview_larger_button");
+
+        let image_scrolled_window: gtk::ScrolledWindow = builder
+            .object("image_scrolled_window")
+            .expect("Couldn't get image_scrolled_window");
 
         let image_viewport: gtk::Viewport = builder
             .object("image_viewport")
@@ -156,6 +161,7 @@ impl Widgets {
             previous_button,
             preview_smaller_button,
             preview_larger_button,
+            image_scrolled_window,
             image_viewport,
             preview_size_label,
             image_event_box,
@@ -317,5 +323,10 @@ impl Widgets {
     /// Get a reference to the widgets's preview size label.
     pub fn preview_size_label(&self) -> &gtk::Label {
         &self.preview_size_label
+    }
+
+    /// Get a reference to the widgets's image scrolled window.
+    pub fn image_scrolled_window(&self) -> &gtk::ScrolledWindow {
+        &self.image_scrolled_window
     }
 }

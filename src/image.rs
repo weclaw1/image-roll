@@ -286,44 +286,84 @@ impl From<PreviewSize> for String {
 }
 
 impl PreviewSize {
-    pub fn smaller(self) -> PreviewSize {
+    pub fn smaller(self) -> Option<PreviewSize> {
         match self {
-            PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
-            PreviewSize::OriginalSize => PreviewSize::Resized(75),
-            PreviewSize::Resized(value) if value == 500 => PreviewSize::Resized(200),
-            PreviewSize::Resized(value) if value == 200 => PreviewSize::Resized(150),
-            PreviewSize::Resized(value) if value == 150 => PreviewSize::Resized(133),
-            PreviewSize::Resized(value) if value == 133 => PreviewSize::OriginalSize,
-            PreviewSize::Resized(value) if value == 75 => PreviewSize::Resized(66),
-            PreviewSize::Resized(value) if value == 66 => PreviewSize::Resized(50),
-            PreviewSize::Resized(value) if value == 50 => PreviewSize::Resized(33),
-            PreviewSize::Resized(value) if value == 33 => PreviewSize::Resized(25),
-            PreviewSize::Resized(value) if value == 25 => PreviewSize::Resized(10),
-            PreviewSize::Resized(value) if value == 10 => PreviewSize::Resized(5),
-            PreviewSize::Resized(_) => panic!("Preview size with given scale is not supported"),
+            PreviewSize::BestFit(_, _) => Some(PreviewSize::OriginalSize),
+            PreviewSize::OriginalSize => Some(PreviewSize::Resized(75)),
+            PreviewSize::Resized(value) if value > 200 => Some(PreviewSize::Resized(200)),
+            PreviewSize::Resized(value) if value > 150 => Some(PreviewSize::Resized(150)),
+            PreviewSize::Resized(value) if value > 133 => Some(PreviewSize::Resized(133)),
+            PreviewSize::Resized(value) if value > 100 => Some(PreviewSize::OriginalSize),
+            PreviewSize::Resized(value) if value > 75 => Some(PreviewSize::Resized(75)),
+            PreviewSize::Resized(value) if value > 66 => Some(PreviewSize::Resized(66)),
+            PreviewSize::Resized(value) if value > 50 => Some(PreviewSize::Resized(50)),
+            PreviewSize::Resized(value) if value > 33 => Some(PreviewSize::Resized(33)),
+            PreviewSize::Resized(value) if value > 25 => Some(PreviewSize::Resized(25)),
+            PreviewSize::Resized(value) if value > 10 => Some(PreviewSize::Resized(10)),
+            PreviewSize::Resized(value) if value > 5 => Some(PreviewSize::Resized(5)),
+            PreviewSize::Resized(_) => None,
         }
+    }
+
+    pub fn smaller_by(self, value: u32) -> Option<PreviewSize> {
+        let old_value = match self {
+            PreviewSize::BestFit(_, _) => return Some(PreviewSize::OriginalSize),
+            PreviewSize::OriginalSize => 100,
+            PreviewSize::Resized(value) => value,
+        };
+
+        old_value
+            .checked_sub(value)
+            .filter(|value| value >= &5)
+            .map(|value| {
+                if value == 100 {
+                    PreviewSize::OriginalSize
+                } else {
+                    PreviewSize::Resized(value)
+                }
+            })
     }
 
     pub fn can_be_smaller(&self) -> bool {
         !matches!(self, PreviewSize::Resized(value) if value <= &5)
     }
 
-    pub fn larger(self) -> PreviewSize {
+    pub fn larger(self) -> Option<PreviewSize> {
         match self {
-            PreviewSize::BestFit(_, _) => PreviewSize::OriginalSize,
-            PreviewSize::OriginalSize => PreviewSize::Resized(133),
-            PreviewSize::Resized(value) if value == 5 => PreviewSize::Resized(10),
-            PreviewSize::Resized(value) if value == 10 => PreviewSize::Resized(25),
-            PreviewSize::Resized(value) if value == 25 => PreviewSize::Resized(33),
-            PreviewSize::Resized(value) if value == 33 => PreviewSize::Resized(50),
-            PreviewSize::Resized(value) if value == 50 => PreviewSize::Resized(66),
-            PreviewSize::Resized(value) if value == 66 => PreviewSize::Resized(75),
-            PreviewSize::Resized(value) if value == 75 => PreviewSize::OriginalSize,
-            PreviewSize::Resized(value) if value == 133 => PreviewSize::Resized(150),
-            PreviewSize::Resized(value) if value == 150 => PreviewSize::Resized(200),
-            PreviewSize::Resized(value) if value == 200 => PreviewSize::Resized(500),
-            PreviewSize::Resized(_) => panic!("Preview size with given scale is not supported"),
+            PreviewSize::BestFit(_, _) => Some(PreviewSize::OriginalSize),
+            PreviewSize::OriginalSize => Some(PreviewSize::Resized(133)),
+            PreviewSize::Resized(value) if value < 10 => Some(PreviewSize::Resized(10)),
+            PreviewSize::Resized(value) if value < 25 => Some(PreviewSize::Resized(25)),
+            PreviewSize::Resized(value) if value < 33 => Some(PreviewSize::Resized(33)),
+            PreviewSize::Resized(value) if value < 50 => Some(PreviewSize::Resized(50)),
+            PreviewSize::Resized(value) if value < 66 => Some(PreviewSize::Resized(66)),
+            PreviewSize::Resized(value) if value < 75 => Some(PreviewSize::Resized(75)),
+            PreviewSize::Resized(value) if value < 100 => Some(PreviewSize::OriginalSize),
+            PreviewSize::Resized(value) if value < 133 => Some(PreviewSize::Resized(133)),
+            PreviewSize::Resized(value) if value < 150 => Some(PreviewSize::Resized(150)),
+            PreviewSize::Resized(value) if value < 200 => Some(PreviewSize::Resized(200)),
+            PreviewSize::Resized(value) if value < 500 => Some(PreviewSize::Resized(500)),
+            PreviewSize::Resized(_) => None,
         }
+    }
+
+    pub fn larger_by(self, value: u32) -> Option<PreviewSize> {
+        let old_value = match self {
+            PreviewSize::BestFit(_, _) => return Some(PreviewSize::OriginalSize),
+            PreviewSize::OriginalSize => 100,
+            PreviewSize::Resized(value) => value,
+        };
+
+        old_value
+            .checked_add(value)
+            .filter(|value| value <= &500)
+            .map(|value| {
+                if value == 100 {
+                    PreviewSize::OriginalSize
+                } else {
+                    PreviewSize::Resized(value)
+                }
+            })
     }
 
     pub fn can_be_larger(&self) -> bool {
