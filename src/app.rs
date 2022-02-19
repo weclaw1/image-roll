@@ -1,4 +1,4 @@
-use gtk::{gio, glib, prelude::*, Builder};
+use gtk::{gio, glib, prelude::*, Builder, GestureZoom};
 
 use std::{
     cell::{Cell, RefCell},
@@ -19,6 +19,7 @@ use crate::{
 
 pub struct App {
     application: gtk::Application,
+    zoom_gesture: gtk::GestureZoom,
     widgets: Widgets,
     image_list: Rc<RefCell<ImageList>>,
     file_list: FileList,
@@ -36,6 +37,8 @@ impl App {
         let builder = Builder::from_resource("/com/github/weclaw1/image-roll/image-roll_ui.glade");
 
         let widgets: Widgets = Widgets::init(builder, application);
+
+        let zoom_gesture = GestureZoom::new(widgets.image_event_box());
 
         if let Some(theme) = gtk::IconTheme::default() {
             theme.add_resource_path("/com/github/weclaw1/image-roll");
@@ -66,6 +69,7 @@ impl App {
 
         let mut app = Self {
             application: application.clone(),
+            zoom_gesture,
             widgets,
             image_list,
             file_list,
@@ -82,6 +86,8 @@ impl App {
             app.selection_coords.clone(),
             app.settings.clone(),
         );
+
+        event::connect_gestures(app.sender.clone(), &app.zoom_gesture);
 
         receiver.attach(None, move |e| {
             app.process_event(e);
