@@ -149,7 +149,11 @@ impl App {
                 }
             }
             Event::DeleteCurrentImage => {
-                action::delete_current_image(&self.sender, self.image_list.clone());
+                action::delete_current_image(
+                    &self.sender,
+                    &mut self.file_list,
+                    self.image_list.clone(),
+                );
                 if self.file_list.current_folder_monitor_mut().is_none() {
                     action::refresh_file_list(&self.sender, &mut self.file_list);
                 }

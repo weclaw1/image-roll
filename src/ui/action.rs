@@ -367,15 +367,29 @@ pub fn save_current_image(
     }
 }
 
-pub fn delete_current_image(sender: &Sender<Event>, image_list: Rc<RefCell<ImageList>>) {
-    match image_list.borrow_mut().delete_current_image() {
-        Ok(image_name) => post_event(
-            sender,
-            Event::DisplayMessage(
-                format!("Image {} was moved to trash", image_name),
-                MessageType::Info,
-            ),
-        ),
+pub fn delete_current_image(
+    sender: &Sender<Event>,
+    file_list: &mut FileList,
+    image_list: Rc<RefCell<ImageList>>,
+) {
+    match file_list.delete_current_file() {
+        Ok(image_path) => {
+            image_list.borrow_mut().remove(image_path.as_path());
+            post_event(
+                sender,
+                Event::DisplayMessage(
+                    format!(
+                        "Image {} was moved to trash",
+                        image_path
+                            .file_name()
+                            .map(|file_name| file_name.to_str())
+                            .flatten()
+                            .unwrap_or_default()
+                    ),
+                    MessageType::Info,
+                ),
+            )
+        }
         Err(error) => post_event(
             sender,
             Event::DisplayMessage(error.to_string(), MessageType::Error),

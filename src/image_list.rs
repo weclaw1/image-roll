@@ -4,11 +4,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use gtk::{
-    gio::{Cancellable, File},
-    prelude::FileExt,
-};
-
 use crate::image::Image;
 
 use anyhow::{anyhow, Result};
@@ -85,22 +80,6 @@ impl ImageList {
 
         current_image.save(filename, clear_operations)?;
         Ok(())
-    }
-
-    pub fn delete_current_image(&mut self) -> Result<String> {
-        let current_image_path = self
-            .current_image_path
-            .as_ref()
-            .ok_or_else(|| anyhow!("Current image path is not set"))?;
-        let current_image_file = File::for_path(current_image_path);
-        let current_image_name = current_image_path
-            .file_name()
-            .map(|file_name| file_name.to_str())
-            .flatten()
-            .ok_or_else(|| anyhow!("Current image file name is not a valid name"))?;
-        current_image_file.trash(<Option<&Cancellable>>::None)?;
-        self.images.remove(current_image_path);
-        Ok(current_image_name.to_string())
     }
 }
 
@@ -226,41 +205,5 @@ mod tests {
             .unwrap();
 
         assert!(image_list.current_image().unwrap().has_operations());
-    }
-
-    #[test]
-    fn delete_current_image_deletes_file_from_filesystem() {
-        let mut test_resources =
-            TestResources::new("test/delete_current_image_deletes_file_from_filesystem");
-        test_resources.add_file("test.png", TEST_IMAGE);
-
-        let image_path = test_resources.file_folder().join("test.png");
-        let image = Image::load(&image_path).unwrap();
-
-        let mut image_list = ImageList::new();
-        image_list.insert(image_path.clone(), image);
-        image_list.set_current_image_path(Some(image_path.clone()));
-
-        image_list.delete_current_image().unwrap();
-
-        assert!(std::fs::File::open(image_path).is_err());
-    }
-
-    #[test]
-    fn delete_current_image_returns_deleted_file_name() {
-        let mut test_resources =
-            TestResources::new("test/delete_current_image_returns_deleted_file_name");
-        test_resources.add_file("test.png", TEST_IMAGE);
-
-        let image_path = test_resources.file_folder().join("test.png");
-        let image = Image::load(&image_path).unwrap();
-
-        let mut image_list = ImageList::new();
-        image_list.insert(image_path.clone(), image);
-        image_list.set_current_image_path(Some(image_path.clone()));
-
-        let deleted_file_name = image_list.delete_current_image().unwrap();
-
-        assert_eq!("test.png", deleted_file_name);
     }
 }

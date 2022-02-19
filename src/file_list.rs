@@ -145,7 +145,6 @@ impl FileList {
     //     self.current_folder.as_ref()
     // }
 
-    #[cfg(test)]
     pub fn current_file(&self) -> Option<&gio::File> {
         self.current_file.as_ref().map(|(_, file)| file)
     }
@@ -187,6 +186,21 @@ impl FileList {
 
     pub fn current_folder_monitor_mut(&mut self) -> Option<&mut gio::FileMonitor> {
         self.current_folder_monitor.as_mut()
+    }
+
+    pub fn delete_current_file(&mut self) -> Result<PathBuf> {
+        let deleted_file = self
+            .current_file()
+            .ok_or_else(|| {
+                anyhow!("Cannot delete current file because file list does not have a current file")
+            })?
+            .to_owned();
+        let deleted_file_path = deleted_file
+            .path()
+            .ok_or_else(|| anyhow!("Deleted file does not have a valid path"))?;
+        self.next();
+        deleted_file.trash(<Option<&Cancellable>>::None)?;
+        Ok(deleted_file_path)
     }
 }
 
@@ -425,5 +439,53 @@ mod tests {
                 .to_str()
                 .unwrap()
         );
+    }
+
+    #[test]
+    fn delete_current_file_deletes_file_from_filesystem() {
+        let mut test_resources =
+            TestResources::new("test/delete_current_file_deletes_file_from_filesystem");
+        test_resources.add_file("test.png", TEST_IMAGE);
+
+        let image_path = test_resources.file_folder().join("test.png");
+
+        let mut file_list = FileList::new(Some(gio::File::for_path(image_path.as_path()))).unwrap();
+
+        file_list.delete_current_file().unwrap();
+
+        assert!(std::fs::File::open(image_path).is_err());
+    }
+
+    #[test]
+    fn delete_current_file_returns_deleted_file_path() {
+        let mut test_resources =
+            TestResources::new("test/delete_current_file_returns_deleted_file_path");
+        test_resources.add_file("test.png", TEST_IMAGE);
+
+        let image_path = test_resources.file_folder().join("test.png");
+
+        let mut file_list = FileList::new(Some(gio::File::for_path(image_path.as_path()))).unwrap();
+
+        let file_list_current_file_path = file_list.current_file_path().unwrap();
+        let deleted_file_path = file_list.delete_current_file().unwrap();
+
+        assert_eq!(file_list_current_file_path, deleted_file_path);
+    }
+
+    #[test]
+    fn file_list_goes_to_next_file_after_removal_of_current_file() {
+        let mut test_resources =
+            TestResources::new("test/file_list_goes_to_next_file_after_removal_of_current_file");
+        test_resources.add_file("test.png", TEST_IMAGE);
+        test_resources.add_file("test2.png", TEST_IMAGE);
+        test_resources.add_file("test3.png", TEST_IMAGE);
+
+        let image_path = test_resources.file_folder().join("test.png");
+
+        let mut file_list = FileList::new(Some(gio::File::for_path(image_path.as_path()))).unwrap();
+
+        let deleted_file_path = file_list.delete_current_file().unwrap();
+
+        assert_ne!(deleted_file_path, file_list.current_file_path().unwrap());
     }
 }
