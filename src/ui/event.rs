@@ -53,6 +53,7 @@ pub enum Event {
     HideInfoPanel,
     ToggleFullscreen,
     Quit,
+    SetAsWallpaper,
 }
 
 pub fn post_event(sender: &glib::Sender<Event>, action: Event) {
@@ -100,7 +101,8 @@ pub fn connect_events(
     connect_window_resized(widgets.clone(), settings);
     connect_toggle_fullscreen(widgets.clone(), sender.clone());
     connect_quit(application, sender.clone());
-    connect_image_scrolled_window_scroll_event(widgets.clone(), sender);
+    connect_image_scrolled_window_scroll_event(widgets.clone(), sender.clone());
+    connect_set_as_wallpaper_menu_button_clicked(widgets.clone(), sender);
 
     widgets.window().show_all();
 }
@@ -474,5 +476,13 @@ fn connect_image_scrolled_window_scroll_event(widgets: Widgets, sender: Sender<E
             }
 
             gtk::Inhibit(true)
+        });
+}
+
+fn connect_set_as_wallpaper_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
+    widgets
+        .set_as_wallpaper_menu_button()
+        .connect_clicked(move |_| {
+            post_event(&sender, Event::SetAsWallpaper);
         });
 }

@@ -188,6 +188,7 @@ impl App {
             Event::Print => action::print(&self.sender, &self.widgets, self.image_list.clone()),
             Event::HideInfoPanel => action::hide_info_panel(&self.widgets),
             Event::ToggleFullscreen => action::toggle_fullscreen(&self.widgets, &mut self.settings),
+            Event::SetAsWallpaper => action::set_as_wallpaper(&self.sender, &self.file_list),
             Event::Quit => action::quit(&self.application),
             event => debug!("Discarded unused event: {:?}", event),
         }

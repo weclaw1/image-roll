@@ -150,6 +150,12 @@ impl FileList {
         self.current_file.as_ref().map(|(_, file)| file)
     }
 
+    pub fn current_file_uri(&self) -> Option<String> {
+        self.current_file
+            .as_ref()
+            .map(|(_, file)| file.uri().to_string())
+    }
+
     pub fn current_file_path(&self) -> Option<PathBuf> {
         self.current_file
             .as_ref()

@@ -4,6 +4,10 @@ use std::{
     rc::Rc,
 };
 
+use ashpd::{
+    desktop::wallpaper::{self, SetOn},
+    WindowIdentifier,
+};
 use gtk::{
     gdk, gio,
     glib::{self, timeout_future_seconds, Sender},
@@ -489,6 +493,28 @@ pub fn quit(application: &gtk::Application) {
         .for_each(|window| window.close());
 }
 
+pub fn set_as_wallpaper(sender: &Sender<Event>, file_list: &FileList) {
+    if let Some(current_file_uri) = file_list.current_file_uri() {
+        let sender = sender.clone();
+        let main_context = glib::MainContext::default();
+        main_context.spawn_local(async move {
+            if let Err(error) = wallpaper::set_from_uri(
+                &WindowIdentifier::default(),
+                current_file_uri.as_str(),
+                true,
+                SetOn::Background,
+            )
+            .await
+            {
+                post_event(
+                    &sender,
+                    Event::DisplayMessage(error.to_string(), MessageType::Error),
+                );
+            }
+        });
+    }
+}
+
 pub fn update_buttons_state(
     widgets: &Widgets,
     file_list: &FileList,
@@ -496,23 +522,12 @@ pub fn update_buttons_state(
     settings: &Settings,
 ) {
     let previous_next_active = file_list.len() > 1;
-    let buttons_active = file_list.len() > 0;
-
     widgets.next_button().set_sensitive(previous_next_active);
     widgets
         .previous_button()
         .set_sensitive(previous_next_active);
-    widgets
-        .rotate_counterclockwise_button()
-        .set_sensitive(buttons_active);
-    widgets
-        .rotate_clockwise_button()
-        .set_sensitive(buttons_active);
-    widgets.crop_button().set_sensitive(buttons_active);
-    widgets.resize_button().set_sensitive(buttons_active);
-    widgets.print_menu_button().set_sensitive(buttons_active);
 
-    if let Some(current_image) = image_list.borrow().current_image() {
+    let buttons_active = if let Some(current_image) = image_list.borrow().current_image() {
         widgets
             .undo_button()
             .set_sensitive(current_image.can_undo_operation());
@@ -522,15 +537,28 @@ pub fn update_buttons_state(
         widgets
             .save_menu_button()
             .set_sensitive(current_image.has_operations());
-        widgets.save_as_menu_button().set_sensitive(true);
-        widgets.delete_button().set_sensitive(true);
+        true
     } else {
         widgets.undo_button().set_sensitive(false);
         widgets.redo_button().set_sensitive(false);
         widgets.save_menu_button().set_sensitive(false);
-        widgets.save_as_menu_button().set_sensitive(false);
-        widgets.delete_button().set_sensitive(false);
-    }
+        false
+    };
+
+    widgets
+        .rotate_counterclockwise_button()
+        .set_sensitive(buttons_active);
+    widgets
+        .rotate_clockwise_button()
+        .set_sensitive(buttons_active);
+    widgets.crop_button().set_sensitive(buttons_active);
+    widgets.resize_button().set_sensitive(buttons_active);
+    widgets.print_menu_button().set_sensitive(buttons_active);
+    widgets.save_as_menu_button().set_sensitive(buttons_active);
+    widgets.delete_button().set_sensitive(buttons_active);
+    widgets
+        .set_as_wallpaper_menu_button()
+        .set_sensitive(buttons_active);
 
     widgets
         .preview_smaller_button()

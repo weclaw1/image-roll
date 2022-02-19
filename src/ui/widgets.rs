@@ -34,6 +34,7 @@ pub struct Widgets {
     save_as_menu_button: gtk::Button,
     preview_fit_screen_button: gtk::Button,
     delete_button: gtk::Button,
+    set_as_wallpaper_menu_button: gtk::Button,
 }
 
 impl Widgets {
@@ -152,6 +153,10 @@ impl Widgets {
             .object("delete_button")
             .expect("Couldn't get delete_button");
 
+        let set_as_wallpaper_menu_button: gtk::Button = builder
+            .object("set_as_wallpaper_menu_button")
+            .expect("Couldn't get set_as_wallpaper_menu_button");
+
         Self {
             window,
             open_menu_button,
@@ -182,6 +187,7 @@ impl Widgets {
             save_as_menu_button,
             preview_fit_screen_button,
             delete_button,
+            set_as_wallpaper_menu_button,
         }
     }
 
@@ -328,5 +334,10 @@ impl Widgets {
     /// Get a reference to the widgets's image scrolled window.
     pub fn image_scrolled_window(&self) -> &gtk::ScrolledWindow {
         &self.image_scrolled_window
+    }
+
+    /// Get a reference to the widgets's set as wallpaper menu button.
+    pub fn set_as_wallpaper_menu_button(&self) -> &gtk::Button {
+        &self.set_as_wallpaper_menu_button
     }
 }
