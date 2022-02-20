@@ -8,6 +8,7 @@ use crate::image::PreviewSize;
 pub struct Settings {
     gio_settings: Option<gio::Settings>,
     scale: PreviewSize,
+    scale_before_zoom_gesture: Option<PreviewSize>,
     fullscreen: bool,
 }
 
@@ -27,6 +28,7 @@ impl Settings {
         Settings {
             gio_settings,
             scale: PreviewSize::BestFit(0, 0),
+            scale_before_zoom_gesture: None,
             fullscreen: false,
         }
     }
@@ -67,5 +69,16 @@ impl Settings {
 
     pub fn fullscreen(&self) -> bool {
         self.fullscreen
+    }
+
+    pub fn scale_before_zoom_gesture(&self) -> Option<PreviewSize> {
+        self.scale_before_zoom_gesture
+    }
+
+    pub fn set_scale_before_zoom_gesture(
+        &mut self,
+        scale_before_zoom_gesture: Option<PreviewSize>,
+    ) {
+        self.scale_before_zoom_gesture = scale_before_zoom_gesture;
     }
 }

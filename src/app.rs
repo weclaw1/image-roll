@@ -199,6 +199,10 @@ impl App {
             Event::HideInfoPanel => action::hide_info_panel(&self.widgets),
             Event::ToggleFullscreen => action::toggle_fullscreen(&self.widgets, &mut self.settings),
             Event::SetAsWallpaper => action::set_as_wallpaper(&self.sender, &self.file_list),
+            Event::StartZoomGesture => action::start_zoom_gesture(&mut self.settings),
+            Event::ZoomGestureScaleChanged(zoom_scale) => {
+                action::change_scale_on_zoom_gesture(&self.sender, &self.settings, zoom_scale)
+            }
             Event::Quit => action::quit(&self.application),
             event => debug!("Discarded unused event: {:?}", event),
         }
