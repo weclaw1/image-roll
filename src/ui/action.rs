@@ -537,10 +537,10 @@ pub fn change_scale_on_zoom_gesture(sender: &Sender<Event>, settings: &Settings,
     if let Some(scale_before_zoom_gesture) = settings.scale_before_zoom_gesture() {
         let new_preview_size = match scale_before_zoom_gesture {
             PreviewSize::BestFit(_, _) | PreviewSize::OriginalSize => {
-                PreviewSize::Resized(100 + (zoom_scale * 100.0) as u32)
+                PreviewSize::Resized((zoom_scale * 100.0) as u32)
             }
             PreviewSize::Resized(old_scale) => {
-                PreviewSize::Resized(old_scale + (zoom_scale * 100.0) as u32)
+                PreviewSize::Resized((old_scale as f64 * zoom_scale) as u32)
             }
         };
         post_event(sender, Event::ChangePreviewSize(new_preview_size));
