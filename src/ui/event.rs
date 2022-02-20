@@ -7,7 +7,6 @@ use gtk::{
         ActionMapExt, ButtonExt, FileChooserExt, GdkContextExt, InfoBarExt, NativeDialogExt,
         PopoverExt, SpinButtonExt, ToggleButtonExt, WidgetExt, WidgetExtManual,
     },
-    traits::GestureExt,
     MessageType, SpinButtonSignals, Window,
 };
 use std::{
@@ -493,12 +492,10 @@ fn connect_set_as_wallpaper_menu_button_clicked(widgets: Widgets, sender: Sender
 }
 
 fn connect_zoom_gesture(sender: Sender<Event>, zoom_gesture: &gtk::GestureZoom) {
-    zoom_gesture.connect_end(move |gesture, _| {
-        if gesture.scale_delta() > 1.2 {
-            post_event(&sender, Event::PreviewLarger(None));
-        }
-        if gesture.scale_delta() < 0.8 {
-            post_event(&sender, Event::PreviewSmaller(None));
-        }
+    zoom_gesture.connect_scale_changed(move |_, scale| {
+        post_event(
+            &sender,
+            Event::ChangePreviewSize(PreviewSize::Resized((scale * 100.0) as u32)),
+        );
     });
 }
