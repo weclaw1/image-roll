@@ -36,8 +36,7 @@ impl Image {
         let extension = path
             .as_ref()
             .extension()
-            .map(|extension| extension.to_str())
-            .flatten()
+            .and_then(|extension| extension.to_str())
             .ok_or_else(|| anyhow!("File path doesn't have file extension"))?;
         let lowercase_extension = extension.to_lowercase();
         let file_type = match lowercase_extension.as_str() {

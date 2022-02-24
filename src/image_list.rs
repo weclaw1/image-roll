@@ -40,22 +40,19 @@ impl ImageList {
     pub fn remove_current_image(&mut self) -> Option<Image> {
         self.current_image_path
             .clone()
-            .map(|image_path| self.remove(&image_path))
-            .flatten()
+            .and_then(|image_path| self.remove(&image_path))
     }
 
     pub fn current_image_mut(&mut self) -> Option<&mut Image> {
         self.current_image_path
             .clone()
-            .map(move |image_path| self.images.get_mut(&image_path))
-            .flatten()
+            .and_then(move |image_path| self.images.get_mut(&image_path))
     }
 
     pub fn current_image(&self) -> Option<&Image> {
         self.current_image_path
             .as_ref()
-            .map(|image_path| self.images.get(image_path))
-            .flatten()
+            .and_then(|image_path| self.images.get(image_path))
     }
 
     pub fn current_image_path(&self) -> Option<PathBuf> {

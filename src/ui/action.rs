@@ -107,8 +107,7 @@ pub fn load_image(
         widgets.window().set_title(
             file_path
                 .file_name()
-                .map(|file_name| file_name.to_str())
-                .flatten()
+                .and_then(|file_name| file_name.to_str())
                 .unwrap_or_default(),
         );
         image_list.set_current_image_path(Some(file_path));
@@ -382,8 +381,7 @@ pub fn delete_current_image(
                         "Image {} was moved to trash",
                         image_path
                             .file_name()
-                            .map(|file_name| file_name.to_str())
-                            .flatten()
+                            .and_then(|file_name| file_name.to_str())
                             .unwrap_or_default()
                     ),
                     MessageType::Info,
@@ -406,16 +404,16 @@ pub fn print(sender: &Sender<Event>, widgets: &Widgets, image_list: Rc<RefCell<I
 
     let cloned_sender = sender.clone();
     print_operation.connect_draw_page(move |_, print_context, _| {
-        if let Some(print_image_buffer) = image_list
-            .borrow()
-            .current_image()
-            .map(|current_image| {
-                current_image.create_print_image_buffer(
-                    print_context.width() as u32,
-                    print_context.height() as u32,
-                )
-            })
-            .flatten()
+        if let Some(print_image_buffer) =
+            image_list
+                .borrow()
+                .current_image()
+                .and_then(|current_image| {
+                    current_image.create_print_image_buffer(
+                        print_context.width() as u32,
+                        print_context.height() as u32,
+                    )
+                })
         {
             let cairo_context = print_context
                 .cairo_context()

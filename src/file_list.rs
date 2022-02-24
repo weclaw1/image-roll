@@ -156,10 +156,7 @@ impl FileList {
     }
 
     pub fn current_file_path(&self) -> Option<PathBuf> {
-        self.current_file
-            .as_ref()
-            .map(|(_, file)| file.path())
-            .flatten()
+        self.current_file.as_ref().and_then(|(_, file)| file.path())
     }
 
     pub fn len(&self) -> usize {
