@@ -119,7 +119,7 @@ mod tests {
             .unwrap()
             .metadata()
             .unwrap()
-            .created()
+            .modified()
             .unwrap();
 
         let image = Image::load(&image_path).unwrap();
