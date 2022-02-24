@@ -18,7 +18,7 @@ ashpd = "0.2.2"
 [dev-dependencies]
 itertools = "0.10.3"
 rand = "0.8.4"
-infer = "0.6.0"
+infer = "0.7.0"
 
 [dependencies.gtk]
 version = "0.15.3"
