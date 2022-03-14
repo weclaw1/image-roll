@@ -151,6 +151,10 @@ impl Image {
         self.preview_image_buffer.as_ref()
     }
 
+    pub fn current_image_buffer(&self) -> Option<&Pixbuf> {
+        self.current_image_buffer.as_ref()
+    }
+
     pub fn image_size(&self) -> Option<(u32, u32)> {
         self.current_image_buffer
             .as_ref()

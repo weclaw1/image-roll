@@ -71,6 +71,21 @@ Author: Robert Węcławski
         <property name="orientation">vertical</property>
         <property name="homogeneous">True</property>
         <child>
+          <object class="GtkButton" id="copy_menu_button">
+            <property name="label" translatable="yes">Copy</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+            <accelerator key="s" signal="clicked" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkButton" id="open_menu_button">
             <property name="label" translatable="yes">Open...</property>
             <property name="visible">True</property>
@@ -82,7 +97,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -97,7 +112,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -112,7 +127,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -126,7 +141,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child>
@@ -141,7 +156,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">5</property>
           </packing>
         </child>
       </object>
@@ -389,8 +404,8 @@ Author: Robert Węcławski
                 <property name="tooltip-text" translatable="yes">Previous</property>
                 <property name="image">previous_icon</property>
                 <property name="always-show-image">True</property>
-                <accelerator key="h" signal="clicked" modifiers="GDK_LOCK_MASK"/>
                 <accelerator key="Left" signal="clicked" modifiers="GDK_LOCK_MASK"/>
+                <accelerator key="h" signal="clicked" modifiers="GDK_LOCK_MASK"/>
               </object>
               <packing>
                 <property name="position">0</property>
@@ -523,8 +538,8 @@ Author: Robert Węcławski
                 <property name="image">next_icon</property>
                 <property name="image-position">right</property>
                 <property name="always-show-image">True</property>
-                <accelerator key="l" signal="clicked" modifiers="GDK_LOCK_MASK"/>
                 <accelerator key="Right" signal="clicked" modifiers="GDK_LOCK_MASK"/>
+                <accelerator key="l" signal="clicked" modifiers="GDK_LOCK_MASK"/>
               </object>
               <packing>
                 <property name="pack-type">end</property>
@@ -557,9 +572,9 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_smaller_icon</property>
-                <accelerator key="j" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
-                <accelerator key="minus" signal="clicked"/>
                 <accelerator key="KP_Subtract" signal="clicked"/>
+                <accelerator key="minus" signal="clicked"/>
+                <accelerator key="j" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -587,9 +602,9 @@ Author: Robert Węcławski
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="image">preview_larger_icon</property>
-                <accelerator key="k" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
-                <accelerator key="plus" signal="clicked"/>
                 <accelerator key="KP_Add" signal="clicked"/>
+                <accelerator key="plus" signal="clicked"/>
+                <accelerator key="k" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
               </object>
               <packing>
                 <property name="expand">False</property>

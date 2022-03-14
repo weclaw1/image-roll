@@ -203,6 +203,7 @@ impl App {
             Event::ZoomGestureScaleChanged(zoom_scale) => {
                 action::change_scale_on_zoom_gesture(&self.sender, &self.settings, zoom_scale)
             }
+            Event::CopyCurrentImage => action::copy_current_image(self.image_list.clone()),
             Event::Quit => action::quit(&self.application),
             event => debug!("Discarded unused event: {:?}", event),
         }

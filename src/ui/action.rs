@@ -527,6 +527,13 @@ pub fn set_as_wallpaper(sender: &Sender<Event>, file_list: &FileList) {
     }
 }
 
+pub fn copy_current_image(image_list: Rc<RefCell<ImageList>>) {
+    let display = gdk::Display::default().unwrap();
+    let clipboard = gtk::Clipboard::default(&display).expect("Failed to get clipboard");
+
+    image_list.borrow().copy_current_image(&clipboard);
+}
+
 pub fn start_zoom_gesture(settings: &mut Settings) {
     settings.set_scale_before_zoom_gesture(Some(settings.scale()));
 }
@@ -589,6 +596,8 @@ pub fn update_buttons_state(
     widgets
         .set_as_wallpaper_menu_button()
         .set_sensitive(buttons_active);
+
+    widgets.copy_menu_button().set_sensitive(buttons_active);
 
     widgets
         .preview_smaller_button()

@@ -34,6 +34,7 @@ pub struct Widgets {
     save_as_menu_button: gtk::Button,
     preview_fit_screen_button: gtk::Button,
     delete_button: gtk::Button,
+    copy_menu_button: gtk::Button,
     set_as_wallpaper_menu_button: gtk::Button,
 }
 
@@ -153,6 +154,10 @@ impl Widgets {
             .object("delete_button")
             .expect("Couldn't get delete_button");
 
+        let copy_menu_button: gtk::Button = builder
+            .object("copy_menu_button")
+            .expect("Couldn't get copy_menu_button");
+
         let set_as_wallpaper_menu_button: gtk::Button = builder
             .object("set_as_wallpaper_menu_button")
             .expect("Couldn't get set_as_wallpaper_menu_button");
@@ -187,6 +192,7 @@ impl Widgets {
             save_as_menu_button,
             preview_fit_screen_button,
             delete_button,
+            copy_menu_button,
             set_as_wallpaper_menu_button,
         }
     }
@@ -339,5 +345,10 @@ impl Widgets {
     /// Get a reference to the widgets's set as wallpaper menu button.
     pub fn set_as_wallpaper_menu_button(&self) -> &gtk::Button {
         &self.set_as_wallpaper_menu_button
+    }
+
+    /// Get a reference to the widget's copy menu button
+    pub fn copy_menu_button(&self) -> &gtk::Button {
+        &self.copy_menu_button
     }
 }
