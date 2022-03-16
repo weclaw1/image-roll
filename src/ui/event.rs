@@ -55,6 +55,7 @@ pub enum Event {
     DisplayMessage(String, gtk::MessageType),
     HideInfoPanel,
     ToggleFullscreen,
+    CopyCurrentImage,
     Quit,
     SetAsWallpaper,
 }
@@ -77,6 +78,7 @@ pub fn connect_events(
         .image_event_box()
         .set_events(gdk::EventMask::POINTER_MOTION_MASK);
 
+    connect_keybinds(widgets.clone(), sender.clone());
     connect_open_menu_button_clicked(widgets.clone(), sender.clone());
     connect_next_button_clicked(widgets.clone(), sender.clone());
     connect_previous_button_clicked(widgets.clone(), sender.clone());
@@ -105,13 +107,31 @@ pub fn connect_events(
     connect_toggle_fullscreen(widgets.clone(), sender.clone());
     connect_quit(application, sender.clone());
     connect_image_scrolled_window_scroll_event(widgets.clone(), sender.clone());
-    connect_set_as_wallpaper_menu_button_clicked(widgets.clone(), sender);
+    connect_set_as_wallpaper_menu_button_clicked(widgets.clone(), sender.clone());
+    connect_copy_menu_button_clicked(widgets.clone(), sender);
 
     widgets.window().show_all();
 }
 
 pub fn connect_gestures(sender: Sender<Event>, zoom_gesture: &gtk::GestureZoom) {
     connect_zoom_gesture(sender, zoom_gesture);
+}
+
+pub fn connect_keybinds(widgets: Widgets, sender: Sender<Event>) {
+    widgets.window().connect_key_press_event(move |_, event| {
+        if let Some(key) = event.keyval().to_unicode() {
+            match key {
+                's' if event.state() == gdk::ModifierType::CONTROL_MASK => {
+                    post_event(&sender, Event::SaveCurrentImage(None))
+                }
+                'c' if event.state() == gdk::ModifierType::CONTROL_MASK => {
+                    post_event(&sender, Event::CopyCurrentImage)
+                }
+                _ => {}
+            }
+        }
+        gtk::Inhibit(false)
+    });
 }
 
 fn connect_open_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
@@ -491,6 +511,16 @@ fn connect_set_as_wallpaper_menu_button_clicked(widgets: Widgets, sender: Sender
         .set_as_wallpaper_menu_button()
         .connect_clicked(move |_| {
             post_event(&sender, Event::SetAsWallpaper);
+        });
+}
+
+fn connect_copy_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
+    widgets
+        .clone()
+        .copy_menu_button()
+        .connect_clicked(move |_| {
+            widgets.popover_menu().popdown();
+            post_event(&sender, Event::CopyCurrentImage);
         });
 }
 

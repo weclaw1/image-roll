@@ -78,6 +78,14 @@ impl ImageList {
         current_image.save(filename, clear_operations)?;
         Ok(())
     }
+    
+    pub fn copy_current_image(&self, clipboard: &gtk::Clipboard) {
+        if let Some(current_image) = self.current_image() {
+            if let Some(buffer) = current_image.current_image_buffer() {
+                clipboard.set_image(buffer);
+            }
+        }
+    }
 }
 
 impl Index<&PathBuf> for ImageList {

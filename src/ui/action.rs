@@ -533,6 +533,22 @@ pub fn set_as_wallpaper(_sender: &Sender<Event>, _file_list: &FileList) {
     error!("This program was built without the wallpaper feature");
 }
 
+pub fn copy_current_image(sender: &Sender<Event>, image_list: Rc<RefCell<ImageList>>) {
+    let display = gdk::Display::default().unwrap();
+
+    match gtk::Clipboard::default(&display) {
+        Some(clipboard) => {
+            image_list.borrow().copy_current_image(&clipboard);
+        }
+        None => {
+            post_event(
+                sender,
+                Event::DisplayMessage("Unable to open clipboard!".to_string(), MessageType::Error),
+            );
+        }
+    }
+}
+
 pub fn start_zoom_gesture(settings: &mut Settings) {
     settings.set_scale_before_zoom_gesture(Some(settings.scale()));
 }
@@ -599,6 +615,8 @@ pub fn update_buttons_state(
         .set_sensitive(buttons_active);
     #[cfg(not(feature = "wallpaper"))]
     widgets.set_as_wallpaper_menu_button().set_sensitive(false);
+
+    widgets.copy_menu_button().set_sensitive(buttons_active);
 
     widgets
         .preview_smaller_button()

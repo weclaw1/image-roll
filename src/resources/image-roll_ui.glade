@@ -92,7 +92,6 @@ Author: Robert Węcławski
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="relief">none</property>
-            <accelerator key="s" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -116,6 +115,20 @@ Author: Robert Węcławski
           </packing>
         </child>
         <child>
+          <object class="GtkButton" id="copy_menu_button">
+            <property name="label" translatable="yes">Copy</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="relief">none</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkButton" id="set_as_wallpaper_menu_button">
             <property name="label" translatable="yes">Set as wallpaper</property>
             <property name="visible">True</property>
@@ -126,7 +139,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
         <child>
@@ -141,7 +154,7 @@ Author: Robert Węcławski
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">5</property>
           </packing>
         </child>
       </object>
