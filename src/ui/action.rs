@@ -527,11 +527,20 @@ pub fn set_as_wallpaper(sender: &Sender<Event>, file_list: &FileList) {
     }
 }
 
-pub fn copy_current_image(image_list: Rc<RefCell<ImageList>>) {
+pub fn copy_current_image(sender: &Sender<Event>, image_list: Rc<RefCell<ImageList>>) {
     let display = gdk::Display::default().unwrap();
-    let clipboard = gtk::Clipboard::default(&display).expect("Failed to get clipboard");
 
-    image_list.borrow().copy_current_image(&clipboard);
+    match gtk::Clipboard::default(&display) {
+        Some(clipboard) => {
+            image_list.borrow().copy_current_image(&clipboard);
+        }
+        None => {
+            post_event(
+                sender,
+                Event::DisplayMessage("Unable to open clipboard!".to_string(), MessageType::Error),
+            );
+        }
+    }
 }
 
 pub fn start_zoom_gesture(settings: &mut Settings) {

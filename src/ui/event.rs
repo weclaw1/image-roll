@@ -119,11 +119,14 @@ pub fn connect_gestures(sender: Sender<Event>, zoom_gesture: &gtk::GestureZoom) 
 
 pub fn connect_keybinds(widgets: Widgets, sender: Sender<Event>) {
     widgets.window().connect_key_press_event(move |_, event| {
-        let keycode = event.keycode().unwrap();
-        if event.state().contains(gdk::ModifierType::CONTROL_MASK) {
-            match keycode {
-                39 => post_event(&sender, Event::SaveCurrentImage(None)),
-                54 => post_event(&sender, Event::CopyCurrentImage),
+        if let Some(key) = event.keyval().to_unicode() {
+            match key {
+                's' if event.state() == gdk::ModifierType::CONTROL_MASK => {
+                    post_event(&sender, Event::SaveCurrentImage(None))
+                }
+                'c' if event.state() == gdk::ModifierType::CONTROL_MASK => {
+                    post_event(&sender, Event::CopyCurrentImage)
+                }
                 _ => {}
             }
         }
