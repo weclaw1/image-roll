@@ -149,6 +149,7 @@ impl FileList {
         self.current_file.as_ref().map(|(_, file)| file)
     }
 
+    #[allow(dead_code)] // currently used only with feature "wallpaper"
     pub fn current_file_uri(&self) -> Option<String> {
         self.current_file
             .as_ref()

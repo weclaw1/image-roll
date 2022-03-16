@@ -4,6 +4,7 @@ use std::{
     rc::Rc,
 };
 
+#[cfg(feature = "wallpaper")]
 use ashpd::{
     desktop::wallpaper::{self, SetOn},
     WindowIdentifier,
@@ -505,6 +506,7 @@ pub fn quit(application: &gtk::Application) {
         .for_each(|window| window.close());
 }
 
+#[cfg(feature = "wallpaper")]
 pub fn set_as_wallpaper(sender: &Sender<Event>, file_list: &FileList) {
     if let Some(current_file_uri) = file_list.current_file_uri() {
         let sender = sender.clone();
@@ -525,6 +527,10 @@ pub fn set_as_wallpaper(sender: &Sender<Event>, file_list: &FileList) {
             }
         });
     }
+}
+#[cfg(not(feature = "wallpaper"))]
+pub fn set_as_wallpaper(_sender: &Sender<Event>, _file_list: &FileList) {
+    error!("This program was built without the wallpaper feature");
 }
 
 pub fn start_zoom_gesture(settings: &mut Settings) {
@@ -586,9 +592,13 @@ pub fn update_buttons_state(
     widgets.print_menu_button().set_sensitive(buttons_active);
     widgets.save_as_menu_button().set_sensitive(buttons_active);
     widgets.delete_button().set_sensitive(buttons_active);
+
+    #[cfg(feature = "wallpaper")]
     widgets
         .set_as_wallpaper_menu_button()
         .set_sensitive(buttons_active);
+    #[cfg(not(feature = "wallpaper"))]
+    widgets.set_as_wallpaper_menu_button().set_sensitive(false);
 
     widgets
         .preview_smaller_button()
