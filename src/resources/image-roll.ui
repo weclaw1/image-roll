@@ -1,0 +1,238 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.9.1 -->
+<interface>
+  <!-- interface-name image-roll.ui -->
+  <requires lib="gtk" version="4.6"/>
+  <object class="GtkWindow" id="main_window">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkInfoBar" id="error_info_bar">
+            <property name="message-type">error</property>
+            <property name="revealed">False</property>
+            <property name="show-close-button">True</property>
+            <child>
+              <object class="GtkLabel" id="error_info_bar_text">
+                <property name="label">ERROR</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="image_scrolled_window">
+            <property name="child">
+              <object class="GtkViewport" id="image_viewport">
+                <property name="child">
+                  <object class="GtkImage" id="image_widget"/>
+                </property>
+              </object>
+            </property>
+            <property name="vexpand">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="action_bar">
+            <child>
+              <object class="GtkButton" id="previous_button">
+                <property name="has-frame">False</property>
+                <property name="icon-name">go-previous-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBox">
+                <property name="hexpand">True</property>
+                <property name="max-children-per-line">6</property>
+                <child>
+                  <object class="GtkButton" id="undo_button">
+                    <property name="has-frame">False</property>
+                    <property name="icon-name">edit-undo-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="rotate_counterclockwise_button">
+                    <property name="has-frame">False</property>
+                    <property name="icon-name">object-rotate-left-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="crop_button">
+                    <property name="has-frame">False</property>
+                    <property name="icon-name">crop-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkMenuButton" id="resize_button">
+                    <property name="direction">up</property>
+                    <property name="has-frame">False</property>
+                    <property name="icon-name">view-fullscreen-symbolic</property>
+                    <property name="popover">resize_popover</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="rotate_clockwise_button">
+                    <property name="has-frame">False</property>
+                    <property name="icon-name">object-rotate-right-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="redo_button">
+                    <property name="has-frame">False</property>
+                    <property name="icon-name">edit-redo-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="next_button">
+                <property name="has-frame">False</property>
+                <property name="icon-name">go-next-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+    <property name="default-height">768</property>
+    <property name="default-width">1024</property>
+    <property name="icon-name">com.github.weclaw1.ImageRoll</property>
+    <property name="title">Image Roll</property>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="headerbar">
+        <child type="end">
+          <object class="GtkBox">
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkButton" id="delete_button">
+                <property name="icon-name">user-trash-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="menu_button">
+                <property name="direction">none</property>
+                <property name="popover">popover_menu</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child type="start">
+          <object class="GtkBox">
+            <child>
+              <object class="GtkButton" id="preview_smaller_button">
+                <property name="icon-name">zoom-out-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="preview_size_label">
+                <property name="label">Fit screen</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="preview_larger_button">
+                <property name="icon-name">zoom-in-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="preview_fit_screen">
+                <property name="icon-name">zoom-fit-best-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopoverMenu" id="popover_menu">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkButton" id="open_menu_button">
+            <property name="has-frame">False</property>
+            <property name="label">Open...</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="save_menu_button">
+            <property name="has-frame">False</property>
+            <property name="label">Save</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="save_as_menu_button">
+            <property name="has-frame">False</property>
+            <property name="label">Save as...</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="copy_menu_button">
+            <property name="has-frame">False</property>
+            <property name="label">Copy</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="set_as_wallpaper_menu_button">
+            <property name="has-frame">False</property>
+            <property name="label">Set as wallpaper</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="print_menu_button">
+            <property name="has-frame">False</property>
+            <property name="label">Print</property>
+          </object>
+        </child>
+      </object>
+    </property>
+  </object>
+  <object class="GtkPopover" id="resize_popover">
+    <property name="child">
+      <object class="GtkBox">
+        <child>
+          <object class="GtkToggleButton" id="link_aspect_ratio_button">
+            <property name="has-frame">False</property>
+            <property name="icon-name">insert-link-symbolic</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="width_spin_button">
+            <property name="adjustment">width_adjustment</property>
+            <property name="climb-rate">0.5</property>
+            <property name="orientation">vertical</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="x_label">
+            <property name="label">x</property>
+            <property name="margin-end">5</property>
+            <property name="margin-start">5</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="height_spin_button">
+            <property name="adjustment">height_adjustment</property>
+            <property name="climb-rate">0.5</property>
+            <property name="orientation">vertical</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="apply_resize_button">
+            <property name="has-frame">False</property>
+            <property name="icon-name">emblem-ok-symbolic</property>
+          </object>
+        </child>
+      </object>
+    </property>
+    <property name="position">top</property>
+  </object>
+  <object class="GtkAdjustment" id="width_adjustment">
+    <property name="page-increment">10.0</property>
+    <property name="step-increment">1.0</property>
+    <property name="upper">2147483647.0</property>
+  </object>
+  <object class="GtkAdjustment" id="height_adjustment">
+    <property name="page-increment">10.0</property>
+    <property name="step-increment">1.0</property>
+    <property name="upper">2147483647.0</property>
+  </object>
+</interface>
