@@ -299,7 +299,6 @@ fn connect_image_widget_draw(
         .image_widget()
         .set_draw_func(move |_, cairo_context, _, _| {
             if let Some(current_image) = image_list.borrow().current_image() {
-                println!("Test");
                 let image_buffer = current_image.preview_image_buffer().unwrap();
                 cairo_context.set_source_pixbuf(
                     image_buffer,

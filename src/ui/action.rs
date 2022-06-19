@@ -80,7 +80,7 @@ pub fn open_file(
 
 pub fn load_image(
     sender: &Sender<Event>,
-    settings: &Settings,
+    settings: &mut Settings,
     widgets: &Widgets,
     image_list: Rc<RefCell<ImageList>>,
     file_path: Option<PathBuf>,
@@ -112,6 +112,10 @@ pub fn load_image(
                 .and_then(|file_name| file_name.to_str()),
         );
         image_list.set_current_image_path(Some(file_path));
+        if let PreviewSize::BestFit(0, 0) = settings.scale() {
+            let new_scale = PreviewSize::BestFit(widgets.image_viewport().allocation().width() as u32, widgets.image_viewport().allocation().height() as u32);
+            settings.set_scale(new_scale);
+        }
         post_event(sender, Event::RefreshPreview(settings.scale()));
     } else {
         widgets.window().set_title(Some("Image Roll"));
@@ -407,15 +411,17 @@ pub fn print(sender: &Sender<Event>, widgets: &Widgets, image_list: Rc<RefCell<I
     };
 }
 
-pub fn undo_operation(image_list: Rc<RefCell<ImageList>>) {
+pub fn undo_operation(sender: &Sender<Event>, settings: &Settings, image_list: Rc<RefCell<ImageList>>) {
     if let Some(current_image) = image_list.borrow_mut().current_image_mut() {
         current_image.undo_operation();
+        post_event(sender, Event::RefreshPreview(settings.scale()));
     }
 }
 
-pub fn redo_operation(image_list: Rc<RefCell<ImageList>>) {
+pub fn redo_operation(sender: &Sender<Event>, settings: &Settings, image_list: Rc<RefCell<ImageList>>) {
     if let Some(current_image) = image_list.borrow_mut().current_image_mut() {
         current_image.redo_operation();
+        post_event(sender, Event::RefreshPreview(settings.scale()));
     }
 }
 

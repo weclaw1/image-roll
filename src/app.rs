@@ -1,4 +1,4 @@
-use gtk::{gio, glib, prelude::*, Builder};
+use gtk::{gio, glib, prelude::*, Builder, gdk::Display};
 
 use std::{
     cell::{Cell, RefCell},
@@ -40,7 +40,7 @@ impl App {
 
         let controllers = Controllers::init();
 
-        gtk::IconTheme::default().add_resource_path("/com/github/weclaw1/image-roll");
+        gtk::IconTheme::for_display(&Display::default().unwrap()).add_resource_path("/com/github/weclaw1/image-roll");
 
         let image_list: Rc<RefCell<ImageList>> = Rc::new(RefCell::new(ImageList::new()));
 
@@ -83,6 +83,8 @@ impl App {
 
         event::connect_controllers(app.sender.clone(), app.widgets.clone(), app.controllers.clone());
 
+        action::update_buttons_state(&app.widgets, &app.file_list, app.image_list.clone(), &app.settings);
+
         receiver.attach(None, move |e| {
             app.process_event(e);
             glib::Continue(true)
@@ -99,7 +101,7 @@ impl App {
             ),
             Event::LoadImage(file_path) => action::load_image(
                 &self.sender,
-                &self.settings,
+                &mut self.settings,
                 &self.widgets,
                 self.image_list.clone(),
                 file_path,
@@ -187,8 +189,8 @@ impl App {
             Event::UpdateResizePopoverHeight => {
                 action::update_resize_popover_height(&self.widgets, self.image_list.clone())
             }
-            Event::UndoOperation => action::undo_operation(self.image_list.clone()),
-            Event::RedoOperation => action::redo_operation(self.image_list.clone()),
+            Event::UndoOperation => action::undo_operation(&self.sender, &self.settings, self.image_list.clone()),
+            Event::RedoOperation => action::redo_operation(&self.sender, &self.settings, self.image_list.clone()),
             Event::Print => action::print(&self.sender, &self.widgets, self.image_list.clone()),
             Event::HideInfoPanel => action::hide_info_panel(&self.widgets),
             Event::ToggleFullscreen => action::toggle_fullscreen(&self.widgets, &mut self.settings),
