@@ -13,10 +13,11 @@ use gtk::{
     gdk, gio,
     glib::{self, timeout_future_seconds, Sender},
     prelude::{
-        FileMonitorExt, GtkApplicationExt, GtkWindowExt,
-        PrintOperationExt, ToggleButtonExt, WidgetExt, GdkCairoContextExt, DisplayExt,
+        DisplayExt, FileMonitorExt, GdkCairoContextExt, GtkApplicationExt, GtkWindowExt,
+        PrintOperationExt, ToggleButtonExt, WidgetExt,
     },
-    MessageType, traits::DrawingAreaExt,
+    traits::DrawingAreaExt,
+    MessageType,
 };
 
 use crate::{
@@ -113,7 +114,10 @@ pub fn load_image(
         );
         image_list.set_current_image_path(Some(file_path));
         if let PreviewSize::BestFit(0, 0) = settings.scale() {
-            let new_scale = PreviewSize::BestFit(widgets.image_viewport().allocation().width() as u32, widgets.image_viewport().allocation().height() as u32);
+            let new_scale = PreviewSize::BestFit(
+                widgets.image_viewport().allocation().width() as u32,
+                widgets.image_viewport().allocation().height() as u32,
+            );
             settings.set_scale(new_scale);
         }
         post_event(sender, Event::RefreshPreview(settings.scale()));
@@ -170,9 +174,14 @@ pub fn refresh_preview(
         .set_text(String::from(preview_size).as_str());
     if let Some(image) = image_list.borrow_mut().current_image_mut() {
         image.create_preview_image_buffer(preview_size);
-        let (preview_image_width, preview_image_height) = image.preview_image_buffer_size().unwrap();
-        widgets.image_widget().set_content_width(preview_image_width as i32);
-        widgets.image_widget().set_content_height(preview_image_height as i32);
+        let (preview_image_width, preview_image_height) =
+            image.preview_image_buffer_size().unwrap();
+        widgets
+            .image_widget()
+            .set_content_width(preview_image_width as i32);
+        widgets
+            .image_widget()
+            .set_content_height(preview_image_height as i32);
     } else {
         widgets.image_widget().set_content_width(0);
         widgets.image_widget().set_content_height(0);
@@ -257,10 +266,7 @@ pub fn drag_selection(
 ) {
     if let Some(((start_position_x, start_position_y), (_, _))) = selection_coords.get() {
         if image_list.borrow().current_image().is_some() {
-            selection_coords.replace(Some((
-                (start_position_x, start_position_y),
-                position,
-            )));
+            selection_coords.replace(Some(((start_position_x, start_position_y), position)));
             widgets.image_widget().queue_draw();
         }
     }
@@ -272,9 +278,7 @@ pub fn end_selection(
     image_list: Rc<RefCell<ImageList>>,
     selection_coords: Rc<Cell<Option<CoordinatesPair>>>,
 ) {
-    if let Some(selection_coords) =
-        selection_coords.take()
-    {
+    if let Some(selection_coords) = selection_coords.take() {
         if let Some(current_image) = image_list.borrow().current_image() {
             let crop_operation = ImageOperation::Crop(
                 current_image
@@ -377,8 +381,7 @@ pub fn print(sender: &Sender<Event>, widgets: &Widgets, image_list: Rc<RefCell<I
                     )
                 })
         {
-            let cairo_context = print_context
-                .cairo_context();
+            let cairo_context = print_context.cairo_context();
             cairo_context.set_source_pixbuf(
                 &print_image_buffer,
                 (print_context.width() - print_image_buffer.width() as f64) / 2.0,
@@ -411,14 +414,22 @@ pub fn print(sender: &Sender<Event>, widgets: &Widgets, image_list: Rc<RefCell<I
     };
 }
 
-pub fn undo_operation(sender: &Sender<Event>, settings: &Settings, image_list: Rc<RefCell<ImageList>>) {
+pub fn undo_operation(
+    sender: &Sender<Event>,
+    settings: &Settings,
+    image_list: Rc<RefCell<ImageList>>,
+) {
     if let Some(current_image) = image_list.borrow_mut().current_image_mut() {
         current_image.undo_operation();
         post_event(sender, Event::RefreshPreview(settings.scale()));
     }
 }
 
-pub fn redo_operation(sender: &Sender<Event>, settings: &Settings, image_list: Rc<RefCell<ImageList>>) {
+pub fn redo_operation(
+    sender: &Sender<Event>,
+    settings: &Settings,
+    image_list: Rc<RefCell<ImageList>>,
+) {
     if let Some(current_image) = image_list.borrow_mut().current_image_mut() {
         current_image.redo_operation();
         post_event(sender, Event::RefreshPreview(settings.scale()));

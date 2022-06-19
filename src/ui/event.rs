@@ -1,13 +1,13 @@
 use gtk::{
-    gdk::{self, Rectangle, Key},
+    gdk::{self, Key, Rectangle},
     gdk_pixbuf::PixbufRotation,
     gio,
     glib::{self, Sender},
     prelude::{
-        ButtonExt, FileChooserExt, NativeDialogExt,
-        PopoverExt, ToggleButtonExt, WidgetExt, DrawingAreaExtManual, GdkCairoContextExt, FileExt,
+        ButtonExt, DrawingAreaExtManual, FileChooserExt, FileExt, GdkCairoContextExt,
+        NativeDialogExt, PopoverExt, ToggleButtonExt, WidgetExt,
     },
-    traits::{GestureExt, GtkWindowExt, GestureSingleExt, DrawingAreaExt},
+    traits::{GestureExt, GestureSingleExt, GtkWindowExt},
     MessageType, Window,
 };
 use std::{
@@ -23,7 +23,7 @@ use crate::{
     settings::Settings,
 };
 
-use super::{widgets::Widgets, controllers::Controllers};
+use super::{controllers::Controllers, widgets::Widgets};
 
 #[derive(Debug)]
 pub enum Event {
@@ -102,7 +102,9 @@ pub fn connect_events(
 }
 
 pub fn connect_controllers(sender: Sender<Event>, widgets: Widgets, controllers: Controllers) {
-    controllers.image_click_gesture().set_button(gtk::gdk::BUTTON_PRIMARY);
+    controllers
+        .image_click_gesture()
+        .set_button(gtk::gdk::BUTTON_PRIMARY);
     connect_controllers_to_widgets(widgets, controllers.clone());
     connect_keybinds(controllers.clone(), sender.clone());
     connect_image_click_pressed_gesture(controllers.clone(), sender.clone());
@@ -114,32 +116,42 @@ pub fn connect_controllers(sender: Sender<Event>, widgets: Widgets, controllers:
 }
 
 fn connect_controllers_to_widgets(widgets: Widgets, controllers: Controllers) {
-    widgets.window().add_controller(controllers.window_key_event_controller());
-    widgets.image_widget().add_controller(controllers.image_click_gesture());
-    widgets.image_widget().add_controller(controllers.image_motion_event_controller());
-    widgets.image_widget().add_controller(controllers.image_zoom_gesture());
-    widgets.image_scrolled_window().add_controller(controllers.image_scrolled_window_scroll_controller());
+    widgets
+        .window()
+        .add_controller(controllers.window_key_event_controller());
+    widgets
+        .image_widget()
+        .add_controller(controllers.image_click_gesture());
+    widgets
+        .image_widget()
+        .add_controller(controllers.image_motion_event_controller());
+    widgets
+        .image_widget()
+        .add_controller(controllers.image_zoom_gesture());
+    widgets
+        .image_scrolled_window()
+        .add_controller(controllers.image_scrolled_window_scroll_controller());
 }
 
 pub fn connect_keybinds(controllers: Controllers, sender: Sender<Event>) {
-    controllers.window_key_event_controller().connect_key_pressed(move |_, key, _, state| {
-        match key {
-            Key::F11 => {
-                post_event(&sender, Event::ToggleFullscreen)
-            },
-            Key::Q if state == gdk::ModifierType::CONTROL_MASK => {
-                post_event(&sender, Event::Quit)
-            },
-            Key::S if state == gdk::ModifierType::CONTROL_MASK => {
-                post_event(&sender, Event::SaveCurrentImage(None))
-            },
-            Key::C if state == gdk::ModifierType::CONTROL_MASK => {
-                post_event(&sender, Event::CopyCurrentImage)
-            },
-            _ => {},
-        }
-        gtk::Inhibit(false)
-    });
+    controllers
+        .window_key_event_controller()
+        .connect_key_pressed(move |_, key, _, state| {
+            match key {
+                Key::F11 => post_event(&sender, Event::ToggleFullscreen),
+                Key::Q if state == gdk::ModifierType::CONTROL_MASK => {
+                    post_event(&sender, Event::Quit)
+                }
+                Key::S if state == gdk::ModifierType::CONTROL_MASK => {
+                    post_event(&sender, Event::SaveCurrentImage(None))
+                }
+                Key::C if state == gdk::ModifierType::CONTROL_MASK => {
+                    post_event(&sender, Event::CopyCurrentImage)
+                }
+                _ => {}
+            }
+            gtk::Inhibit(false)
+        });
 }
 
 fn connect_open_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
@@ -200,23 +212,37 @@ fn connect_previous_button_clicked(widgets: Widgets, sender: Sender<Event>) {
     });
 }
 
-fn connect_window_default_width_notify(widgets: Widgets, settings: Settings, sender: Sender<Event>) {
+fn connect_window_default_width_notify(
+    widgets: Widgets,
+    settings: Settings,
+    sender: Sender<Event>,
+) {
     widgets
         .clone()
         .window()
         .connect_default_width_notify(move |window| {
             settings.set_window_size((window.width() as u32, window.height() as u32));
-            post_event(&sender, Event::ImageViewportResize(widgets.image_viewport().allocation()));
+            post_event(
+                &sender,
+                Event::ImageViewportResize(widgets.image_viewport().allocation()),
+            );
         });
 }
 
-fn connect_window_default_height_notify(widgets: Widgets, settings: Settings, sender: Sender<Event>) {
+fn connect_window_default_height_notify(
+    widgets: Widgets,
+    settings: Settings,
+    sender: Sender<Event>,
+) {
     widgets
         .clone()
         .window()
         .connect_default_height_notify(move |window| {
             settings.set_window_size((window.width() as u32, window.height() as u32));
-            post_event(&sender, Event::ImageViewportResize(widgets.image_viewport().allocation()));
+            post_event(
+                &sender,
+                Event::ImageViewportResize(widgets.image_viewport().allocation()),
+            );
         });
 }
 
@@ -264,10 +290,7 @@ fn connect_image_click_pressed_gesture(controllers: Controllers, sender: Sender<
     controllers
         .image_click_gesture()
         .connect_pressed(move |_, _, x, y| {
-            post_event(
-                &sender,
-                Event::StartSelection((x as u32, y as u32)),
-            );
+            post_event(&sender, Event::StartSelection((x as u32, y as u32)));
         });
 }
 
@@ -275,10 +298,7 @@ fn connect_image_motion_event_controller_motion(controllers: Controllers, sender
     controllers
         .image_motion_event_controller()
         .connect_motion(move |_, x, y| {
-            post_event(
-                &sender,
-                Event::DragSelection((x as u32, y as u32)),
-            );
+            post_event(&sender, Event::DragSelection((x as u32, y as u32)));
         });
 }
 
@@ -300,11 +320,7 @@ fn connect_image_widget_draw(
         .set_draw_func(move |_, cairo_context, _, _| {
             if let Some(current_image) = image_list.borrow().current_image() {
                 let image_buffer = current_image.preview_image_buffer().unwrap();
-                cairo_context.set_source_pixbuf(
-                    image_buffer,
-                    0.0,
-                    0.0,
-                );
+                cairo_context.set_source_pixbuf(image_buffer, 0.0, 0.0);
                 if let Err(error) = cairo_context.paint() {
                     error!("{}", error);
                     return;
@@ -331,11 +347,9 @@ fn connect_image_widget_draw(
 }
 
 fn connect_resize_button_activated(widgets: Widgets, sender: Sender<Event>) {
-    widgets
-        .resize_button()
-        .connect_activate(move |_| {
-            post_event(&sender, Event::ResizePopoverDisplayed);
-        });
+    widgets.resize_button().connect_activate(move |_| {
+        post_event(&sender, Event::ResizePopoverDisplayed);
+    });
 }
 
 fn connect_width_spin_button_value_changed(widgets: Widgets, sender: Sender<Event>) {
@@ -481,7 +495,10 @@ fn connect_info_bar_response(widgets: Widgets) {
     });
 }
 
-fn connect_image_scrolled_window_scroll_controller_scroll(controllers: Controllers, sender: Sender<Event>) {
+fn connect_image_scrolled_window_scroll_controller_scroll(
+    controllers: Controllers,
+    sender: Sender<Event>,
+) {
     controllers
         .image_scrolled_window_scroll_controller()
         .connect_scroll(move |_, _, y| {
@@ -515,10 +532,8 @@ fn connect_copy_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
 }
 
 fn connect_zoom_gesture_begin(controllers: Controllers, sender: Sender<Event>) {
-    controllers
-        .image_zoom_gesture()
-        .connect_begin(move |_, _| {
-            post_event(&sender, Event::StartZoomGesture);
+    controllers.image_zoom_gesture().connect_begin(move |_, _| {
+        post_event(&sender, Event::StartZoomGesture);
     });
 }
 
@@ -527,5 +542,5 @@ fn connect_zoom_gesture_scale_changed(controllers: Controllers, sender: Sender<E
         .image_zoom_gesture()
         .connect_scale_changed(move |_, scale| {
             post_event(&sender, Event::ZoomGestureScaleChanged(scale));
-    });
+        });
 }

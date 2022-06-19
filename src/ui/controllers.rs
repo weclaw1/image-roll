@@ -1,6 +1,5 @@
 use gtk::EventControllerScrollFlags;
 
-
 #[derive(Clone)]
 pub struct Controllers {
     window_key_event_controller: gtk::EventControllerKey,
@@ -17,7 +16,9 @@ impl Controllers {
             image_click_gesture: gtk::GestureClick::new(),
             image_motion_event_controller: gtk::EventControllerMotion::new(),
             image_zoom_gesture: gtk::GestureZoom::new(),
-            image_scrolled_window_scroll_controller: gtk::EventControllerScroll::new(EventControllerScrollFlags::BOTH_AXES),
+            image_scrolled_window_scroll_controller: gtk::EventControllerScroll::new(
+                EventControllerScrollFlags::BOTH_AXES,
+            ),
         }
     }
 

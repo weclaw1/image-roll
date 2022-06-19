@@ -6,7 +6,7 @@
 
 ## Features
 - Written in Rust
-- uses modern GTK 3
+- uses modern GTK 4
 - adaptive - can be used on desktop and mobile devices
 - crop image
 - rotate image
@@ -20,11 +20,11 @@
 ### Requirements
 If you use AUR or Flatpak you may skip this section.
 
-For this application you are required to have at least GTK 3.22.
+For this application you are required to have at least GTK 4.4.
 
 #### Ubuntu/Debian
 ```
-sudo apt install libgtk-3-dev
+sudo apt install libgtk-4-dev
 ```
 #### Fedora/CentOS
 ```

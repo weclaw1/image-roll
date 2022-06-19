@@ -1,17 +1,17 @@
-use gtk::{gio, glib, prelude::*, Builder, gdk::Display};
+use gtk::{gdk::Display, gio, glib, prelude::*, Builder};
 
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
 };
 
-use crate::{file_list::FileList, ui::controllers::Controllers};
 use crate::image_list::ImageList;
 use crate::settings::Settings;
 use crate::ui::{
     event::{post_event, Event},
     widgets::Widgets,
 };
+use crate::{file_list::FileList, ui::controllers::Controllers};
 use crate::{
     image::CoordinatesPair,
     ui::{action, event},
@@ -40,7 +40,8 @@ impl App {
 
         let controllers = Controllers::init();
 
-        gtk::IconTheme::for_display(&Display::default().unwrap()).add_resource_path("/com/github/weclaw1/image-roll");
+        gtk::IconTheme::for_display(&Display::default().unwrap())
+            .add_resource_path("/com/github/weclaw1/image-roll");
 
         let image_list: Rc<RefCell<ImageList>> = Rc::new(RefCell::new(ImageList::new()));
 
@@ -81,9 +82,18 @@ impl App {
             app.settings.clone(),
         );
 
-        event::connect_controllers(app.sender.clone(), app.widgets.clone(), app.controllers.clone());
+        event::connect_controllers(
+            app.sender.clone(),
+            app.widgets.clone(),
+            app.controllers.clone(),
+        );
 
-        action::update_buttons_state(&app.widgets, &app.file_list, app.image_list.clone(), &app.settings);
+        action::update_buttons_state(
+            &app.widgets,
+            &app.file_list,
+            app.image_list.clone(),
+            &app.settings,
+        );
 
         receiver.attach(None, move |e| {
             app.process_event(e);
@@ -189,8 +199,12 @@ impl App {
             Event::UpdateResizePopoverHeight => {
                 action::update_resize_popover_height(&self.widgets, self.image_list.clone())
             }
-            Event::UndoOperation => action::undo_operation(&self.sender, &self.settings, self.image_list.clone()),
-            Event::RedoOperation => action::redo_operation(&self.sender, &self.settings, self.image_list.clone()),
+            Event::UndoOperation => {
+                action::undo_operation(&self.sender, &self.settings, self.image_list.clone())
+            }
+            Event::RedoOperation => {
+                action::redo_operation(&self.sender, &self.settings, self.image_list.clone())
+            }
             Event::Print => action::print(&self.sender, &self.widgets, self.image_list.clone()),
             Event::HideInfoPanel => action::hide_info_panel(&self.widgets),
             Event::ToggleFullscreen => action::toggle_fullscreen(&self.widgets, &mut self.settings),
@@ -199,9 +213,7 @@ impl App {
             Event::ZoomGestureScaleChanged(zoom_scale) => {
                 action::change_scale_on_zoom_gesture(&self.sender, &self.settings, zoom_scale)
             }
-            Event::CopyCurrentImage => {
-                action::copy_current_image(self.image_list.clone())
-            }
+            Event::CopyCurrentImage => action::copy_current_image(self.image_list.clone()),
             Event::Quit => action::quit(&self.application),
             event => debug!("Discarded unused event: {:?}", event),
         }

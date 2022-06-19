@@ -102,7 +102,7 @@ impl Image {
             image_buffer.scale_simple(
                 (image_width * scale_ratio) as i32,
                 (image_height * scale_ratio) as i32,
-                InterpType::Bilinear,
+                InterpType::Nearest,
             )
         } else {
             None
