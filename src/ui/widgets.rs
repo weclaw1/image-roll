@@ -1,5 +1,7 @@
+use std::cell::RefCell;
+
 use gtk::{
-    prelude::{BuilderExtManual, GtkWindowExt, WidgetExt},
+    prelude::{GtkWindowExt, WidgetExt},
     ApplicationWindow, Builder,
 };
 
@@ -7,7 +9,7 @@ use gtk::{
 pub struct Widgets {
     window: ApplicationWindow,
     open_menu_button: gtk::Button,
-    image_widget: gtk::Image,
+    image_widget: gtk::DrawingArea,
     popover_menu: gtk::PopoverMenu,
     next_button: gtk::Button,
     previous_button: gtk::Button,
@@ -16,7 +18,6 @@ pub struct Widgets {
     image_scrolled_window: gtk::ScrolledWindow,
     image_viewport: gtk::Viewport,
     preview_size_label: gtk::Label,
-    image_event_box: gtk::EventBox,
     rotate_counterclockwise_button: gtk::Button,
     rotate_clockwise_button: gtk::Button,
     crop_button: gtk::ToggleButton,
@@ -36,6 +37,7 @@ pub struct Widgets {
     delete_button: gtk::Button,
     copy_menu_button: gtk::Button,
     set_as_wallpaper_menu_button: gtk::Button,
+    file_chooser: RefCell<Option<gtk::FileChooserNative>>,
 }
 
 impl Widgets {
@@ -49,7 +51,7 @@ impl Widgets {
             .object("open_menu_button")
             .expect("Couldn't get open_menu_button");
 
-        let image_widget: gtk::Image = builder
+        let image_widget: gtk::DrawingArea = builder
             .object("image_widget")
             .expect("Couldn't get image_widget");
 
@@ -82,10 +84,6 @@ impl Widgets {
         let preview_size_label: gtk::Label = builder
             .object("preview_size_label")
             .expect("Couldn't get preview_size_label");
-
-        let image_event_box: gtk::EventBox = builder
-            .object("image_event_box")
-            .expect("Couldn't get image_preview_box");
 
         let rotate_counterclockwise_button: gtk::Button = builder
             .object("rotate_counterclockwise_button")
@@ -174,7 +172,6 @@ impl Widgets {
             image_scrolled_window,
             image_viewport,
             preview_size_label,
-            image_event_box,
             rotate_counterclockwise_button,
             rotate_clockwise_button,
             crop_button,
@@ -194,6 +191,7 @@ impl Widgets {
             delete_button,
             copy_menu_button,
             set_as_wallpaper_menu_button,
+            file_chooser: RefCell::new(None),
         }
     }
 
@@ -208,7 +206,7 @@ impl Widgets {
     }
 
     /// Get a reference to the widgets's image widget.
-    pub fn image_widget(&self) -> &gtk::Image {
+    pub fn image_widget(&self) -> &gtk::DrawingArea {
         &self.image_widget
     }
 
@@ -240,11 +238,6 @@ impl Widgets {
     /// Get a reference to the widgets's image viewport.
     pub fn image_viewport(&self) -> &gtk::Viewport {
         &self.image_viewport
-    }
-
-    /// Get a reference to the widgets's image event box.
-    pub fn image_event_box(&self) -> &gtk::EventBox {
-        &self.image_event_box
     }
 
     /// Get a reference to the widgets's rotate counterclockwise button.
@@ -350,5 +343,9 @@ impl Widgets {
     /// Get a reference to the widget's copy menu button
     pub fn copy_menu_button(&self) -> &gtk::Button {
         &self.copy_menu_button
+    }
+
+    pub fn file_chooser(&self) -> &RefCell<Option<gtk::FileChooserNative>> {
+        &self.file_chooser
     }
 }

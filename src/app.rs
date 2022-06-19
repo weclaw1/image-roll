@@ -1,11 +1,11 @@
-use gtk::{gio, glib, prelude::*, Builder, GestureZoom};
+use gtk::{gio, glib, prelude::*, Builder};
 
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
 };
 
-use crate::file_list::FileList;
+use crate::{file_list::FileList, ui::controllers::Controllers};
 use crate::image_list::ImageList;
 use crate::settings::Settings;
 use crate::ui::{
@@ -19,7 +19,7 @@ use crate::{
 
 pub struct App {
     application: gtk::Application,
-    zoom_gesture: gtk::GestureZoom,
+    controllers: Controllers,
     widgets: Widgets,
     image_list: Rc<RefCell<ImageList>>,
     file_list: FileList,
@@ -34,15 +34,13 @@ impl App {
         let resources = gio::Resource::from_data(&bytes).expect("Couldn't load resources");
         gio::resources_register(&resources);
 
-        let builder = Builder::from_resource("/com/github/weclaw1/image-roll/image-roll_ui.glade");
+        let builder = Builder::from_resource("/com/github/weclaw1/image-roll/image-roll.ui");
 
         let widgets: Widgets = Widgets::init(builder, application);
 
-        let zoom_gesture = GestureZoom::new(widgets.image_event_box());
+        let controllers = Controllers::init();
 
-        if let Some(theme) = gtk::IconTheme::default() {
-            theme.add_resource_path("/com/github/weclaw1/image-roll");
-        }
+        gtk::IconTheme::default().add_resource_path("/com/github/weclaw1/image-roll");
 
         let image_list: Rc<RefCell<ImageList>> = Rc::new(RefCell::new(ImageList::new()));
 
@@ -64,12 +62,9 @@ impl App {
             post_event(&second_sender, Event::OpenFile(file.clone()));
         }
 
-        application.set_accels_for_action("win.toggle-fullscreen", &["F11"]);
-        application.set_accels_for_action("app.quit", &["<Primary>Q"]);
-
         let mut app = Self {
             application: application.clone(),
-            zoom_gesture,
+            controllers,
             widgets,
             image_list,
             file_list,
@@ -79,7 +74,6 @@ impl App {
         };
 
         event::connect_events(
-            app.application.clone(),
             app.widgets.clone(),
             app.sender.clone(),
             app.image_list.clone(),
@@ -87,7 +81,7 @@ impl App {
             app.settings.clone(),
         );
 
-        event::connect_gestures(app.sender.clone(), &app.zoom_gesture);
+        event::connect_controllers(app.sender.clone(), app.widgets.clone(), app.controllers.clone());
 
         receiver.attach(None, move |e| {
             app.process_event(e);
@@ -204,7 +198,7 @@ impl App {
                 action::change_scale_on_zoom_gesture(&self.sender, &self.settings, zoom_scale)
             }
             Event::CopyCurrentImage => {
-                action::copy_current_image(&self.sender, self.image_list.clone())
+                action::copy_current_image(self.image_list.clone())
             }
             Event::Quit => action::quit(&self.application),
             event => debug!("Discarded unused event: {:?}", event),

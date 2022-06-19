@@ -21,8 +21,9 @@ rand = "0.8.4"
 infer = "0.7.0"
 
 [dependencies.gtk]
-version = "0.15.3"
-features = ["v3_22_29"]
+package = "gtk4"
+version = "0.4.8"
+features = ["v4_4"]
 
 [features]
 default = ["wallpaper"]

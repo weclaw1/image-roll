@@ -3,7 +3,7 @@
 <interface>
   <!-- interface-name image-roll.ui -->
   <requires lib="gtk" version="4.6"/>
-  <object class="GtkWindow" id="main_window">
+  <object class="GtkApplicationWindow" id="main_window">
     <property name="child">
       <object class="GtkBox">
         <property name="orientation">vertical</property>
@@ -24,7 +24,10 @@
             <property name="child">
               <object class="GtkViewport" id="image_viewport">
                 <property name="child">
-                  <object class="GtkImage" id="image_widget"/>
+                  <object class="GtkDrawingArea" id="image_widget">
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                  </object>
                 </property>
               </object>
             </property>
@@ -133,7 +136,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="preview_fit_screen">
+              <object class="GtkButton" id="preview_fit_screen_button">
                 <property name="icon-name">zoom-fit-best-symbolic</property>
               </object>
             </child>

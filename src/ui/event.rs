@@ -1,14 +1,14 @@
 use gtk::{
-    gdk::{self, Rectangle, ScrollDirection},
+    gdk::{self, Rectangle, Key},
     gdk_pixbuf::PixbufRotation,
-    gio::{self, SimpleAction},
+    gio,
     glib::{self, Sender},
     prelude::{
-        ActionMapExt, ButtonExt, FileChooserExt, GdkContextExt, InfoBarExt, NativeDialogExt,
-        PopoverExt, SpinButtonExt, ToggleButtonExt, WidgetExt, WidgetExtManual,
+        ButtonExt, FileChooserExt, NativeDialogExt,
+        PopoverExt, ToggleButtonExt, WidgetExt, DrawingAreaExtManual, GdkCairoContextExt, FileExt,
     },
-    traits::GestureExt,
-    MessageType, SpinButtonSignals, Window,
+    traits::{GestureExt, GtkWindowExt, GestureSingleExt, DrawingAreaExt},
+    MessageType, Window,
 };
 use std::{
     cell::{Cell, RefCell},
@@ -23,7 +23,7 @@ use crate::{
     settings::Settings,
 };
 
-use super::widgets::Widgets;
+use super::{widgets::Widgets, controllers::Controllers};
 
 #[derive(Debug)]
 pub enum Event {
@@ -67,32 +67,24 @@ pub fn post_event(sender: &glib::Sender<Event>, action: Event) {
 }
 
 pub fn connect_events(
-    application: gtk::Application,
     widgets: Widgets,
     sender: Sender<Event>,
     image_list: Rc<RefCell<ImageList>>,
     selection_coords: Rc<Cell<Option<CoordinatesPair>>>,
     settings: Settings,
 ) {
-    widgets
-        .image_event_box()
-        .set_events(gdk::EventMask::POINTER_MOTION_MASK);
-
-    connect_keybinds(widgets.clone(), sender.clone());
     connect_open_menu_button_clicked(widgets.clone(), sender.clone());
     connect_next_button_clicked(widgets.clone(), sender.clone());
     connect_previous_button_clicked(widgets.clone(), sender.clone());
-    connect_image_viewport_size_allocate(widgets.clone(), sender.clone());
+    connect_window_default_width_notify(widgets.clone(), settings.clone(), sender.clone());
+    connect_window_default_height_notify(widgets.clone(), settings, sender.clone());
     connect_preview_smaller_button_clicked(widgets.clone(), sender.clone());
     connect_preview_larger_button_clicked(widgets.clone(), sender.clone());
     connect_preview_fit_screen_button_clicked(widgets.clone(), sender.clone());
     connect_rotate_counterclockwise_button_clicked(widgets.clone(), sender.clone());
     connect_rotate_clockwise_button_clicked(widgets.clone(), sender.clone());
-    connect_image_event_box_button_press_event(widgets.clone(), sender.clone());
-    connect_image_event_box_motion_notify_event(widgets.clone(), sender.clone());
-    connect_image_event_box_button_release_event(widgets.clone(), sender.clone());
     connect_image_widget_draw(widgets.clone(), image_list.clone(), selection_coords);
-    connect_resize_button_toggled(widgets.clone(), sender.clone());
+    connect_resize_button_activated(widgets.clone(), sender.clone());
     connect_width_spin_button_value_changed(widgets.clone(), sender.clone());
     connect_height_spin_button_value_changed(widgets.clone(), sender.clone());
     connect_apply_resize_button_clicked(widgets.clone(), sender.clone());
@@ -103,32 +95,48 @@ pub fn connect_events(
     connect_save_as_menu_button_clicked(widgets.clone(), image_list, sender.clone());
     connect_delete_button_clicked(widgets.clone(), sender.clone());
     connect_info_bar_response(widgets.clone());
-    connect_window_resized(widgets.clone(), settings);
-    connect_toggle_fullscreen(widgets.clone(), sender.clone());
-    connect_quit(application, sender.clone());
-    connect_image_scrolled_window_scroll_event(widgets.clone(), sender.clone());
     connect_set_as_wallpaper_menu_button_clicked(widgets.clone(), sender.clone());
     connect_copy_menu_button_clicked(widgets.clone(), sender);
 
-    widgets.window().show_all();
+    widgets.window().present();
 }
 
-pub fn connect_gestures(sender: Sender<Event>, zoom_gesture: &gtk::GestureZoom) {
-    connect_zoom_gesture(sender, zoom_gesture);
+pub fn connect_controllers(sender: Sender<Event>, widgets: Widgets, controllers: Controllers) {
+    controllers.image_click_gesture().set_button(gtk::gdk::BUTTON_PRIMARY);
+    connect_controllers_to_widgets(widgets, controllers.clone());
+    connect_keybinds(controllers.clone(), sender.clone());
+    connect_image_click_pressed_gesture(controllers.clone(), sender.clone());
+    connect_image_motion_event_controller_motion(controllers.clone(), sender.clone());
+    connect_image_click_released_gesture(controllers.clone(), sender.clone());
+    connect_zoom_gesture_begin(controllers.clone(), sender.clone());
+    connect_zoom_gesture_scale_changed(controllers.clone(), sender.clone());
+    connect_image_scrolled_window_scroll_controller_scroll(controllers, sender);
 }
 
-pub fn connect_keybinds(widgets: Widgets, sender: Sender<Event>) {
-    widgets.window().connect_key_press_event(move |_, event| {
-        if let Some(key) = event.keyval().to_unicode() {
-            match key {
-                's' if event.state() == gdk::ModifierType::CONTROL_MASK => {
-                    post_event(&sender, Event::SaveCurrentImage(None))
-                }
-                'c' if event.state() == gdk::ModifierType::CONTROL_MASK => {
-                    post_event(&sender, Event::CopyCurrentImage)
-                }
-                _ => {}
-            }
+fn connect_controllers_to_widgets(widgets: Widgets, controllers: Controllers) {
+    widgets.window().add_controller(controllers.window_key_event_controller());
+    widgets.image_widget().add_controller(controllers.image_click_gesture());
+    widgets.image_widget().add_controller(controllers.image_motion_event_controller());
+    widgets.image_widget().add_controller(controllers.image_zoom_gesture());
+    widgets.image_scrolled_window().add_controller(controllers.image_scrolled_window_scroll_controller());
+}
+
+pub fn connect_keybinds(controllers: Controllers, sender: Sender<Event>) {
+    controllers.window_key_event_controller().connect_key_pressed(move |_, key, _, state| {
+        match key {
+            Key::F11 => {
+                post_event(&sender, Event::ToggleFullscreen)
+            },
+            Key::Q if state == gdk::ModifierType::CONTROL_MASK => {
+                post_event(&sender, Event::Quit)
+            },
+            Key::S if state == gdk::ModifierType::CONTROL_MASK => {
+                post_event(&sender, Event::SaveCurrentImage(None))
+            },
+            Key::C if state == gdk::ModifierType::CONTROL_MASK => {
+                post_event(&sender, Event::CopyCurrentImage)
+            },
+            _ => {},
         }
         gtk::Inhibit(false)
     });
@@ -142,12 +150,11 @@ fn connect_open_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
             widgets.popover_menu().popdown();
             let file_chooser = gtk::FileChooserNative::new(
                 Some("Open file"),
-                <Option<&Window>>::None,
+                gtk::Window::NONE,
                 gtk::FileChooserAction::Open,
                 None,
                 None,
             );
-
             file_chooser.set_transient_for(Some(widgets.window()));
 
             let file_filter = gtk::FileFilter::new();
@@ -174,10 +181,10 @@ fn connect_open_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
                     };
                     post_event(&sender, Event::OpenFile(file));
                 }
+                file_chooser.destroy();
             });
-
-            file_chooser.run();
-            file_chooser.destroy();
+            file_chooser.show();
+            widgets.file_chooser().replace(Some(file_chooser));
         });
 }
 
@@ -193,11 +200,23 @@ fn connect_previous_button_clicked(widgets: Widgets, sender: Sender<Event>) {
     });
 }
 
-fn connect_image_viewport_size_allocate(widgets: Widgets, sender: Sender<Event>) {
+fn connect_window_default_width_notify(widgets: Widgets, settings: Settings, sender: Sender<Event>) {
     widgets
-        .image_viewport()
-        .connect_size_allocate(move |_, allocation| {
-            post_event(&sender, Event::ImageViewportResize(*allocation));
+        .clone()
+        .window()
+        .connect_default_width_notify(move |window| {
+            settings.set_window_size((window.width() as u32, window.height() as u32));
+            post_event(&sender, Event::ImageViewportResize(widgets.image_viewport().allocation()));
+        });
+}
+
+fn connect_window_default_height_notify(widgets: Widgets, settings: Settings, sender: Sender<Event>) {
+    widgets
+        .clone()
+        .window()
+        .connect_default_height_notify(move |window| {
+            settings.set_window_size((window.width() as u32, window.height() as u32));
+            post_event(&sender, Event::ImageViewportResize(widgets.image_viewport().allocation()));
         });
 }
 
@@ -241,38 +260,33 @@ fn connect_rotate_clockwise_button_clicked(widgets: Widgets, sender: Sender<Even
     });
 }
 
-fn connect_image_event_box_button_press_event(widgets: Widgets, sender: Sender<Event>) {
-    widgets
-        .image_event_box()
-        .connect_button_press_event(move |_, button_event| {
-            let (position_x, position_y) = button_event.position();
+fn connect_image_click_pressed_gesture(controllers: Controllers, sender: Sender<Event>) {
+    controllers
+        .image_click_gesture()
+        .connect_pressed(move |_, _, x, y| {
             post_event(
                 &sender,
-                Event::StartSelection((position_x as u32, position_y as u32)),
+                Event::StartSelection((x as u32, y as u32)),
             );
-            gtk::Inhibit(false)
         });
 }
 
-fn connect_image_event_box_motion_notify_event(widgets: Widgets, sender: Sender<Event>) {
-    widgets
-        .image_event_box()
-        .connect_motion_notify_event(move |_, motion_event| {
-            let (position_x, position_y) = motion_event.position();
+fn connect_image_motion_event_controller_motion(controllers: Controllers, sender: Sender<Event>) {
+    controllers
+        .image_motion_event_controller()
+        .connect_motion(move |_, x, y| {
             post_event(
                 &sender,
-                Event::DragSelection((position_x as u32, position_y as u32)),
+                Event::DragSelection((x as u32, y as u32)),
             );
-            gtk::Inhibit(false)
         });
 }
 
-fn connect_image_event_box_button_release_event(widgets: Widgets, sender: Sender<Event>) {
-    widgets
-        .image_event_box()
-        .connect_button_release_event(move |_, _| {
+fn connect_image_click_released_gesture(controllers: Controllers, sender: Sender<Event>) {
+    controllers
+        .image_click_gesture()
+        .connect_released(move |_, _, _, _| {
             post_event(&sender, Event::EndSelection);
-            gtk::Inhibit(false)
         });
 }
 
@@ -283,25 +297,24 @@ fn connect_image_widget_draw(
 ) {
     widgets
         .image_widget()
-        .connect_draw(move |image_widget, cairo_context| {
+        .set_draw_func(move |_, cairo_context, _, _| {
             if let Some(current_image) = image_list.borrow().current_image() {
+                println!("Test");
+                let image_buffer = current_image.preview_image_buffer().unwrap();
+                cairo_context.set_source_pixbuf(
+                    image_buffer,
+                    0.0,
+                    0.0,
+                );
+                if let Err(error) = cairo_context.paint() {
+                    error!("{}", error);
+                    return;
+                }
                 if let Some((
                     (start_selection_coord_x, start_selection_coord_y),
                     (end_selection_coord_x, end_selection_coord_y),
                 )) = selection_coords.get()
                 {
-                    let image_buffer = current_image.preview_image_buffer().unwrap();
-                    cairo_context.set_source_pixbuf(
-                        image_buffer,
-                        (image_widget.allocation().width() as f64 - image_buffer.width() as f64)
-                            / 2.0,
-                        (image_widget.allocation().height() as f64 - image_buffer.height() as f64)
-                            / 2.0,
-                    );
-                    if let Err(error) = cairo_context.paint() {
-                        error!("{}", error);
-                        return gtk::Inhibit(true);
-                    }
                     cairo_context.set_source_rgb(0.0, 0.0, 0.0);
                     cairo_context.set_line_width(1.0);
                     cairo_context.rectangle(
@@ -313,20 +326,16 @@ fn connect_image_widget_draw(
                     if let Err(error) = cairo_context.stroke() {
                         error!("{}", error);
                     }
-                    return gtk::Inhibit(true);
                 }
             }
-            gtk::Inhibit(false)
         });
 }
 
-fn connect_resize_button_toggled(widgets: Widgets, sender: Sender<Event>) {
+fn connect_resize_button_activated(widgets: Widgets, sender: Sender<Event>) {
     widgets
         .resize_button()
-        .connect_toggled(move |resize_button| {
-            if resize_button.is_active() {
-                post_event(&sender, Event::ResizePopoverDisplayed);
-            }
+        .connect_activate(move |_| {
+            post_event(&sender, Event::ResizePopoverDisplayed);
         });
 }
 
@@ -364,7 +373,7 @@ fn connect_apply_resize_button_clicked(widgets: Widgets, sender: Sender<Event>) 
                     widgets.height_spin_button().value() as u32,
                 ))),
             );
-            widgets.resize_button().emit_clicked();
+            widgets.resize_button().popdown();
         });
 }
 
@@ -399,7 +408,12 @@ fn connect_save_as_menu_button_clicked(
             file_chooser.set_transient_for(Some(widgets.window()));
 
             if let Some(file_path) = image_list.borrow().current_image_path() {
-                file_chooser.set_filename(file_path);
+                if let Err(error) = file_chooser.set_file(&gio::File::for_path(file_path)) {
+                    post_event(
+                        &sender,
+                        Event::DisplayMessage(error.to_string(), MessageType::Warning),
+                    );
+                }
             }
 
             let file_filter = gtk::FileFilter::new();
@@ -410,8 +424,8 @@ fn connect_save_as_menu_button_clicked(
             let sender = sender.clone();
             file_chooser.connect_response(move |file_chooser, response| {
                 if response == gtk::ResponseType::Accept {
-                    let filename = if let Some(filename) = file_chooser.filename() {
-                        filename
+                    let file = if let Some(file) = file_chooser.file() {
+                        file
                     } else {
                         post_event(
                             &sender,
@@ -422,11 +436,12 @@ fn connect_save_as_menu_button_clicked(
                         );
                         return;
                     };
-                    post_event(&sender, Event::SaveCurrentImage(Some(filename)));
+                    post_event(&sender, Event::SaveCurrentImage(Some(file.path().unwrap())));
                 }
+                file_chooser.destroy();
             });
-            file_chooser.run();
-            file_chooser.destroy();
+            file_chooser.show();
+            widgets.file_chooser().replace(Some(file_chooser));
         });
 }
 
@@ -467,38 +482,14 @@ fn connect_info_bar_response(widgets: Widgets) {
     });
 }
 
-fn connect_window_resized(widgets: Widgets, settings: Settings) {
-    widgets
-        .window()
-        .connect_size_allocate(move |_, allocation| {
-            settings.set_window_size((allocation.width() as u32, allocation.height() as u32));
-        });
-}
-
-fn connect_toggle_fullscreen(widgets: Widgets, sender: Sender<Event>) {
-    let action_toggle_fullscreen = SimpleAction::new("toggle-fullscreen", None);
-    action_toggle_fullscreen.connect_activate(move |_, _| {
-        post_event(&sender, Event::ToggleFullscreen);
-    });
-    widgets.window().add_action(&action_toggle_fullscreen);
-}
-
-fn connect_quit(application: gtk::Application, sender: Sender<Event>) {
-    let action_quit = SimpleAction::new("quit", None);
-    action_quit.connect_activate(move |_, _| {
-        post_event(&sender, Event::Quit);
-    });
-    application.add_action(&action_quit);
-}
-
-fn connect_image_scrolled_window_scroll_event(widgets: Widgets, sender: Sender<Event>) {
-    widgets
-        .image_scrolled_window()
-        .connect_scroll_event(move |_, scroll_event| {
-            if scroll_event.direction() == ScrollDirection::Up || scroll_event.delta().1 < 0.0 {
+fn connect_image_scrolled_window_scroll_controller_scroll(controllers: Controllers, sender: Sender<Event>) {
+    controllers
+        .image_scrolled_window_scroll_controller()
+        .connect_scroll(move |_, _, y| {
+            if y < 0.0 {
                 post_event(&sender, Event::PreviewLarger(Some(5)));
             }
-            if scroll_event.direction() == ScrollDirection::Down || scroll_event.delta().1 > 0.0 {
+            if y > 0.0 {
                 post_event(&sender, Event::PreviewSmaller(Some(5)));
             }
 
@@ -524,16 +515,18 @@ fn connect_copy_menu_button_clicked(widgets: Widgets, sender: Sender<Event>) {
         });
 }
 
-fn connect_zoom_gesture(sender: Sender<Event>, zoom_gesture: &gtk::GestureZoom) {
-    let signal_handler_sender = sender.clone();
-    zoom_gesture.connect_begin(move |_, _| {
-        post_event(&signal_handler_sender, Event::StartZoomGesture);
+fn connect_zoom_gesture_begin(controllers: Controllers, sender: Sender<Event>) {
+    controllers
+        .image_zoom_gesture()
+        .connect_begin(move |_, _| {
+            post_event(&sender, Event::StartZoomGesture);
     });
-    let signal_handler_sender = sender;
-    zoom_gesture.connect_scale_changed(move |_, scale| {
-        post_event(
-            &signal_handler_sender,
-            Event::ZoomGestureScaleChanged(scale),
-        );
+}
+
+fn connect_zoom_gesture_scale_changed(controllers: Controllers, sender: Sender<Event>) {
+    controllers
+        .image_zoom_gesture()
+        .connect_scale_changed(move |_, scale| {
+            post_event(&sender, Event::ZoomGestureScaleChanged(scale));
     });
 }

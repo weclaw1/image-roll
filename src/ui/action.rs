@@ -13,10 +13,10 @@ use gtk::{
     gdk, gio,
     glib::{self, timeout_future_seconds, Sender},
     prelude::{
-        FileMonitorExt, GdkContextExt, GtkApplicationExt, GtkWindowExt, ImageExt, InfoBarExt,
-        LabelExt, PrintOperationExt, SpinButtonExt, ToggleButtonExt, WidgetExt,
+        FileMonitorExt, GtkApplicationExt, GtkWindowExt,
+        PrintOperationExt, ToggleButtonExt, WidgetExt, GdkCairoContextExt, DisplayExt,
     },
-    MessageType,
+    MessageType, traits::DrawingAreaExt,
 };
 
 use crate::{
@@ -96,7 +96,8 @@ pub fn load_image(
         let image = match image {
             Ok(image) => image,
             Err(error) => {
-                widgets.image_widget().set_from_pixbuf(None);
+                image_list.set_current_image_path(None);
+                post_event(sender, Event::RefreshPreview(settings.scale()));
                 post_event(
                     sender,
                     Event::DisplayMessage(error.to_string(), MessageType::Error),
@@ -108,15 +109,14 @@ pub fn load_image(
         widgets.window().set_title(
             file_path
                 .file_name()
-                .and_then(|file_name| file_name.to_str())
-                .unwrap_or_default(),
+                .and_then(|file_name| file_name.to_str()),
         );
         image_list.set_current_image_path(Some(file_path));
         post_event(sender, Event::RefreshPreview(settings.scale()));
     } else {
-        widgets.image_widget().set_from_pixbuf(None);
-        widgets.window().set_title("Image Roll");
+        widgets.window().set_title(Some("Image Roll"));
         image_list.set_current_image_path(None);
+        post_event(sender, Event::RefreshPreview(settings.scale()));
     }
 }
 
@@ -166,10 +166,14 @@ pub fn refresh_preview(
         .set_text(String::from(preview_size).as_str());
     if let Some(image) = image_list.borrow_mut().current_image_mut() {
         image.create_preview_image_buffer(preview_size);
-        widgets
-            .image_widget()
-            .set_from_pixbuf(image.preview_image_buffer());
+        let (preview_image_width, preview_image_height) = image.preview_image_buffer_size().unwrap();
+        widgets.image_widget().set_content_width(preview_image_width as i32);
+        widgets.image_widget().set_content_height(preview_image_height as i32);
+    } else {
+        widgets.image_widget().set_content_width(0);
+        widgets.image_widget().set_content_height(0);
     }
+    widgets.image_widget().queue_draw();
 }
 
 pub fn change_preview_size(
@@ -235,22 +239,9 @@ pub fn start_selection(
     selection_coords: Rc<Cell<Option<CoordinatesPair>>>,
     position: (u32, u32),
 ) {
-    if let Some(current_image) = image_list.borrow().current_image() {
-        let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
-        let (position_x, position_y) = position;
-        let event_box_allocation = widgets.image_event_box().allocation();
-        let (image_coords_position_x, image_coords_position_y) = (
-            position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
-            position_y as i32 - ((event_box_allocation.height() - image_height as i32) / 2),
-        );
-        if image_coords_position_x >= 0
-            && image_coords_position_x < image_width as i32
-            && image_coords_position_y >= 0
-            && image_coords_position_y < image_height as i32
-        {
-            selection_coords.replace(Some(((position_x, position_y), (position_x, position_y))));
-            widgets.image_widget().queue_draw();
-        }
+    if image_list.borrow().current_image().is_some() {
+        selection_coords.replace(Some((position, position)));
+        widgets.image_widget().queue_draw();
     }
 }
 
@@ -261,25 +252,12 @@ pub fn drag_selection(
     position: (u32, u32),
 ) {
     if let Some(((start_position_x, start_position_y), (_, _))) = selection_coords.get() {
-        if let Some(current_image) = image_list.borrow().current_image() {
-            let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
-            let (position_x, position_y) = position;
-            let event_box_allocation = widgets.image_event_box().allocation();
-            let (image_coords_position_x, image_coords_position_y) = (
-                position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
-                position_y as i32 - ((event_box_allocation.height() - image_height as i32) / 2),
-            );
-            if image_coords_position_x >= 0
-                && image_coords_position_x < image_width as i32
-                && image_coords_position_y >= 0
-                && image_coords_position_y < image_height as i32
-            {
-                selection_coords.replace(Some((
-                    (start_position_x, start_position_y),
-                    (position_x, position_y),
-                )));
-                widgets.image_widget().queue_draw();
-            }
+        if image_list.borrow().current_image().is_some() {
+            selection_coords.replace(Some((
+                (start_position_x, start_position_y),
+                position,
+            )));
+            widgets.image_widget().queue_draw();
         }
     }
 }
@@ -290,34 +268,13 @@ pub fn end_selection(
     image_list: Rc<RefCell<ImageList>>,
     selection_coords: Rc<Cell<Option<CoordinatesPair>>>,
 ) {
-    if let Some(((start_position_x, start_position_y), (end_position_x, end_position_y))) =
+    if let Some(selection_coords) =
         selection_coords.take()
     {
         if let Some(current_image) = image_list.borrow().current_image() {
-            let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
-            let event_box_allocation = widgets.image_event_box().allocation();
-            let (image_coords_start_position_x, image_coords_start_position_y) = (
-                start_position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
-                start_position_y as i32
-                    - ((event_box_allocation.height() - image_height as i32) / 2),
-            );
-            let (image_coords_end_position_x, image_coords_end_position_y) = (
-                end_position_x as i32 - ((event_box_allocation.width() - image_width as i32) / 2),
-                end_position_y as i32 - ((event_box_allocation.height() - image_height as i32) / 2),
-            );
-
             let crop_operation = ImageOperation::Crop(
                 current_image
-                    .preview_coords_to_image_coords((
-                        (
-                            image_coords_start_position_x as u32,
-                            image_coords_start_position_y as u32,
-                        ),
-                        (
-                            image_coords_end_position_x as u32,
-                            image_coords_end_position_y as u32,
-                        ),
-                    ))
+                    .preview_coords_to_image_coords(selection_coords)
                     .unwrap(),
             );
             post_event(sender, Event::ImageEdit(crop_operation));
@@ -417,8 +374,7 @@ pub fn print(sender: &Sender<Event>, widgets: &Widgets, image_list: Rc<RefCell<I
                 })
         {
             let cairo_context = print_context
-                .cairo_context()
-                .expect("Couldn't get cairo context");
+                .cairo_context();
             cairo_context.set_source_pixbuf(
                 &print_image_buffer,
                 (print_context.width() - print_image_buffer.width() as f64) / 2.0,
@@ -533,20 +489,9 @@ pub fn set_as_wallpaper(_sender: &Sender<Event>, _file_list: &FileList) {
     error!("This program was built without the wallpaper feature");
 }
 
-pub fn copy_current_image(sender: &Sender<Event>, image_list: Rc<RefCell<ImageList>>) {
+pub fn copy_current_image(image_list: Rc<RefCell<ImageList>>) {
     let display = gdk::Display::default().unwrap();
-
-    match gtk::Clipboard::default(&display) {
-        Some(clipboard) => {
-            image_list.borrow().copy_current_image(&clipboard);
-        }
-        None => {
-            post_event(
-                sender,
-                Event::DisplayMessage("Unable to open clipboard!".to_string(), MessageType::Error),
-            );
-        }
-    }
+    image_list.borrow().copy_current_image(display.clipboard());
 }
 
 pub fn start_zoom_gesture(settings: &mut Settings) {

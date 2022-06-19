@@ -7,8 +7,8 @@
         "dest": "cargo/vendor/aho-corasick-0.7.18"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%221e37cfd5e7657ada45f742d6e99ca5788580b5c529dc78faf11ece6dc702656f%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"1e37cfd5e7657ada45f742d6e99ca5788580b5c529dc78faf11ece6dc702656f\", \"files\": {}}",
         "dest": "cargo/vendor/aho-corasick-0.7.18",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -20,8 +20,8 @@
         "dest": "cargo/vendor/anyhow-1.0.52"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2284450d0b4a8bd1ba4144ce8ce718fbc5d071358b1e5384bace6536b3d1f2d5b3%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"84450d0b4a8bd1ba4144ce8ce718fbc5d071358b1e5384bace6536b3d1f2d5b3\", \"files\": {}}",
         "dest": "cargo/vendor/anyhow-1.0.52",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -33,8 +33,8 @@
         "dest": "cargo/vendor/ashpd-0.2.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%227915e26e0786f91768d23de32afafa4ee5e2ea76be21c0ecd8e14441543c1655%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"7915e26e0786f91768d23de32afafa4ee5e2ea76be21c0ecd8e14441543c1655\", \"files\": {}}",
         "dest": "cargo/vendor/ashpd-0.2.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -46,8 +46,8 @@
         "dest": "cargo/vendor/async-broadcast-0.3.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2290622698a1218e0b2fb846c97b5f19a0831f6baddee73d9454156365ccfa473b%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"90622698a1218e0b2fb846c97b5f19a0831f6baddee73d9454156365ccfa473b\", \"files\": {}}",
         "dest": "cargo/vendor/async-broadcast-0.3.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -59,8 +59,8 @@
         "dest": "cargo/vendor/async-channel-1.6.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%222114d64672151c0c5eaa5e131ec84a74f06e1e559830dabba01ca30605d66319%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"2114d64672151c0c5eaa5e131ec84a74f06e1e559830dabba01ca30605d66319\", \"files\": {}}",
         "dest": "cargo/vendor/async-channel-1.6.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -72,8 +72,8 @@
         "dest": "cargo/vendor/async-executor-1.4.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22871f9bb5e0a22eeb7e8cf16641feb87c9dc67032ccf8ff49e772eb9941d3a965%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"871f9bb5e0a22eeb7e8cf16641feb87c9dc67032ccf8ff49e772eb9941d3a965\", \"files\": {}}",
         "dest": "cargo/vendor/async-executor-1.4.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -85,8 +85,8 @@
         "dest": "cargo/vendor/async-io-1.6.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a811e6a479f2439f0c04038796b5cfb3d2ad56c230e0f2d3f7b04d68cfee607b%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a811e6a479f2439f0c04038796b5cfb3d2ad56c230e0f2d3f7b04d68cfee607b\", \"files\": {}}",
         "dest": "cargo/vendor/async-io-1.6.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -98,8 +98,8 @@
         "dest": "cargo/vendor/async-lock-2.4.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22e6a8ea61bf9947a1007c5cada31e647dbc77b103c679858150003ba697ea798b%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"e6a8ea61bf9947a1007c5cada31e647dbc77b103c679858150003ba697ea798b\", \"files\": {}}",
         "dest": "cargo/vendor/async-lock-2.4.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -111,8 +111,8 @@
         "dest": "cargo/vendor/async-recursion-0.3.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22d7d78656ba01f1b93024b7c3a0467f1608e4be67d725749fdcd7d2c7678fd7a2%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"d7d78656ba01f1b93024b7c3a0467f1608e4be67d725749fdcd7d2c7678fd7a2\", \"files\": {}}",
         "dest": "cargo/vendor/async-recursion-0.3.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -124,8 +124,8 @@
         "dest": "cargo/vendor/async-task-4.1.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22677d306121baf53310a3fd342d88dc0824f6bbeace68347593658525565abee8%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"677d306121baf53310a3fd342d88dc0824f6bbeace68347593658525565abee8\", \"files\": {}}",
         "dest": "cargo/vendor/async-task-4.1.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -137,35 +137,9 @@
         "dest": "cargo/vendor/async-trait-0.1.52"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22061a7acccaa286c011ddc30970520b98fa40e00c9d644633fb26b5fc63a265e3%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"061a7acccaa286c011ddc30970520b98fa40e00c9d644633fb26b5fc63a265e3\", \"files\": {}}",
         "dest": "cargo/vendor/async-trait-0.1.52",
-        "dest-filename": ".cargo-checksum.json"
-    },
-    {
-        "type": "archive",
-        "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/atk/atk-0.15.1.crate",
-        "sha256": "2c3d816ce6f0e2909a96830d6911c2aff044370b1ef92d7f267b43bae5addedd",
-        "dest": "cargo/vendor/atk-0.15.1"
-    },
-    {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%222c3d816ce6f0e2909a96830d6911c2aff044370b1ef92d7f267b43bae5addedd%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/atk-0.15.1",
-        "dest-filename": ".cargo-checksum.json"
-    },
-    {
-        "type": "archive",
-        "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/atk-sys/atk-sys-0.15.1.crate",
-        "sha256": "58aeb089fb698e06db8089971c7ee317ab9644bade33383f63631437b03aafb6",
-        "dest": "cargo/vendor/atk-sys-0.15.1"
-    },
-    {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2258aeb089fb698e06db8089971c7ee317ab9644bade33383f63631437b03aafb6%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/atk-sys-0.15.1",
         "dest-filename": ".cargo-checksum.json"
     },
     {
@@ -176,8 +150,8 @@
         "dest": "cargo/vendor/atty-0.2.14"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22d9b39be18770d11421cdb1b9947a45dd3f37e93092cbf377614828a319d5fee8%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"d9b39be18770d11421cdb1b9947a45dd3f37e93092cbf377614828a319d5fee8\", \"files\": {}}",
         "dest": "cargo/vendor/atty-0.2.14",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -189,8 +163,8 @@
         "dest": "cargo/vendor/autocfg-1.0.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a\", \"files\": {}}",
         "dest": "cargo/vendor/autocfg-1.0.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -202,8 +176,8 @@
         "dest": "cargo/vendor/bitflags-1.3.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a\", \"files\": {}}",
         "dest": "cargo/vendor/bitflags-1.3.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -215,8 +189,8 @@
         "dest": "cargo/vendor/byteorder-1.4.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2214c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610\", \"files\": {}}",
         "dest": "cargo/vendor/byteorder-1.4.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -228,8 +202,8 @@
         "dest": "cargo/vendor/cache-padded-1.2.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22c1db59621ec70f09c5e9b597b220c7a2b43611f4710dc03ceb8748637775692c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"c1db59621ec70f09c5e9b597b220c7a2b43611f4710dc03ceb8748637775692c\", \"files\": {}}",
         "dest": "cargo/vendor/cache-padded-1.2.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -241,8 +215,8 @@
         "dest": "cargo/vendor/cairo-rs-0.15.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22b869e97a87170f96762f9f178eae8c461147e722ba21dd8814105bf5716bf14a%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"b869e97a87170f96762f9f178eae8c461147e722ba21dd8814105bf5716bf14a\", \"files\": {}}",
         "dest": "cargo/vendor/cairo-rs-0.15.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -254,8 +228,8 @@
         "dest": "cargo/vendor/cairo-sys-rs-0.15.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%223c55d429bef56ac9172d25fecb85dc8068307d17acd74b377866b7a1ef25d3c8%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"3c55d429bef56ac9172d25fecb85dc8068307d17acd74b377866b7a1ef25d3c8\", \"files\": {}}",
         "dest": "cargo/vendor/cairo-sys-rs-0.15.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -267,8 +241,8 @@
         "dest": "cargo/vendor/cc-1.0.73"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%222fff2a6927b3bb87f9595d67196a70493f627687a71d87a0d692242c33f58c11%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"2fff2a6927b3bb87f9595d67196a70493f627687a71d87a0d692242c33f58c11\", \"files\": {}}",
         "dest": "cargo/vendor/cc-1.0.73",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -280,8 +254,8 @@
         "dest": "cargo/vendor/cfb-0.6.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2274f89d248799e3f15f91b70917f65381062a01bb8e222700ea0e5a7ff9785f9c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"74f89d248799e3f15f91b70917f65381062a01bb8e222700ea0e5a7ff9785f9c\", \"files\": {}}",
         "dest": "cargo/vendor/cfb-0.6.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -293,8 +267,8 @@
         "dest": "cargo/vendor/cfg-expr-0.10.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22295b6eb918a60a25fec0b23a5e633e74fddbaf7bb04411e65a10c366aca4b5cd%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"295b6eb918a60a25fec0b23a5e633e74fddbaf7bb04411e65a10c366aca4b5cd\", \"files\": {}}",
         "dest": "cargo/vendor/cfg-expr-0.10.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -306,8 +280,8 @@
         "dest": "cargo/vendor/cfg-if-1.0.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd\", \"files\": {}}",
         "dest": "cargo/vendor/cfg-if-1.0.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -319,8 +293,8 @@
         "dest": "cargo/vendor/concurrent-queue-1.2.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2230ed07550be01594c6026cff2a1d7fe9c8f683caa798e12b68694ac9e88286a3%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"30ed07550be01594c6026cff2a1d7fe9c8f683caa798e12b68694ac9e88286a3\", \"files\": {}}",
         "dest": "cargo/vendor/concurrent-queue-1.2.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -332,8 +306,8 @@
         "dest": "cargo/vendor/derivative-2.2.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22fcc3dd5e9e9c0b295d6e1e4d811fb6f157d5ffd784b8d202fc62eac8035a770b%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"fcc3dd5e9e9c0b295d6e1e4d811fb6f157d5ffd784b8d202fc62eac8035a770b\", \"files\": {}}",
         "dest": "cargo/vendor/derivative-2.2.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -345,8 +319,8 @@
         "dest": "cargo/vendor/easy-parallel-3.2.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%226907e25393cdcc1f4f3f513d9aac1e840eb1cc341a0fccb01171f7d14d10b946%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"6907e25393cdcc1f4f3f513d9aac1e840eb1cc341a0fccb01171f7d14d10b946\", \"files\": {}}",
         "dest": "cargo/vendor/easy-parallel-3.2.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -358,8 +332,8 @@
         "dest": "cargo/vendor/either-1.6.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457\", \"files\": {}}",
         "dest": "cargo/vendor/either-1.6.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -371,8 +345,8 @@
         "dest": "cargo/vendor/enumflags2-0.7.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a25c90b056b3f84111cf183cbeddef0d3a0bbe9a674f057e1a1533c315f24def%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a25c90b056b3f84111cf183cbeddef0d3a0bbe9a674f057e1a1533c315f24def\", \"files\": {}}",
         "dest": "cargo/vendor/enumflags2-0.7.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -384,8 +358,8 @@
         "dest": "cargo/vendor/enumflags2_derive-0.7.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22144ec79496cbab6f84fa125dc67be9264aef22eb8a28da8454d9c33f15108da4%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"144ec79496cbab6f84fa125dc67be9264aef22eb8a28da8454d9c33f15108da4\", \"files\": {}}",
         "dest": "cargo/vendor/enumflags2_derive-0.7.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -397,8 +371,8 @@
         "dest": "cargo/vendor/env_logger-0.9.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%220b2cf0344971ee6c64c31be0d530793fba457d322dfec2810c453d0ef228f9c3%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"0b2cf0344971ee6c64c31be0d530793fba457d322dfec2810c453d0ef228f9c3\", \"files\": {}}",
         "dest": "cargo/vendor/env_logger-0.9.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -410,8 +384,8 @@
         "dest": "cargo/vendor/event-listener-2.5.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2277f3309417938f28bf8228fcff79a4a37103981e3e186d2ccd19c74b38f4eb71%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"77f3309417938f28bf8228fcff79a4a37103981e3e186d2ccd19c74b38f4eb71\", \"files\": {}}",
         "dest": "cargo/vendor/event-listener-2.5.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -423,8 +397,8 @@
         "dest": "cargo/vendor/fastrand-1.7.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22c3fcf0cee53519c866c09b5de1f6c56ff9d647101f81c1964fa632e148896cdf%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"c3fcf0cee53519c866c09b5de1f6c56ff9d647101f81c1964fa632e148896cdf\", \"files\": {}}",
         "dest": "cargo/vendor/fastrand-1.7.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -436,8 +410,8 @@
         "dest": "cargo/vendor/field-offset-0.3.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%221e1c54951450cbd39f3dbcf1005ac413b49487dabf18a720ad2383eccfeffb92%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"1e1c54951450cbd39f3dbcf1005ac413b49487dabf18a720ad2383eccfeffb92\", \"files\": {}}",
         "dest": "cargo/vendor/field-offset-0.3.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -449,8 +423,8 @@
         "dest": "cargo/vendor/futures-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%221adc00f486adfc9ce99f77d717836f0c5aa84965eb0b4f051f4e83f7cab53f8b%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"1adc00f486adfc9ce99f77d717836f0c5aa84965eb0b4f051f4e83f7cab53f8b\", \"files\": {}}",
         "dest": "cargo/vendor/futures-0.3.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -462,8 +436,8 @@
         "dest": "cargo/vendor/futures-channel-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2274ed2411805f6e4e3d9bc904c95d5d423b89b3b25dc0250aa74729de20629ff9%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"74ed2411805f6e4e3d9bc904c95d5d423b89b3b25dc0250aa74729de20629ff9\", \"files\": {}}",
         "dest": "cargo/vendor/futures-channel-0.3.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -475,8 +449,8 @@
         "dest": "cargo/vendor/futures-core-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22af51b1b4a7fdff033703db39de8802c673eb91855f2e0d47dcf3bf2c0ef01f99%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"af51b1b4a7fdff033703db39de8802c673eb91855f2e0d47dcf3bf2c0ef01f99\", \"files\": {}}",
         "dest": "cargo/vendor/futures-core-0.3.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -488,8 +462,8 @@
         "dest": "cargo/vendor/futures-executor-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%224d0d535a57b87e1ae31437b892713aee90cd2d7b0ee48727cd11fc72ef54761c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"4d0d535a57b87e1ae31437b892713aee90cd2d7b0ee48727cd11fc72ef54761c\", \"files\": {}}",
         "dest": "cargo/vendor/futures-executor-0.3.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -501,8 +475,8 @@
         "dest": "cargo/vendor/futures-io-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%220b0e06c393068f3a6ef246c75cdca793d6a46347e75286933e5e75fd2fd11582%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"0b0e06c393068f3a6ef246c75cdca793d6a46347e75286933e5e75fd2fd11582\", \"files\": {}}",
         "dest": "cargo/vendor/futures-io-0.3.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -514,8 +488,8 @@
         "dest": "cargo/vendor/futures-lite-1.12.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%227694489acd39452c77daa48516b894c153f192c3578d5a839b62c58099fcbf48%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"7694489acd39452c77daa48516b894c153f192c3578d5a839b62c58099fcbf48\", \"files\": {}}",
         "dest": "cargo/vendor/futures-lite-1.12.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -527,8 +501,8 @@
         "dest": "cargo/vendor/futures-macro-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22c54913bae956fb8df7f4dc6fc90362aa72e69148e3f39041fbe8742d21e0ac57%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"c54913bae956fb8df7f4dc6fc90362aa72e69148e3f39041fbe8742d21e0ac57\", \"files\": {}}",
         "dest": "cargo/vendor/futures-macro-0.3.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -540,8 +514,8 @@
         "dest": "cargo/vendor/futures-sink-0.3.21"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2221163e139fa306126e6eedaf49ecdb4588f939600f0b1e770f4205ee4b7fa868%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"21163e139fa306126e6eedaf49ecdb4588f939600f0b1e770f4205ee4b7fa868\", \"files\": {}}",
         "dest": "cargo/vendor/futures-sink-0.3.21",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -553,8 +527,8 @@
         "dest": "cargo/vendor/futures-task-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22bbe54a98670017f3be909561f6ad13e810d9a51f3f061b902062ca3da80799f2%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"bbe54a98670017f3be909561f6ad13e810d9a51f3f061b902062ca3da80799f2\", \"files\": {}}",
         "dest": "cargo/vendor/futures-task-0.3.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -566,22 +540,9 @@
         "dest": "cargo/vendor/futures-util-0.3.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2267eb846bfd58e44a8481a00049e82c43e0ccb5d61f8dc071057cb19249dd4d78%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"67eb846bfd58e44a8481a00049e82c43e0ccb5d61f8dc071057cb19249dd4d78\", \"files\": {}}",
         "dest": "cargo/vendor/futures-util-0.3.16",
-        "dest-filename": ".cargo-checksum.json"
-    },
-    {
-        "type": "archive",
-        "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/gdk/gdk-0.15.2.crate",
-        "sha256": "614258e81ec35ed8770e64a0838f3a47f95b398bc51e724d3b3fa09c1ee0f8d5",
-        "dest": "cargo/vendor/gdk-0.15.2"
-    },
-    {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22614258e81ec35ed8770e64a0838f3a47f95b398bc51e724d3b3fa09c1ee0f8d5%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/gdk-0.15.2",
         "dest-filename": ".cargo-checksum.json"
     },
     {
@@ -592,8 +553,8 @@
         "dest": "cargo/vendor/gdk-pixbuf-0.15.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2273aa2f5de1b45710da90a55863276667dc3a3264aaf6a2aeace62bb015244d49%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"73aa2f5de1b45710da90a55863276667dc3a3264aaf6a2aeace62bb015244d49\", \"files\": {}}",
         "dest": "cargo/vendor/gdk-pixbuf-0.15.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -605,22 +566,35 @@
         "dest": "cargo/vendor/gdk-pixbuf-sys-0.15.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22413424d9818621fa3cfc8a3a915cdb89a7c3c507d56761b4ec83a9a98e587171%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"413424d9818621fa3cfc8a3a915cdb89a7c3c507d56761b4ec83a9a98e587171\", \"files\": {}}",
         "dest": "cargo/vendor/gdk-pixbuf-sys-0.15.1",
         "dest-filename": ".cargo-checksum.json"
     },
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/gdk-sys/gdk-sys-0.15.1.crate",
-        "sha256": "32e7a08c1e8f06f4177fb7e51a777b8c1689f743a7bc11ea91d44d2226073a88",
-        "dest": "cargo/vendor/gdk-sys-0.15.1"
+        "url": "https://static.crates.io/crates/gdk4/gdk4-0.4.8.crate",
+        "sha256": "4fabb7cf843c26b085a5d68abb95d0c0bf27a9ae2eeff9c4adb503a1eb580876",
+        "dest": "cargo/vendor/gdk4-0.4.8"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2232e7a08c1e8f06f4177fb7e51a777b8c1689f743a7bc11ea91d44d2226073a88%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/gdk-sys-0.15.1",
+        "type": "inline",
+        "contents": "{\"package\": \"4fabb7cf843c26b085a5d68abb95d0c0bf27a9ae2eeff9c4adb503a1eb580876\", \"files\": {}}",
+        "dest": "cargo/vendor/gdk4-0.4.8",
+        "dest-filename": ".cargo-checksum.json"
+    },
+    {
+        "type": "archive",
+        "archive-type": "tar-gzip",
+        "url": "https://static.crates.io/crates/gdk4-sys/gdk4-sys-0.4.8.crate",
+        "sha256": "efe7dcb44f5c00aeabff3f69abfc5673de46559070f89bd3fbb7b66485d9cef2",
+        "dest": "cargo/vendor/gdk4-sys-0.4.8"
+    },
+    {
+        "type": "inline",
+        "contents": "{\"package\": \"efe7dcb44f5c00aeabff3f69abfc5673de46559070f89bd3fbb7b66485d9cef2\", \"files\": {}}",
+        "dest": "cargo/vendor/gdk4-sys-0.4.8",
         "dest-filename": ".cargo-checksum.json"
     },
     {
@@ -631,8 +605,8 @@
         "dest": "cargo/vendor/getrandom-0.2.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22418d37c8b1d42553c93648be529cb70f920d3baf8ef469b74b9638df426e0b4c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"418d37c8b1d42553c93648be529cb70f920d3baf8ef469b74b9638df426e0b4c\", \"files\": {}}",
         "dest": "cargo/vendor/getrandom-0.2.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -644,8 +618,8 @@
         "dest": "cargo/vendor/gio-0.15.5"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2259105fa464928adf56b159c8d980cc11fbfbe414befb904caac5163d383049bf%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"59105fa464928adf56b159c8d980cc11fbfbe414befb904caac5163d383049bf\", \"files\": {}}",
         "dest": "cargo/vendor/gio-0.15.5",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -657,8 +631,8 @@
         "dest": "cargo/vendor/gio-sys-0.15.5"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%224f0bc4cfc9ebcdd05cc5057bc51b99c32f8f9bf246274f6a556ffd27279f8fe3%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"4f0bc4cfc9ebcdd05cc5057bc51b99c32f8f9bf246274f6a556ffd27279f8fe3\", \"files\": {}}",
         "dest": "cargo/vendor/gio-sys-0.15.5",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -670,8 +644,8 @@
         "dest": "cargo/vendor/glib-0.15.5"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2241dcfbdb6cc6c02aee163339465d8a40d6f3f64c3a43f729a4195f0e153338b7%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"41dcfbdb6cc6c02aee163339465d8a40d6f3f64c3a43f729a4195f0e153338b7\", \"files\": {}}",
         "dest": "cargo/vendor/glib-0.15.5",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -683,8 +657,8 @@
         "dest": "cargo/vendor/glib-macros-0.15.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22e58b262ff65ef771003873cea8c10e0fe854f1c508d48d62a4111a1ff163f7d1%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"e58b262ff65ef771003873cea8c10e0fe854f1c508d48d62a4111a1ff163f7d1\", \"files\": {}}",
         "dest": "cargo/vendor/glib-macros-0.15.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -696,8 +670,8 @@
         "dest": "cargo/vendor/glib-sys-0.15.5"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22fa1d4e1a63d8574541e5b92931e4e669ddc87ffa85d58e84e631dba13ad2e10c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"fa1d4e1a63d8574541e5b92931e4e669ddc87ffa85d58e84e631dba13ad2e10c\", \"files\": {}}",
         "dest": "cargo/vendor/glib-sys-0.15.5",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -709,48 +683,100 @@
         "dest": "cargo/vendor/gobject-sys-0.15.5"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22df6859463843c20cf3837e3a9069b6ab2051aeeadf4c899d33344f4aea83189a%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"df6859463843c20cf3837e3a9069b6ab2051aeeadf4c899d33344f4aea83189a\", \"files\": {}}",
         "dest": "cargo/vendor/gobject-sys-0.15.5",
         "dest-filename": ".cargo-checksum.json"
     },
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/gtk/gtk-0.15.3.crate",
-        "sha256": "c7978eaec05bea63947c801d29a21372f2ed39aec0bf56bf7725d3599094675e",
-        "dest": "cargo/vendor/gtk-0.15.3"
+        "url": "https://static.crates.io/crates/graphene-rs/graphene-rs-0.15.1.crate",
+        "sha256": "7c54f9fbbeefdb62c99f892dfca35f83991e2cb5b46a8dc2a715e58612f85570",
+        "dest": "cargo/vendor/graphene-rs-0.15.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22c7978eaec05bea63947c801d29a21372f2ed39aec0bf56bf7725d3599094675e%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/gtk-0.15.3",
+        "type": "inline",
+        "contents": "{\"package\": \"7c54f9fbbeefdb62c99f892dfca35f83991e2cb5b46a8dc2a715e58612f85570\", \"files\": {}}",
+        "dest": "cargo/vendor/graphene-rs-0.15.1",
         "dest-filename": ".cargo-checksum.json"
     },
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/gtk-sys/gtk-sys-0.15.3.crate",
-        "sha256": "d5bc2f0587cba247f60246a0ca11fe25fb733eabc3de12d1965fc07efab87c84",
-        "dest": "cargo/vendor/gtk-sys-0.15.3"
+        "url": "https://static.crates.io/crates/graphene-sys/graphene-sys-0.15.10.crate",
+        "sha256": "fa691fc7337ba1df599afb55c3bcb85c04f1b3f17362570e9bb0ff0d1bc3028a",
+        "dest": "cargo/vendor/graphene-sys-0.15.10"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22d5bc2f0587cba247f60246a0ca11fe25fb733eabc3de12d1965fc07efab87c84%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/gtk-sys-0.15.3",
+        "type": "inline",
+        "contents": "{\"package\": \"fa691fc7337ba1df599afb55c3bcb85c04f1b3f17362570e9bb0ff0d1bc3028a\", \"files\": {}}",
+        "dest": "cargo/vendor/graphene-sys-0.15.10",
         "dest-filename": ".cargo-checksum.json"
     },
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/gtk3-macros/gtk3-macros-0.15.1.crate",
-        "sha256": "8c891188af69e77a1e8a0b1746fbd03b9b396e7d34d518c5331b15950259f541",
-        "dest": "cargo/vendor/gtk3-macros-0.15.1"
+        "url": "https://static.crates.io/crates/gsk4/gsk4-0.4.8.crate",
+        "sha256": "05e9020d333280b3aa38d496495bfa9b50712eebf1ad63f0ec5bcddb5eb61be4",
+        "dest": "cargo/vendor/gsk4-0.4.8"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%228c891188af69e77a1e8a0b1746fbd03b9b396e7d34d518c5331b15950259f541%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/gtk3-macros-0.15.1",
+        "type": "inline",
+        "contents": "{\"package\": \"05e9020d333280b3aa38d496495bfa9b50712eebf1ad63f0ec5bcddb5eb61be4\", \"files\": {}}",
+        "dest": "cargo/vendor/gsk4-0.4.8",
+        "dest-filename": ".cargo-checksum.json"
+    },
+    {
+        "type": "archive",
+        "archive-type": "tar-gzip",
+        "url": "https://static.crates.io/crates/gsk4-sys/gsk4-sys-0.4.8.crate",
+        "sha256": "7add39ccf60078508c838643a2dcc91f045c46ed63b5ea6ab701b2e25bda3fea",
+        "dest": "cargo/vendor/gsk4-sys-0.4.8"
+    },
+    {
+        "type": "inline",
+        "contents": "{\"package\": \"7add39ccf60078508c838643a2dcc91f045c46ed63b5ea6ab701b2e25bda3fea\", \"files\": {}}",
+        "dest": "cargo/vendor/gsk4-sys-0.4.8",
+        "dest-filename": ".cargo-checksum.json"
+    },
+    {
+        "type": "archive",
+        "archive-type": "tar-gzip",
+        "url": "https://static.crates.io/crates/gtk4/gtk4-0.4.8.crate",
+        "sha256": "c64f0c2a3d80e899dc3febddad5bac193ffcf74a0fd7e31037f30dd34d6f7396",
+        "dest": "cargo/vendor/gtk4-0.4.8"
+    },
+    {
+        "type": "inline",
+        "contents": "{\"package\": \"c64f0c2a3d80e899dc3febddad5bac193ffcf74a0fd7e31037f30dd34d6f7396\", \"files\": {}}",
+        "dest": "cargo/vendor/gtk4-0.4.8",
+        "dest-filename": ".cargo-checksum.json"
+    },
+    {
+        "type": "archive",
+        "archive-type": "tar-gzip",
+        "url": "https://static.crates.io/crates/gtk4-macros/gtk4-macros-0.4.8.crate",
+        "sha256": "fafbcc920af4eb677d7d164853e7040b9de5a22379c596f570190c675d45f7a7",
+        "dest": "cargo/vendor/gtk4-macros-0.4.8"
+    },
+    {
+        "type": "inline",
+        "contents": "{\"package\": \"fafbcc920af4eb677d7d164853e7040b9de5a22379c596f570190c675d45f7a7\", \"files\": {}}",
+        "dest": "cargo/vendor/gtk4-macros-0.4.8",
+        "dest-filename": ".cargo-checksum.json"
+    },
+    {
+        "type": "archive",
+        "archive-type": "tar-gzip",
+        "url": "https://static.crates.io/crates/gtk4-sys/gtk4-sys-0.4.8.crate",
+        "sha256": "5bc8006eea634b7c72da3ff79e24606e45f21b3b832a3c5a1f543f5f97eb0f63",
+        "dest": "cargo/vendor/gtk4-sys-0.4.8"
+    },
+    {
+        "type": "inline",
+        "contents": "{\"package\": \"5bc8006eea634b7c72da3ff79e24606e45f21b3b832a3c5a1f543f5f97eb0f63\", \"files\": {}}",
+        "dest": "cargo/vendor/gtk4-sys-0.4.8",
         "dest-filename": ".cargo-checksum.json"
     },
     {
@@ -761,8 +787,8 @@
         "dest": "cargo/vendor/heck-0.4.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%222540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"2540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9\", \"files\": {}}",
         "dest": "cargo/vendor/heck-0.4.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -774,8 +800,8 @@
         "dest": "cargo/vendor/hermit-abi-0.1.19"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2262b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33\", \"files\": {}}",
         "dest": "cargo/vendor/hermit-abi-0.1.19",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -787,8 +813,8 @@
         "dest": "cargo/vendor/hex-0.4.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%227f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70\", \"files\": {}}",
         "dest": "cargo/vendor/hex-0.4.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -800,8 +826,8 @@
         "dest": "cargo/vendor/humantime-2.1.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%229a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"9a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4\", \"files\": {}}",
         "dest": "cargo/vendor/humantime-2.1.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -813,8 +839,8 @@
         "dest": "cargo/vendor/infer-0.7.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2220b2b533137b9cad970793453d4f921c2e91312a6d88b1085c07bc15fc51bb3b%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"20b2b533137b9cad970793453d4f921c2e91312a6d88b1085c07bc15fc51bb3b\", \"files\": {}}",
         "dest": "cargo/vendor/infer-0.7.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -826,8 +852,8 @@
         "dest": "cargo/vendor/instant-0.1.12"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%227a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"7a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c\", \"files\": {}}",
         "dest": "cargo/vendor/instant-0.1.12",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -839,8 +865,8 @@
         "dest": "cargo/vendor/itertools-0.10.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a9a9d19fa1e79b6215ff29b9d6880b706147f16e9b1dbb1e4e5947b5b02bc5e3%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a9a9d19fa1e79b6215ff29b9d6880b706147f16e9b1dbb1e4e5947b5b02bc5e3\", \"files\": {}}",
         "dest": "cargo/vendor/itertools-0.10.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -852,8 +878,8 @@
         "dest": "cargo/vendor/lazy_static-1.4.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646\", \"files\": {}}",
         "dest": "cargo/vendor/lazy_static-1.4.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -865,8 +891,8 @@
         "dest": "cargo/vendor/libc-0.2.118"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2206e509672465a0504304aa87f9f176f2b2b716ed8fb105ebe5c02dc6dce96a94%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"06e509672465a0504304aa87f9f176f2b2b716ed8fb105ebe5c02dc6dce96a94\", \"files\": {}}",
         "dest": "cargo/vendor/libc-0.2.118",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -878,8 +904,8 @@
         "dest": "cargo/vendor/log-0.4.14"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2251b9bbe6c47d51fc3e1a9b945965946b4c44142ab8792c50835a980d362c2710%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"51b9bbe6c47d51fc3e1a9b945965946b4c44142ab8792c50835a980d362c2710\", \"files\": {}}",
         "dest": "cargo/vendor/log-0.4.14",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -891,8 +917,8 @@
         "dest": "cargo/vendor/memchr-2.4.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22b16bd47d9e329435e309c58469fe0791c2d0d1ba96ec0954152a5ae2b04387dc%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"b16bd47d9e329435e309c58469fe0791c2d0d1ba96ec0954152a5ae2b04387dc\", \"files\": {}}",
         "dest": "cargo/vendor/memchr-2.4.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -904,8 +930,8 @@
         "dest": "cargo/vendor/memoffset-0.6.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2259accc507f1338036a0477ef61afdae33cde60840f4dfe481319ce3ad116ddf9%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"59accc507f1338036a0477ef61afdae33cde60840f4dfe481319ce3ad116ddf9\", \"files\": {}}",
         "dest": "cargo/vendor/memoffset-0.6.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -917,8 +943,8 @@
         "dest": "cargo/vendor/nix-0.23.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%229f866317acbd3a240710c63f065ffb1e4fd466259045ccb504130b7f668f35c6%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"9f866317acbd3a240710c63f065ffb1e4fd466259045ccb504130b7f668f35c6\", \"files\": {}}",
         "dest": "cargo/vendor/nix-0.23.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -930,8 +956,8 @@
         "dest": "cargo/vendor/once_cell-1.8.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56\", \"files\": {}}",
         "dest": "cargo/vendor/once_cell-1.8.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -943,8 +969,8 @@
         "dest": "cargo/vendor/ordered-stream-0.0.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2244630c059eacfd6e08bdaa51b1db2ce33119caa4ddc1235e923109aa5f25ccb1%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"44630c059eacfd6e08bdaa51b1db2ce33119caa4ddc1235e923109aa5f25ccb1\", \"files\": {}}",
         "dest": "cargo/vendor/ordered-stream-0.0.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -956,8 +982,8 @@
         "dest": "cargo/vendor/pango-0.15.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2279211eff430c29cc38c69e0ab54bc78fa1568121ca9737707eee7f92a8417a94%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"79211eff430c29cc38c69e0ab54bc78fa1568121ca9737707eee7f92a8417a94\", \"files\": {}}",
         "dest": "cargo/vendor/pango-0.15.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -969,8 +995,8 @@
         "dest": "cargo/vendor/pango-sys-0.15.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%227022c2fb88cd2d9d55e1a708a8c53a3ae8678234c4a54bf623400aeb7f31fac2%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"7022c2fb88cd2d9d55e1a708a8c53a3ae8678234c4a54bf623400aeb7f31fac2\", \"files\": {}}",
         "dest": "cargo/vendor/pango-sys-0.15.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -982,8 +1008,8 @@
         "dest": "cargo/vendor/parking-2.0.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22427c3892f9e783d91cc128285287e70a59e206ca452770ece88a76f7a3eddd72%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"427c3892f9e783d91cc128285287e70a59e206ca452770ece88a76f7a3eddd72\", \"files\": {}}",
         "dest": "cargo/vendor/parking-2.0.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -995,8 +1021,8 @@
         "dest": "cargo/vendor/pest-2.1.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2210f4872ae94d7b90ae48754df22fd42ad52ce740b8f370b03da4835417403e53%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"10f4872ae94d7b90ae48754df22fd42ad52ce740b8f370b03da4835417403e53\", \"files\": {}}",
         "dest": "cargo/vendor/pest-2.1.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1008,8 +1034,8 @@
         "dest": "cargo/vendor/pin-project-lite-0.2.7"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%228d31d11c69a6b52a174b42bdc0c30e5e11670f90788b2c471c31c1d17d449443%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"8d31d11c69a6b52a174b42bdc0c30e5e11670f90788b2c471c31c1d17d449443\", \"files\": {}}",
         "dest": "cargo/vendor/pin-project-lite-0.2.7",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1021,22 +1047,22 @@
         "dest": "cargo/vendor/pin-utils-0.1.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%228b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184\", \"files\": {}}",
         "dest": "cargo/vendor/pin-utils-0.1.0",
         "dest-filename": ".cargo-checksum.json"
     },
     {
         "type": "archive",
         "archive-type": "tar-gzip",
-        "url": "https://static.crates.io/crates/pkg-config/pkg-config-0.3.19.crate",
-        "sha256": "3831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c",
-        "dest": "cargo/vendor/pkg-config-0.3.19"
+        "url": "https://static.crates.io/crates/pkg-config/pkg-config-0.3.25.crate",
+        "sha256": "1df8c4ec4b0627e53bdf214615ad287367e482558cf84b109250b37464dc03ae",
+        "dest": "cargo/vendor/pkg-config-0.3.25"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%223831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c%22%2C%20%22files%22%3A%20%7B%7D%7D",
-        "dest": "cargo/vendor/pkg-config-0.3.19",
+        "type": "inline",
+        "contents": "{\"package\": \"1df8c4ec4b0627e53bdf214615ad287367e482558cf84b109250b37464dc03ae\", \"files\": {}}",
+        "dest": "cargo/vendor/pkg-config-0.3.25",
         "dest-filename": ".cargo-checksum.json"
     },
     {
@@ -1047,8 +1073,8 @@
         "dest": "cargo/vendor/polling-2.2.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22685404d509889fade3e86fe3a5803bca2ec09b0c0778d5ada6ec8bf7a8de5259%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"685404d509889fade3e86fe3a5803bca2ec09b0c0778d5ada6ec8bf7a8de5259\", \"files\": {}}",
         "dest": "cargo/vendor/polling-2.2.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1060,8 +1086,8 @@
         "dest": "cargo/vendor/ppv-lite86-0.2.16"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22eb9f9e6e233e5c4a35559a617bf40a4ec447db2e84c20b55a6f83167b7e57872%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"eb9f9e6e233e5c4a35559a617bf40a4ec447db2e84c20b55a6f83167b7e57872\", \"files\": {}}",
         "dest": "cargo/vendor/ppv-lite86-0.2.16",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1073,8 +1099,8 @@
         "dest": "cargo/vendor/proc-macro-crate-1.0.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2241fdbd1df62156fbc5945f4762632564d7d038153091c3fcf1067f6aef7cff92%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"41fdbd1df62156fbc5945f4762632564d7d038153091c3fcf1067f6aef7cff92\", \"files\": {}}",
         "dest": "cargo/vendor/proc-macro-crate-1.0.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1086,8 +1112,8 @@
         "dest": "cargo/vendor/proc-macro-error-1.0.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c\", \"files\": {}}",
         "dest": "cargo/vendor/proc-macro-error-1.0.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1099,8 +1125,8 @@
         "dest": "cargo/vendor/proc-macro-error-attr-1.0.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869\", \"files\": {}}",
         "dest": "cargo/vendor/proc-macro-error-attr-1.0.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1112,8 +1138,8 @@
         "dest": "cargo/vendor/proc-macro-hack-0.5.19"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5\", \"files\": {}}",
         "dest": "cargo/vendor/proc-macro-hack-0.5.19",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1125,8 +1151,8 @@
         "dest": "cargo/vendor/proc-macro-nested-0.1.7"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22bc881b2c22681370c6a780e47af9840ef841837bc98118431d4e1868bd0c1086%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"bc881b2c22681370c6a780e47af9840ef841837bc98118431d4e1868bd0c1086\", \"files\": {}}",
         "dest": "cargo/vendor/proc-macro-nested-0.1.7",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1138,9 +1164,22 @@
         "dest": "cargo/vendor/proc-macro2-1.0.28"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%225c7ed8b8c7b886ea3ed7dde405212185f423ab44682667c8c6dd14aa1d9f6612%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"5c7ed8b8c7b886ea3ed7dde405212185f423ab44682667c8c6dd14aa1d9f6612\", \"files\": {}}",
         "dest": "cargo/vendor/proc-macro2-1.0.28",
+        "dest-filename": ".cargo-checksum.json"
+    },
+    {
+        "type": "archive",
+        "archive-type": "tar-gzip",
+        "url": "https://static.crates.io/crates/quick-xml/quick-xml-0.22.0.crate",
+        "sha256": "8533f14c8382aaad0d592c812ac3b826162128b65662331e1127b45c3d18536b",
+        "dest": "cargo/vendor/quick-xml-0.22.0"
+    },
+    {
+        "type": "inline",
+        "contents": "{\"package\": \"8533f14c8382aaad0d592c812ac3b826162128b65662331e1127b45c3d18536b\", \"files\": {}}",
+        "dest": "cargo/vendor/quick-xml-0.22.0",
         "dest-filename": ".cargo-checksum.json"
     },
     {
@@ -1151,8 +1190,8 @@
         "dest": "cargo/vendor/quote-1.0.9"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22c3d0b9745dc2debf507c8422de05d7226cc1f0644216dfdfead988f9b1ab32a7%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"c3d0b9745dc2debf507c8422de05d7226cc1f0644216dfdfead988f9b1ab32a7\", \"files\": {}}",
         "dest": "cargo/vendor/quote-1.0.9",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1164,8 +1203,8 @@
         "dest": "cargo/vendor/rand-0.8.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%222e7573632e6454cf6b99d7aac4ccca54be06da05aca2ef7423d22d27d4d4bcd8%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"2e7573632e6454cf6b99d7aac4ccca54be06da05aca2ef7423d22d27d4d4bcd8\", \"files\": {}}",
         "dest": "cargo/vendor/rand-0.8.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1177,8 +1216,8 @@
         "dest": "cargo/vendor/rand_chacha-0.3.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22e6c10a63a0fa32252be49d21e7709d4d4baf8d231c2dbce1eaa8141b9b127d88%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"e6c10a63a0fa32252be49d21e7709d4d4baf8d231c2dbce1eaa8141b9b127d88\", \"files\": {}}",
         "dest": "cargo/vendor/rand_chacha-0.3.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1190,8 +1229,8 @@
         "dest": "cargo/vendor/rand_core-0.6.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22d34f1408f55294453790c48b2f1ebbb1c5b4b7563eb1f418bcfcfdbb06ebb4e7%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"d34f1408f55294453790c48b2f1ebbb1c5b4b7563eb1f418bcfcfdbb06ebb4e7\", \"files\": {}}",
         "dest": "cargo/vendor/rand_core-0.6.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1203,8 +1242,8 @@
         "dest": "cargo/vendor/rand_hc-0.3.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22d51e9f596de227fda2ea6c84607f5558e196eeaf43c986b724ba4fb8fdf497e7%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"d51e9f596de227fda2ea6c84607f5558e196eeaf43c986b724ba4fb8fdf497e7\", \"files\": {}}",
         "dest": "cargo/vendor/rand_hc-0.3.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1216,8 +1255,8 @@
         "dest": "cargo/vendor/regex-1.5.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22d07a8629359eb56f1e2fb1652bb04212c072a87ba68546a04065d525673ac461%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"d07a8629359eb56f1e2fb1652bb04212c072a87ba68546a04065d525673ac461\", \"files\": {}}",
         "dest": "cargo/vendor/regex-1.5.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1229,8 +1268,8 @@
         "dest": "cargo/vendor/regex-syntax-0.6.25"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b\", \"files\": {}}",
         "dest": "cargo/vendor/regex-syntax-0.6.25",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1242,8 +1281,8 @@
         "dest": "cargo/vendor/rustc_version-0.3.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22f0dfe2087c51c460008730de8b57e6a320782fbfb312e1f4d520e6c6fae155ee%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"f0dfe2087c51c460008730de8b57e6a320782fbfb312e1f4d520e6c6fae155ee\", \"files\": {}}",
         "dest": "cargo/vendor/rustc_version-0.3.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1255,8 +1294,8 @@
         "dest": "cargo/vendor/semver-0.11.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22f301af10236f6df4160f7c3f04eec6dbc70ace82d23326abad5edee88801c6b6%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"f301af10236f6df4160f7c3f04eec6dbc70ace82d23326abad5edee88801c6b6\", \"files\": {}}",
         "dest": "cargo/vendor/semver-0.11.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1268,8 +1307,8 @@
         "dest": "cargo/vendor/semver-parser-0.10.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2200b0bef5b7f9e0df16536d3961cfb6e84331c065b4066afb39768d0e319411f7%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"00b0bef5b7f9e0df16536d3961cfb6e84331c065b4066afb39768d0e319411f7\", \"files\": {}}",
         "dest": "cargo/vendor/semver-parser-0.10.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1281,8 +1320,8 @@
         "dest": "cargo/vendor/serde-1.0.127"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22f03b9878abf6d14e6779d3f24f07b2cfa90352cfec4acc5aab8f1ac7f146fae8%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"f03b9878abf6d14e6779d3f24f07b2cfa90352cfec4acc5aab8f1ac7f146fae8\", \"files\": {}}",
         "dest": "cargo/vendor/serde-1.0.127",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1294,8 +1333,8 @@
         "dest": "cargo/vendor/serde_derive-1.0.127"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a024926d3432516606328597e0f224a51355a493b49fdd67e9209187cbe55ecc%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a024926d3432516606328597e0f224a51355a493b49fdd67e9209187cbe55ecc\", \"files\": {}}",
         "dest": "cargo/vendor/serde_derive-1.0.127",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1307,8 +1346,8 @@
         "dest": "cargo/vendor/serde_repr-0.1.7"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2298d0516900518c29efa217c298fa1f4e6c6ffc85ae29fd7f4ee48f176e1a9ed5%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"98d0516900518c29efa217c298fa1f4e6c6ffc85ae29fd7f4ee48f176e1a9ed5\", \"files\": {}}",
         "dest": "cargo/vendor/serde_repr-0.1.7",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1320,8 +1359,8 @@
         "dest": "cargo/vendor/sha1-0.6.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22c1da05c97445caa12d05e848c4a4fcbbea29e748ac28f7e80e9b010392063770%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"c1da05c97445caa12d05e848c4a4fcbbea29e748ac28f7e80e9b010392063770\", \"files\": {}}",
         "dest": "cargo/vendor/sha1-0.6.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1333,8 +1372,8 @@
         "dest": "cargo/vendor/sha1_smol-1.0.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22ae1a47186c03a32177042e55dbc5fd5aee900b8e0069a8d70fba96a9375cd012%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"ae1a47186c03a32177042e55dbc5fd5aee900b8e0069a8d70fba96a9375cd012\", \"files\": {}}",
         "dest": "cargo/vendor/sha1_smol-1.0.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1346,8 +1385,8 @@
         "dest": "cargo/vendor/slab-0.4.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22c307a32c1c5c437f38c7fd45d753050587732ba8628319fbdf12a7e289ccc590%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"c307a32c1c5c437f38c7fd45d753050587732ba8628319fbdf12a7e289ccc590\", \"files\": {}}",
         "dest": "cargo/vendor/slab-0.4.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1359,8 +1398,8 @@
         "dest": "cargo/vendor/smallvec-1.6.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22fe0f37c9e8f3c5a4a66ad655a93c74daac4ad00c441533bf5c6e7990bb42604e%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"fe0f37c9e8f3c5a4a66ad655a93c74daac4ad00c441533bf5c6e7990bb42604e\", \"files\": {}}",
         "dest": "cargo/vendor/smallvec-1.6.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1372,8 +1411,8 @@
         "dest": "cargo/vendor/socket2-0.4.4"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2266d72b759436ae32898a2af0a14218dbf55efde3feeb170eb623637db85ee1e0%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"66d72b759436ae32898a2af0a14218dbf55efde3feeb170eb623637db85ee1e0\", \"files\": {}}",
         "dest": "cargo/vendor/socket2-0.4.4",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1385,8 +1424,8 @@
         "dest": "cargo/vendor/static_assertions-1.1.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f\", \"files\": {}}",
         "dest": "cargo/vendor/static_assertions-1.1.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1398,8 +1437,8 @@
         "dest": "cargo/vendor/syn-1.0.74"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%221873d832550d4588c3dbc20f01361ab00bfe741048f71e3fecf145a7cc18b29c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"1873d832550d4588c3dbc20f01361ab00bfe741048f71e3fecf145a7cc18b29c\", \"files\": {}}",
         "dest": "cargo/vendor/syn-1.0.74",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1411,8 +1450,8 @@
         "dest": "cargo/vendor/system-deps-6.0.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a1a45a1c4c9015217e12347f2a411b57ce2c4fc543913b14b6fe40483328e709%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a1a45a1c4c9015217e12347f2a411b57ce2c4fc543913b14b6fe40483328e709\", \"files\": {}}",
         "dest": "cargo/vendor/system-deps-6.0.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1424,8 +1463,8 @@
         "dest": "cargo/vendor/termcolor-1.1.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%222dfed899f0eb03f32ee8c6a0aabdb8a7949659e3466561fc0adf54e26d88c5f4%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"2dfed899f0eb03f32ee8c6a0aabdb8a7949659e3466561fc0adf54e26d88c5f4\", \"files\": {}}",
         "dest": "cargo/vendor/termcolor-1.1.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1437,8 +1476,8 @@
         "dest": "cargo/vendor/thiserror-1.0.26"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2293119e4feac1cbe6c798c34d3a53ea0026b0b1de6a120deef895137c0529bfe2%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"93119e4feac1cbe6c798c34d3a53ea0026b0b1de6a120deef895137c0529bfe2\", \"files\": {}}",
         "dest": "cargo/vendor/thiserror-1.0.26",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1450,8 +1489,8 @@
         "dest": "cargo/vendor/thiserror-impl-1.0.26"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22060d69a0afe7796bf42e9e2ff91f5ee691fb15c53d38b4b62a9a53eb23164745%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"060d69a0afe7796bf42e9e2ff91f5ee691fb15c53d38b4b62a9a53eb23164745\", \"files\": {}}",
         "dest": "cargo/vendor/thiserror-impl-1.0.26",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1463,8 +1502,8 @@
         "dest": "cargo/vendor/toml-0.5.8"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22a31142970826733df8241ef35dc040ef98c679ab14d7c3e54d827099b3acecaa%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"a31142970826733df8241ef35dc040ef98c679ab14d7c3e54d827099b3acecaa\", \"files\": {}}",
         "dest": "cargo/vendor/toml-0.5.8",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1476,8 +1515,8 @@
         "dest": "cargo/vendor/ucd-trie-0.1.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2256dee185309b50d1f11bfedef0fe6d036842e3fb77413abef29f8f8d1c5d4c1c%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"56dee185309b50d1f11bfedef0fe6d036842e3fb77413abef29f8f8d1c5d4c1c\", \"files\": {}}",
         "dest": "cargo/vendor/ucd-trie-0.1.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1489,8 +1528,8 @@
         "dest": "cargo/vendor/unicode-xid-0.2.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%228ccb82d61f80a663efe1f787a51b16b5a51e3314d6ac365b08639f52387b33f3%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"8ccb82d61f80a663efe1f787a51b16b5a51e3314d6ac365b08639f52387b33f3\", \"files\": {}}",
         "dest": "cargo/vendor/unicode-xid-0.2.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1502,8 +1541,8 @@
         "dest": "cargo/vendor/uuid-0.8.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7\", \"files\": {}}",
         "dest": "cargo/vendor/uuid-0.8.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1515,8 +1554,8 @@
         "dest": "cargo/vendor/version-compare-0.1.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22fe88247b92c1df6b6de80ddc290f3976dbdf2f5f5d3fd049a9fb598c6dd5ca73%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"fe88247b92c1df6b6de80ddc290f3976dbdf2f5f5d3fd049a9fb598c6dd5ca73\", \"files\": {}}",
         "dest": "cargo/vendor/version-compare-0.1.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1528,8 +1567,8 @@
         "dest": "cargo/vendor/version_check-0.9.3"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%225fecdca9a5291cc2b8dcf7dc02453fee791a280f3743cb0905f8822ae463b3fe%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"5fecdca9a5291cc2b8dcf7dc02453fee791a280f3743cb0905f8822ae463b3fe\", \"files\": {}}",
         "dest": "cargo/vendor/version_check-0.9.3",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1541,8 +1580,8 @@
         "dest": "cargo/vendor/waker-fn-1.1.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%229d5b2c62b4012a3e1eca5a7e077d13b3bf498c4073e33ccd58626607748ceeca%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"9d5b2c62b4012a3e1eca5a7e077d13b3bf498c4073e33ccd58626607748ceeca\", \"files\": {}}",
         "dest": "cargo/vendor/waker-fn-1.1.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1554,8 +1593,8 @@
         "dest": "cargo/vendor/wasi-0.10.2+wasi-snapshot-preview1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22fd6fbd9a79829dd1ad0cc20627bf1ed606756a7f77edff7b66b7064f9cb327c6%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"fd6fbd9a79829dd1ad0cc20627bf1ed606756a7f77edff7b66b7064f9cb327c6\", \"files\": {}}",
         "dest": "cargo/vendor/wasi-0.10.2+wasi-snapshot-preview1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1567,8 +1606,8 @@
         "dest": "cargo/vendor/wepoll-ffi-0.1.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22d743fdedc5c64377b5fc2bc036b01c7fd642205a0d96356034ae3404d49eb7fb%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"d743fdedc5c64377b5fc2bc036b01c7fd642205a0d96356034ae3404d49eb7fb\", \"files\": {}}",
         "dest": "cargo/vendor/wepoll-ffi-0.1.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1580,8 +1619,8 @@
         "dest": "cargo/vendor/winapi-0.3.9"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%225c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419\", \"files\": {}}",
         "dest": "cargo/vendor/winapi-0.3.9",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1593,8 +1632,8 @@
         "dest": "cargo/vendor/winapi-i686-pc-windows-gnu-0.4.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6\", \"files\": {}}",
         "dest": "cargo/vendor/winapi-i686-pc-windows-gnu-0.4.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1606,8 +1645,8 @@
         "dest": "cargo/vendor/winapi-util-0.1.5"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2270ec6ce85bb158151cae5e5c87f95a8e97d2c0c4b001223f33a334e3ce5de178%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"70ec6ce85bb158151cae5e5c87f95a8e97d2c0c4b001223f33a334e3ce5de178\", \"files\": {}}",
         "dest": "cargo/vendor/winapi-util-0.1.5",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1619,8 +1658,8 @@
         "dest": "cargo/vendor/winapi-x86_64-pc-windows-gnu-0.4.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%22712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f\", \"files\": {}}",
         "dest": "cargo/vendor/winapi-x86_64-pc-windows-gnu-0.4.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1632,8 +1671,8 @@
         "dest": "cargo/vendor/zbus-2.1.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%227bb86f3d4592e26a48b2719742aec94f8ae6238ebde20d98183ee185d1275e9a%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"7bb86f3d4592e26a48b2719742aec94f8ae6238ebde20d98183ee185d1275e9a\", \"files\": {}}",
         "dest": "cargo/vendor/zbus-2.1.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1645,8 +1684,8 @@
         "dest": "cargo/vendor/zbus_macros-2.1.1"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2236823cc10fddc3c6b19f048903262dacaf8274170e9a255784bdd8b4570a8040%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"36823cc10fddc3c6b19f048903262dacaf8274170e9a255784bdd8b4570a8040\", \"files\": {}}",
         "dest": "cargo/vendor/zbus_macros-2.1.1",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1658,8 +1697,8 @@
         "dest": "cargo/vendor/zbus_names-2.1.0"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2245dfcdcf87b71dad505d30cc27b1b7b88a64b6d1c435648f48f9dbc1fdc4b7e1%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"45dfcdcf87b71dad505d30cc27b1b7b88a64b6d1c435648f48f9dbc1fdc4b7e1\", \"files\": {}}",
         "dest": "cargo/vendor/zbus_names-2.1.0",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1671,8 +1710,8 @@
         "dest": "cargo/vendor/zvariant-3.1.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%2249ea5dc38b2058fae6a5b79009388143dadce1e91c26a67f984a0fc0381c8033%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"49ea5dc38b2058fae6a5b79009388143dadce1e91c26a67f984a0fc0381c8033\", \"files\": {}}",
         "dest": "cargo/vendor/zvariant-3.1.2",
         "dest-filename": ".cargo-checksum.json"
     },
@@ -1684,14 +1723,14 @@
         "dest": "cargo/vendor/zvariant_derive-3.1.2"
     },
     {
-        "type": "file",
-        "url": "data:%7B%22package%22%3A%20%228c2cecc5a61c2a053f7f653a24cd15b3b0195d7f7ddb5042c837fb32e161fb7a%22%2C%20%22files%22%3A%20%7B%7D%7D",
+        "type": "inline",
+        "contents": "{\"package\": \"8c2cecc5a61c2a053f7f653a24cd15b3b0195d7f7ddb5042c837fb32e161fb7a\", \"files\": {}}",
         "dest": "cargo/vendor/zvariant_derive-3.1.2",
         "dest-filename": ".cargo-checksum.json"
     },
     {
-        "type": "file",
-        "url": "data:%5Bsource.vendored-sources%5D%0Adirectory%20%3D%20%22cargo/vendor%22%0A%0A%5Bsource.crates-io%5D%0Areplace-with%20%3D%20%22vendored-sources%22%0A",
+        "type": "inline",
+        "contents": "[source.vendored-sources]\ndirectory = \"cargo/vendor\"\n\n[source.crates-io]\nreplace-with = \"vendored-sources\"\n",
         "dest": "cargo",
         "dest-filename": "config"
     }

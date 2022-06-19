@@ -7,6 +7,7 @@ use std::{
 use crate::image::Image;
 
 use anyhow::{anyhow, Result};
+use gtk::gdk::Texture;
 
 pub struct ImageList {
     images: HashMap<PathBuf, Image>,
@@ -79,10 +80,10 @@ impl ImageList {
         Ok(())
     }
 
-    pub fn copy_current_image(&self, clipboard: &gtk::Clipboard) {
+    pub fn copy_current_image(&self, clipboard: gtk::gdk::Clipboard) {
         if let Some(current_image) = self.current_image() {
             if let Some(buffer) = current_image.current_image_buffer() {
-                clipboard.set_image(buffer);
+                clipboard.set_texture(&Texture::for_pixbuf(buffer));
             }
         }
     }

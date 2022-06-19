@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/github/weclaw1/image-roll">
-    <file preprocess="xml-stripblanks">image-roll_ui.glade</file>
+    <file preprocess="xml-stripblanks">image-roll.ui</file>
     <file>com.github.weclaw1.ImageRoll.svg</file>
     <file preprocess="xml-stripblanks">crop-symbolic.svg</file>
   </gresource>
