@@ -3,6 +3,6 @@
   <gresource prefix="/com/github/weclaw1/image-roll">
     <file>image-roll.ui</file>
     <file>com.github.weclaw1.ImageRoll.svg</file>
-    <file>crop-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">data/icons/scalable/actions/crop-symbolic.svg</file>
   </gresource>
 </gresources>
