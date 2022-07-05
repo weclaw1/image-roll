@@ -56,6 +56,8 @@ impl App {
             .window()
             .set_default_size(window_width as i32, window_height as i32);
 
+        widgets.window().settings().set_gtk_application_prefer_dark_theme(true);
+
         let (sender, receiver) = glib::MainContext::channel::<Event>(glib::PRIORITY_DEFAULT);
 
         let second_sender = sender.clone();
