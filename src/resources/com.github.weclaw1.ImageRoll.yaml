@@ -1,6 +1,6 @@
 app-id: com.github.weclaw1.ImageRoll
 runtime: org.gnome.Platform
-runtime-version: '41'
+runtime-version: '42'
 sdk: org.gnome.Sdk
 sdk-extensions:
 - org.freedesktop.Sdk.Extension.rust-stable
@@ -34,4 +34,4 @@ modules:
   - cargo-sources.json
   - type: git
     url: https://github.com/weclaw1/image-roll.git
-    tag: 1.6.0
+    tag: 2.0.0
