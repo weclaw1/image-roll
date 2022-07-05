@@ -1,8 +1,8 @@
 use gtk::{
-    gdk::{self, Key, Rectangle},
+    gdk::{self, Key},
     gdk_pixbuf::PixbufRotation,
     gio,
-    glib::{self, Sender},
+    glib::{self, timeout_future, Sender},
     prelude::{
         ButtonExt, DrawingAreaExtManual, FileChooserExt, FileExt, GdkCairoContextExt,
         NativeDialogExt, PopoverExt, ToggleButtonExt, WidgetExt,
@@ -14,6 +14,7 @@ use std::{
     cell::{Cell, RefCell},
     path::PathBuf,
     rc::Rc,
+    time::Duration,
 };
 
 use crate::{
@@ -29,7 +30,7 @@ use super::{controllers::Controllers, widgets::Widgets};
 pub enum Event {
     OpenFile(gio::File),
     LoadImage(Option<PathBuf>),
-    ImageViewportResize(Rectangle),
+    ImageViewportResize((u32, u32)),
     RefreshPreview(PreviewSize),
     ChangePreviewSize(PreviewSize),
     ImageEdit(ImageOperation),
@@ -78,6 +79,8 @@ pub fn connect_events(
     connect_previous_button_clicked(widgets.clone(), sender.clone());
     connect_window_default_width_notify(widgets.clone(), settings.clone(), sender.clone());
     connect_window_default_height_notify(widgets.clone(), settings, sender.clone());
+    connect_window_maximized_notify(widgets.clone(), sender.clone());
+    connect_window_fullscreened_notify(widgets.clone(), sender.clone());
     connect_preview_smaller_button_clicked(widgets.clone(), sender.clone());
     connect_preview_larger_button_clicked(widgets.clone(), sender.clone());
     connect_preview_fit_screen_button_clicked(widgets.clone(), sender.clone());
@@ -105,8 +108,8 @@ pub fn connect_controllers(sender: Sender<Event>, widgets: Widgets, controllers:
     controllers
         .image_click_gesture()
         .set_button(gtk::gdk::BUTTON_PRIMARY);
-    connect_controllers_to_widgets(widgets, controllers.clone());
-    connect_keybinds(controllers.clone(), sender.clone());
+    connect_controllers_to_widgets(widgets.clone(), controllers.clone());
+    connect_keybinds(controllers.clone(), widgets, sender.clone());
     connect_image_click_pressed_gesture(controllers.clone(), sender.clone());
     connect_image_motion_event_controller_motion(controllers.clone(), sender.clone());
     connect_image_click_released_gesture(controllers.clone(), sender.clone());
@@ -133,20 +136,113 @@ fn connect_controllers_to_widgets(widgets: Widgets, controllers: Controllers) {
         .add_controller(controllers.image_scrolled_window_scroll_controller());
 }
 
-pub fn connect_keybinds(controllers: Controllers, sender: Sender<Event>) {
+pub fn connect_keybinds(controllers: Controllers, widgets: Widgets, sender: Sender<Event>) {
     controllers
         .window_key_event_controller()
         .connect_key_pressed(move |_, key, _, state| {
             match key {
                 Key::F11 => post_event(&sender, Event::ToggleFullscreen),
-                Key::Q if state == gdk::ModifierType::CONTROL_MASK => {
+                Key::Left | Key::h => {
+                    if widgets.previous_button().is_sensitive() {
+                        widgets.previous_button().emit_clicked();
+                    }
+                }
+                Key::Right | Key::l => {
+                    if widgets.next_button().is_sensitive() {
+                        widgets.next_button().emit_clicked();
+                    }
+                }
+                Key::minus | Key::KP_Subtract => {
+                    if widgets.preview_smaller_button().is_sensitive() {
+                        widgets.preview_smaller_button().emit_clicked();
+                    }
+                }
+                Key::plus | Key::KP_Add => {
+                    if widgets.preview_larger_button().is_sensitive() {
+                        widgets.preview_larger_button().emit_clicked();
+                    }
+                }
+                Key::f => {
+                    if widgets.preview_fit_screen_button().is_sensitive() {
+                        widgets.preview_fit_screen_button().emit_clicked();
+                    }
+                }
+                Key::Delete => {
+                    if widgets.delete_button().is_sensitive() {
+                        widgets.delete_button().emit_clicked();
+                    }
+                }
+                Key::S
+                    if state
+                        == (gdk::ModifierType::SHIFT_MASK | gdk::ModifierType::CONTROL_MASK) =>
+                {
+                    if widgets.save_as_menu_button().is_sensitive() {
+                        widgets.save_as_menu_button().emit_clicked();
+                    }
+                }
+                Key::R
+                    if state
+                        == (gdk::ModifierType::SHIFT_MASK | gdk::ModifierType::CONTROL_MASK) =>
+                {
+                    if widgets.rotate_counterclockwise_button().is_sensitive() {
+                        widgets.rotate_counterclockwise_button().emit_clicked();
+                    }
+                }
+                Key::C if state == gdk::ModifierType::SHIFT_MASK => {
+                    if widgets.crop_button().is_sensitive() {
+                        widgets.crop_button().emit_clicked();
+                    }
+                }
+                Key::S if state == gdk::ModifierType::SHIFT_MASK => {
+                    if widgets.resize_button().is_sensitive() {
+                        widgets.resize_button().emit_activate();
+                    }
+                }
+                Key::q if state == gdk::ModifierType::CONTROL_MASK => {
                     post_event(&sender, Event::Quit)
                 }
-                Key::S if state == gdk::ModifierType::CONTROL_MASK => {
-                    post_event(&sender, Event::SaveCurrentImage(None))
+                Key::o if state == gdk::ModifierType::CONTROL_MASK => {
+                    widgets.open_menu_button().emit_clicked();
                 }
-                Key::C if state == gdk::ModifierType::CONTROL_MASK => {
-                    post_event(&sender, Event::CopyCurrentImage)
+                Key::s if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.save_menu_button().is_sensitive() {
+                        widgets.save_menu_button().emit_clicked();
+                    }
+                }
+                Key::c if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.copy_menu_button().is_sensitive() {
+                        widgets.copy_menu_button().emit_clicked();
+                    }
+                }
+                Key::p if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.print_menu_button().is_sensitive() {
+                        widgets.print_menu_button().emit_clicked();
+                    }
+                }
+                Key::z if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.undo_button().is_sensitive() {
+                        widgets.undo_button().emit_clicked();
+                    }
+                }
+                Key::y if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.redo_button().is_sensitive() {
+                        widgets.redo_button().emit_clicked();
+                    }
+                }
+                Key::r if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.rotate_clockwise_button().is_sensitive() {
+                        widgets.rotate_clockwise_button().emit_clicked();
+                    }
+                }
+                Key::j if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.preview_smaller_button().is_sensitive() {
+                        widgets.preview_smaller_button().emit_clicked();
+                    }
+                }
+                Key::k if state == gdk::ModifierType::CONTROL_MASK => {
+                    if widgets.preview_larger_button().is_sensitive() {
+                        widgets.preview_larger_button().emit_clicked();
+                    }
                 }
                 _ => {}
             }
@@ -224,7 +320,10 @@ fn connect_window_default_width_notify(
             settings.set_window_size((window.width() as u32, window.height() as u32));
             post_event(
                 &sender,
-                Event::ImageViewportResize(widgets.image_viewport().allocation()),
+                Event::ImageViewportResize((
+                    widgets.image_viewport().allocation().width() as u32,
+                    widgets.image_viewport().allocation().height() as u32,
+                )),
             );
         });
 }
@@ -241,9 +340,51 @@ fn connect_window_default_height_notify(
             settings.set_window_size((window.width() as u32, window.height() as u32));
             post_event(
                 &sender,
-                Event::ImageViewportResize(widgets.image_viewport().allocation()),
+                Event::ImageViewportResize((
+                    widgets.image_viewport().allocation().width() as u32,
+                    widgets.image_viewport().allocation().height() as u32,
+                )),
             );
         });
+}
+
+fn connect_window_fullscreened_notify(widgets: Widgets, sender: Sender<Event>) {
+    widgets
+        .clone()
+        .window()
+        .connect_fullscreened_notify(move |_| {
+            let main_context = glib::MainContext::default();
+            let sender = sender.clone();
+            let widgets = widgets.clone();
+            main_context.spawn_local(async move {
+                timeout_future(Duration::from_millis(5)).await;
+                post_event(
+                    &sender,
+                    Event::ImageViewportResize((
+                        widgets.image_viewport().allocation().width() as u32,
+                        widgets.image_viewport().allocation().height() as u32,
+                    )),
+                );
+            });
+        });
+}
+
+fn connect_window_maximized_notify(widgets: Widgets, sender: Sender<Event>) {
+    widgets.clone().window().connect_maximized_notify(move |_| {
+        let main_context = glib::MainContext::default();
+        let sender = sender.clone();
+        let widgets = widgets.clone();
+        main_context.spawn_local(async move {
+            timeout_future(Duration::from_millis(5)).await;
+            post_event(
+                &sender,
+                Event::ImageViewportResize((
+                    widgets.image_viewport().allocation().width() as u32,
+                    widgets.image_viewport().allocation().height() as u32,
+                )),
+            );
+        });
+    });
 }
 
 fn connect_preview_smaller_button_clicked(widgets: Widgets, sender: Sender<Event>) {

@@ -119,8 +119,8 @@ impl App {
             Event::DisplayMessage(message, message_type) => {
                 action::display_message(&self.widgets, message.as_str(), message_type)
             }
-            Event::ImageViewportResize(allocation) => {
-                action::image_viewport_resize(&self.sender, &mut self.settings, allocation)
+            Event::ImageViewportResize(viewport_size) => {
+                action::image_viewport_resize(&self.sender, &mut self.settings, viewport_size)
             }
             Event::RefreshPreview(preview_size) => {
                 action::refresh_preview(&self.widgets, self.image_list.clone(), preview_size)

@@ -155,10 +155,10 @@ pub fn previous_image(
 pub fn image_viewport_resize(
     sender: &Sender<Event>,
     settings: &mut Settings,
-    allocation: gdk::Rectangle,
+    viewport_size: (u32, u32),
 ) {
     if let PreviewSize::BestFit(_, _) = settings.scale() {
-        let new_scale = PreviewSize::BestFit(allocation.width() as u32, allocation.height() as u32);
+        let new_scale = PreviewSize::BestFit(viewport_size.0, viewport_size.1);
         settings.set_scale(new_scale);
         post_event(sender, Event::RefreshPreview(new_scale));
     }
