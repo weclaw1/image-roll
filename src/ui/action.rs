@@ -265,7 +265,12 @@ pub fn drag_selection(
     position: (u32, u32),
 ) {
     if let Some(((start_position_x, start_position_y), (_, _))) = selection_coords.get() {
-        if image_list.borrow().current_image().is_some() {
+        if let Some(current_image) = image_list.borrow().current_image() {
+            let (position_x, position_y) = position;
+            let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
+            if position_x >= image_width || position_y >= image_height {
+                return;
+            } 
             selection_coords.replace(Some(((start_position_x, start_position_y), position)));
             widgets.image_widget().queue_draw();
         }

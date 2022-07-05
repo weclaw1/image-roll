@@ -152,6 +152,8 @@ impl Widgets {
             .object("delete_button")
             .expect("Couldn't get delete_button");
 
+        delete_button.add_css_class("destructive-action");
+
         let copy_menu_button: gtk::Button = builder
             .object("copy_menu_button")
             .expect("Couldn't get copy_menu_button");
