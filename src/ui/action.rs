@@ -270,7 +270,7 @@ pub fn drag_selection(
             let (image_width, image_height) = current_image.preview_image_buffer_size().unwrap();
             if position_x >= image_width || position_y >= image_height {
                 return;
-            } 
+            }
             selection_coords.replace(Some(((start_position_x, start_position_y), position)));
             widgets.image_widget().queue_draw();
         }
