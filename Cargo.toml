@@ -10,15 +10,15 @@ authors = ["Robert Węcławski <r.weclawski@gmail.com>"]
 edition = "2021"
 
 [dependencies]
-log = "0.4.14"
+log = "0.4.17"
 env_logger = "0.9.0"
-anyhow = "1.0.52"
-ashpd = { version = "0.2.2", optional = true }
+anyhow = "1.0.58"
+ashpd = { version = "0.3.2", optional = true }
 
 [dev-dependencies]
 itertools = "0.10.3"
-rand = "0.8.4"
-infer = "0.7.0"
+rand = "0.8.5"
+infer = "0.9.0"
 
 [dependencies.gtk]
 package = "gtk4"

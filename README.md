@@ -40,14 +40,8 @@ flatpak install flathub com.github.weclaw1.ImageRoll
 
 ### Alpine Linux
 Alpine Linux provides [image-roll](https://pkgs.alpinelinux.org/packages?name=image-roll) package.
-It’s currently in Edge (unstable) repository, but it will be available in the stable branches starting with Alpine v3.16.
-
 ```
-# Add edge community repository tagged as @edge.
-echo "@edge https://dl-cdn.alpinelinux.org/alpine/edge/community" > /etc/apk/repositories
-
-# Install image-roll from the @edge repository.
-apk add image-roll@edge
+apk add image-roll
 ```
 
 ### AUR
