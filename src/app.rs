@@ -41,7 +41,7 @@ impl App {
         let controllers = Controllers::init();
 
         gtk::IconTheme::for_display(&Display::default().unwrap())
-            .add_resource_path("/com/github/weclaw1/image-roll/data/icons/scalable/actions");
+            .add_resource_path("/com/github/weclaw1/image-roll/icons/");
 
         let image_list: Rc<RefCell<ImageList>> = Rc::new(RefCell::new(ImageList::new()));
 

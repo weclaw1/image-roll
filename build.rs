@@ -60,7 +60,7 @@ fn main() {
 
     println!("cargo:rerun-if-changed=src/resources/resources.xml");
     println!("cargo:rerun-if-changed=src/resources/image-roll.ui");
-    println!("cargo:rerun-if-changed=src/resources/data/icons/scalable/actions/crop-symbolic.svg");
+    println!("cargo:rerun-if-changed=src/resources/icons/crop-symbolic.svg");
     println!("cargo:rerun-if-changed=src/resources/com.github.weclaw1.ImageRoll.svg");
     println!("cargo:rerun-if-changed=src/resources/com.github.weclaw1.ImageRoll.gschema.xml");
     println!("cargo:rerun-if-changed=Cargo.lock");
