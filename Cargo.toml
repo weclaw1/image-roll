@@ -1,6 +1,6 @@
 [package]
 name = "image-roll"
-version = "2.0.0"
+version = "2.0.1"
 license = "MIT"
 description = "Image Roll is a simple and fast GTK image viewer with basic image manipulation tools."
 homepage = "https://github.com/weclaw1/image-roll"
