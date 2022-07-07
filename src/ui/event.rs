@@ -460,27 +460,28 @@ fn connect_image_widget_draw(
         .image_widget()
         .set_draw_func(move |_, cairo_context, _, _| {
             if let Some(current_image) = image_list.borrow().current_image() {
-                let image_buffer = current_image.preview_image_buffer().unwrap();
-                cairo_context.set_source_pixbuf(image_buffer, 0.0, 0.0);
-                if let Err(error) = cairo_context.paint() {
-                    error!("{}", error);
-                    return;
-                }
-                if let Some((
-                    (start_selection_coord_x, start_selection_coord_y),
-                    (end_selection_coord_x, end_selection_coord_y),
-                )) = selection_coords.get()
-                {
-                    cairo_context.set_source_rgb(0.0, 0.0, 0.0);
-                    cairo_context.set_line_width(1.0);
-                    cairo_context.rectangle(
-                        start_selection_coord_x as f64,
-                        start_selection_coord_y as f64,
-                        (end_selection_coord_x as i32 - start_selection_coord_x as i32) as f64,
-                        (end_selection_coord_y as i32 - start_selection_coord_y as i32) as f64,
-                    );
-                    if let Err(error) = cairo_context.stroke() {
+                if let Some(image_buffer) = current_image.preview_image_buffer() {
+                    cairo_context.set_source_pixbuf(image_buffer, 0.0, 0.0);
+                    if let Err(error) = cairo_context.paint() {
                         error!("{}", error);
+                        return;
+                    }
+                    if let Some((
+                        (start_selection_coord_x, start_selection_coord_y),
+                        (end_selection_coord_x, end_selection_coord_y),
+                    )) = selection_coords.get()
+                    {
+                        cairo_context.set_source_rgb(0.0, 0.0, 0.0);
+                        cairo_context.set_line_width(1.0);
+                        cairo_context.rectangle(
+                            start_selection_coord_x as f64,
+                            start_selection_coord_y as f64,
+                            (end_selection_coord_x as i32 - start_selection_coord_x as i32) as f64,
+                            (end_selection_coord_y as i32 - start_selection_coord_y as i32) as f64,
+                        );
+                        if let Err(error) = cairo_context.stroke() {
+                            error!("{}", error);
+                        }
                     }
                 }
             }

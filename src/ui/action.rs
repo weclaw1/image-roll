@@ -174,14 +174,15 @@ pub fn refresh_preview(
         .set_text(String::from(preview_size).as_str());
     if let Some(image) = image_list.borrow_mut().current_image_mut() {
         image.create_preview_image_buffer(preview_size);
-        let (preview_image_width, preview_image_height) =
-            image.preview_image_buffer_size().unwrap();
-        widgets
-            .image_widget()
-            .set_content_width(preview_image_width as i32);
-        widgets
-            .image_widget()
-            .set_content_height(preview_image_height as i32);
+        if let Some((preview_image_width, preview_image_height)) = image.preview_image_buffer_size()
+        {
+            widgets
+                .image_widget()
+                .set_content_width(preview_image_width as i32);
+            widgets
+                .image_widget()
+                .set_content_height(preview_image_height as i32);
+        }
     } else {
         widgets.image_widget().set_content_width(0);
         widgets.image_widget().set_content_height(0);

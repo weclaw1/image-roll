@@ -1,8 +1,15 @@
-use gtk::{gdk::Display, gio, glib, prelude::*, Builder};
+use gtk::{
+    gdk::Display,
+    gio,
+    glib::{self, timeout_future},
+    prelude::*,
+    Builder,
+};
 
 use std::{
     cell::{Cell, RefCell},
     rc::Rc,
+    time::Duration,
 };
 
 use crate::image_list::ImageList;
@@ -63,9 +70,14 @@ impl App {
 
         let (sender, receiver) = glib::MainContext::channel::<Event>(glib::PRIORITY_DEFAULT);
 
-        let second_sender = sender.clone();
         if let Some(file) = file {
-            post_event(&second_sender, Event::OpenFile(file.clone()));
+            let main_context = glib::MainContext::default();
+            let second_sender = sender.clone();
+            let file = file.clone();
+            main_context.spawn_local(async move {
+                timeout_future(Duration::from_millis(10)).await;
+                post_event(&second_sender, Event::OpenFile(file));
+            });
         }
 
         let mut app = Self {
