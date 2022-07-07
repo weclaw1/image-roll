@@ -38,14 +38,18 @@
           <object class="GtkBox" id="action_bar">
             <child>
               <object class="GtkButton" id="previous_button">
+                <property name="halign">start</property>
                 <property name="has-frame">False</property>
+                <property name="hexpand">True</property>
                 <property name="icon-name">go-previous-symbolic</property>
               </object>
             </child>
             <child>
               <object class="GtkFlowBox">
-                <property name="hexpand">True</property>
+                <property name="column-spacing">8</property>
+                <property name="halign">center</property>
                 <property name="max-children-per-line">6</property>
+                <property name="width-request">300</property>
                 <child>
                   <object class="GtkButton" id="undo_button">
                     <property name="has-frame">False</property>
@@ -88,7 +92,9 @@
             </child>
             <child>
               <object class="GtkButton" id="next_button">
+                <property name="halign">end</property>
                 <property name="has-frame">False</property>
+                <property name="hexpand">True</property>
                 <property name="icon-name">go-next-symbolic</property>
               </object>
             </child>
